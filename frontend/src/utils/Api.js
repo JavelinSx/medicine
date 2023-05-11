@@ -125,7 +125,7 @@ class Api {
     updateUser(data){
 
         const {updatedUser, updatedData} = data
-        console.log(updatedUser)
+        console.log(updatedData)
         return this._request({
             url: `/update/${updatedUser.role}/${updatedUser._id}`,
             options:{
