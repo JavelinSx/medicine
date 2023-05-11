@@ -13,7 +13,6 @@ const PopupInteractionUser = () => {
 
 
     const handleConfirm = () => {
-        console.log(user)
         if(purpose==='edit'){
             const pathPatient = `/profile/patient/${user._id}`
             const pathPersonal = `/profile/personal/${user._id}`

@@ -7,7 +7,6 @@ import {  useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchCookie } from '../../ducks/auth';
 
-
 import Login from '../Login/Login'
 import SelectRole from '../SelectRole/SelectRole';
 import Header from '../Header/Header';
@@ -22,11 +21,6 @@ function App (){
   const dispatch = useDispatch();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [userRoleLogin, setUserRoleLogin] = useState('patient')
-  const numberPattern = /\d+/;
-  const cyrillicPattern = /[а-яА-ЯЁё]/gui
-
-  // console.log(cyrillicPattern.test('вфафва'))
-  console.log(!cyrillicPattern.test('qefауа'))
 
   useEffect(() => {
     if(isAuthenticated){
@@ -75,7 +69,6 @@ function App (){
         <Route exact path='/profile/personal/:id' element={
           <ProtectedRoute 
             component={PersonalProfile}
-            test='test'
           />
         } />
 

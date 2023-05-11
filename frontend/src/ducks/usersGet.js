@@ -25,34 +25,36 @@ const initialState = {
     errorGet: null,
 }
 
-export const fetchInfoDoctors = createAsyncThunk(DOCTORS_INFO_FETCH, async(_, thunkAPI) => {
+export const fetchInfoDoctors = createAsyncThunk(DOCTORS_INFO_FETCH, async() => {
     return await MainApi.getDoctors()
     .then((user) => user)
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
 })
 
-export const fetchInfoRegistrars = createAsyncThunk(REGISTRARS_INFO_FETCH, async(_, thunkAPI) => {
+export const fetchInfoRegistrars = createAsyncThunk(REGISTRARS_INFO_FETCH, async() => {
     return await MainApi.getRegistrars()
     .then((user) => user)
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
 })
 
-export const fetchInfoNurses = createAsyncThunk(NURSES_INFO_FETCH, async(_, thunkAPI) => {
+export const fetchInfoNurses = createAsyncThunk(NURSES_INFO_FETCH, async() => {
     return await MainApi.getNurses()
     .then((user) => user)
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
 })
 
-export const fetchInfoPatients = createAsyncThunk(PATIENTS_INFO_FETCH, async(_, thunkAPI) => {
+export const fetchInfoPatients = createAsyncThunk(PATIENTS_INFO_FETCH, async() => {
     return await MainApi.getPatients()
     .then((user) => user)
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
 })
 
 const usersGet = createSlice({
     name: 'usersGet',
     initialState,
-    reducers:{},
+    reducers:{
+
+    },
     extraReducers: builder => {
         builder
         //fetchInfoPatients

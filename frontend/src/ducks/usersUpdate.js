@@ -2,10 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import MainApi from "../utils/Api";
 
 const USER_UPDATE_FETCH = 'update/user'
-const DOCTOR_UPDATE_FETCH = 'create/doctor'
-const ADMIN_UPDATE_FETCH = 'create/admin'
-const REGISTRAR_UPDATE_FETCH = 'create/registrar'
-const NURSE_UPDATE_FETCH = 'create/nurse'
 
 const initialState = {
     updatedUser: null,

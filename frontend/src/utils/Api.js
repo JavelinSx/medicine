@@ -98,13 +98,14 @@ class Api {
     }
 
     createUser(data){
+        const{info, roleList} = data
         return this._request({
-            url: `/create/${data.userRole}`,
+            url: `/create/${roleList}`,
             options:{
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
-                body: JSON.stringify(data)
+                body: JSON.stringify(info)
             }
         })
     }

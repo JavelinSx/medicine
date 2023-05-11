@@ -1,8 +1,9 @@
 import './ListPeronslItem.css'
-import { useEffect, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { openPopup, closePopup, setText, confirmPopup } from '../../ducks/popupInteractionUser';
-import { fetchDeletePatient } from '../../ducks/usersDelete';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+
+import { useDispatch } from 'react-redux';
+import { openPopup} from '../../ducks/popupInteractionUser';
 
 function ListPersonalItem({user}) {
 
@@ -21,7 +22,7 @@ function ListPersonalItem({user}) {
                         user: user,
                     }))}
                 >
-                    
+                    <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
 
                 </button>
                 <button 
@@ -33,7 +34,7 @@ function ListPersonalItem({user}) {
                         user: user
                     }))}
                 >
-
+                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                 </button>
 
         </>
