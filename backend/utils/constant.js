@@ -13,6 +13,7 @@ module.exports.ERRORS_MESSAGE = {
       messageDefault: 'Запрашиваемый ресурс не найден',
       messageSearchCard: 'Карточка с таким id не найден',
       messageSearchUser: 'Пользователь с таким id не найден',
+      messageSearchUsers: 'Пользователи не найдены'
     },
     forbidden: {
       messageDefault: 'Пользователь не имеет достаточно прав для этого действия',

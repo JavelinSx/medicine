@@ -9,7 +9,7 @@ const ExistLoginError = require('../errors/exist_login_error');
 const { NODE_ENV, JWT_PROD } = process.env
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { JWT_DEV } = require('../../../diplom/movies-explorer-api/utils/const')
+const { JWT_DEV } = require('../utils/constant')
 const Patient = require('../models/patient')
 
 module.exports.loginPatient = (req, res, next) => {
@@ -47,12 +47,16 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.registerPatient = (req, res, next) => {
-    const {login, password} = req.body
+    const {login, password, surName, name, middleName} = req.body
     return bcryptjs.hash(password, 10)
-    .then((hash) => Patient.create({ login, password: hash}))
+    .then((hash) => Patient.create({ login, password: hash, surName, name, middleName}))
     .then((user) => {
         res.send({
-            login: user.login, _id: user._id
+            login: user.login, 
+            _id: user._id,
+            surName: user.surName,
+            name: user.name,
+            middleName: user.middleName
         })
     })
     .catch((err) => {
@@ -78,7 +82,7 @@ module.exports.getPatient = (req, res, next) => {
 
 module.exports.getPatients = (req, res, next) => {
     Patient.find({})
-    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUsers))
     .then((user) => {
         res.send(user)
     })
@@ -88,7 +92,7 @@ module.exports.getPatients = (req, res, next) => {
 module.exports.updatePatient = (req, res, next) => {
     const { surName, name, middleName, gender, birthDay } = req.body;
     Patient.findByIdAndUpdate(
-        req.patient._id,
+        req.params.id,
         {surName, name, middleName, gender, birthDay},
         {
             new: true,
@@ -99,8 +103,8 @@ module.exports.updatePatient = (req, res, next) => {
     .then((patient) => {
         res.send(patient)
     })
-    .catch(() => {
-        next(new Error('Ошибка при обнолвении данных пользователя'))
+    .catch((err) => {
+        next(new Error(err))
     })
 }
 

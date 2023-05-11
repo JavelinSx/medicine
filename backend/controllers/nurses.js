@@ -9,7 +9,7 @@ const ExistLoginError = require('../errors/exist_login_error');
 const { NODE_ENV, JWT_PROD } = process.env
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { JWT_DEV } = require('../../../diplom/movies-explorer-api/utils/const')
+const { JWT_DEV } = require('../utils/constant')
 const Nurse = require('../models/nurse')
 
 module.exports.loginNurse = (req, res, next) => {
@@ -57,7 +57,7 @@ module.exports.getNurse = (req, res, next) => {
 
 module.exports.getNurses = (req, res, next) => {
     Nurse.find({})
-    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUsers))
     .then((user) => {
         res.send(user)
     })

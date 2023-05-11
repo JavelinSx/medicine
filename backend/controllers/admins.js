@@ -9,11 +9,14 @@ const ExistLoginError = require('../errors/exist_login_error');
 const { NODE_ENV, JWT_PROD } = process.env
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { JWT_DEV } = require('../../../diplom/movies-explorer-api/utils/const')
+const { JWT_DEV } = require('../utils/constant')
 const Admin = require('../models/admin')
 
 module.exports.loginAdmin = (req, res, next) => {
     const {login, password} = req.body;
+    // bcryptjs.hash('test',10)
+    //     .then((data) => console.log(data))
+    
     Admin.findUserByCredentials(login, password)
         .then((user) => {
             const token = jwt.sign(
@@ -48,6 +51,7 @@ module.exports.logout = (req, res) => {
 
 module.exports.registerAdmin = (req, res, next) => {
     const {login, password} = req.body
+
     return bcryptjs.hash(password, 10)
     .then((hash) => Admin.create({ login, password: hash}))
     .then((user) => {
@@ -77,7 +81,7 @@ module.exports.getAdmin = (req, res, next) => {
 
 module.exports.getAdmins = (req, res, next) => {
     Admin.find({})
-    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUsers))
     .then((user) => {
         res.send(user)
     })
