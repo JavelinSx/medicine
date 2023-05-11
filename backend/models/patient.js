@@ -12,7 +12,7 @@ const patientSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ['м', 'ж']
+        enum: ['Муж.', 'Жен.']
     },
     birthDay: {
         type: Date,

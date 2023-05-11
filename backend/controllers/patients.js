@@ -35,6 +35,8 @@ module.exports.loginPatient = (req, res, next) => {
                 name: user.name,
                 surName: user.serName,
                 middleName: user.middleName,
+                gender: user.gender,
+                birthDay: user.birthDay
             })
         })
         .catch(() => {
@@ -47,16 +49,18 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.registerPatient = (req, res, next) => {
-    const {login, password, surName, name, middleName} = req.body
+    const {login, password, surName, name, middleName, gender, birthDay} = req.body
     return bcryptjs.hash(password, 10)
-    .then((hash) => Patient.create({ login, password: hash, surName, name, middleName}))
+    .then((hash) => Patient.create({ login, password: hash, surName, name, middleName, gender, birthDay}))
     .then((user) => {
         res.send({
             login: user.login, 
             _id: user._id,
             surName: user.surName,
             name: user.name,
-            middleName: user.middleName
+            middleName: user.middleName,
+            gender: user.gender,
+            birthDay: user.birthDay
         })
     })
     .catch((err) => {
@@ -91,6 +95,7 @@ module.exports.getPatients = (req, res, next) => {
 
 module.exports.updatePatient = (req, res, next) => {
     const { surName, name, middleName, gender, birthDay } = req.body;
+    console.log(birthDay)
     Patient.findByIdAndUpdate(
         req.params.id,
         {surName, name, middleName, gender, birthDay},
