@@ -3,7 +3,7 @@ import DatePicker from 'react-date-picker';
 import {dateSend} from '../../utils/dateParsing'
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-function Card() {
+function FormCard() {
 
     const {register, handleSubmit, formState: { errors }, control} = useForm({
         mode: 'onBlur',
@@ -37,7 +37,6 @@ function Card() {
                 <input {...register('comments')} type='file' placeholder='МРТ' /> 
                 <input {...register('comments')} type='file' placeholder='КТ' /> 
 
-
                 {errors.exampleRequired && <span>This field is required</span>}
                 <button type="submit">Сохранить</button>
             </form>
@@ -45,4 +44,4 @@ function Card() {
     );
 }
 
-export default Card;
+export default FormCard;
