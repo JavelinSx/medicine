@@ -53,7 +53,7 @@ const usersGet = createSlice({
     name: 'usersGet',
     initialState,
     reducers:{
-
+        
     },
     extraReducers: builder => {
         builder

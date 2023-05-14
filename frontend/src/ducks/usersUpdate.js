@@ -10,7 +10,6 @@ const initialState = {
 }
 
 export const fetchUpdateUser = createAsyncThunk(USER_UPDATE_FETCH, async(data) => {
-    console.log(data)
     return await MainApi.updateUser(data)
         .then((user) => user)
         .catch((err) => {throw err})
@@ -29,16 +28,13 @@ const usersUpdate = createSlice({
         builder
         //fetchCreatePatient
             .addCase(fetchUpdateUser.pending, (state, action) => {
-                console.log(action.payload)
                 state.loadingUpdate = true
             })
             .addCase(fetchUpdateUser.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.updatedUser = action.payload;
                 state.loadingUpdate = false;
             })
             .addCase(fetchUpdateUser.rejected, (state, action) => {
-                console.log(action)
                 state.errorUpdate = action.payload;
                 state.loadingUpdate = false;
             })      

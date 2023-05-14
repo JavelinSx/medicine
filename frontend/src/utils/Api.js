@@ -98,14 +98,14 @@ class Api {
     }
 
     createUser(data){
-        const{info, roleList} = data
+        const{infoCopy, roleList} = data
         return this._request({
             url: `/create/${roleList}`,
             options:{
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
-                body: JSON.stringify(info)
+                body: JSON.stringify(infoCopy)
             }
         })
     }
@@ -123,9 +123,7 @@ class Api {
     }
 
     updateUser(data){
-
         const {updatedUser, updatedData} = data
-        console.log(updatedData)
         return this._request({
             url: `/update/${updatedUser.role}/${updatedUser._id}`,
             options:{

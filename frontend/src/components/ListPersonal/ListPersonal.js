@@ -6,9 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRefresh } from '@fortawesome/free-solid-svg-icons'
 
 function ListPersonal({nameList, roleList, list, listState, toggleListUser, updateList}) {
-
-
-
   return ( 
       <>
               <div>
