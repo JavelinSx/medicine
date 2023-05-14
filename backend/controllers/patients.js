@@ -49,6 +49,7 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.registerPatient = (req, res, next) => {
+    console.log(req.body)
     const {login, password, surName, name, middleName, gender, birthDay} = req.body
     return bcryptjs.hash(password, 10)
     .then((hash) => Patient.create({ login, password: hash, surName, name, middleName, gender, birthDay}))
@@ -95,7 +96,6 @@ module.exports.getPatients = (req, res, next) => {
 
 module.exports.updatePatient = (req, res, next) => {
     const { surName, name, middleName, gender, birthDay } = req.body;
-    console.log(birthDay)
     Patient.findByIdAndUpdate(
         req.params.id,
         {surName, name, middleName, gender, birthDay},
@@ -105,8 +105,8 @@ module.exports.updatePatient = (req, res, next) => {
         }
     )
     .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
-    .then((patient) => {
-        res.send(patient)
+    .then((user) => {
+        res.send(user)
     })
     .catch((err) => {
         next(new Error(err))
