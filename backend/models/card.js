@@ -23,7 +23,7 @@ const cardSchema = new mongoose.Schema({
         type: Number
     },
     resultForm: {
-        type: Number,
+        type: Array,
     },
     patient: {
         type: mongoose.Schema.Types.ObjectId,
