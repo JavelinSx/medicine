@@ -6,8 +6,7 @@ import DatePicker from 'react-date-picker';
 import {dateSend} from '../../utils/dateParsing'
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import FormCard from '../FormCard/FormCard';
-import FormCardSurvey from '../FormCardSurvey/FormCardSurvey';
+import Card from '../Card/Card';
 function PatientProfile() {
     
     const dispatch = useDispatch();
@@ -56,8 +55,7 @@ function PatientProfile() {
                 {errors.exampleRequired && <span>This field is required</span>}
                 <button type="submit">Изменить</button>
             </form>
-            <FormCard />
-            <FormCardSurvey />
+            <Card></Card>
         </>
     );
 }
