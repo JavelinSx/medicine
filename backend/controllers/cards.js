@@ -11,21 +11,11 @@ const Patient = require('../models/patient');
 module.exports.createCard = (req, res, next) => {
 
       const { patientId } = req.params;
-      const { date, markerSA, symptoms, patientComment, mrtFile, ctFile, healthScore, formResult } = req.body;
   
       Patient.findById(patientId)
         .then(() => {
             const newCard = Card.create({
-                date,
-                markerSA,
-                symptoms,
-                patientComment,
-                mrtFile,
-                ctFile,
-                healthScore,
-                formResult,
                 patient: patientId,
-                doctor: req.user._id,
             });
         
             res.send({ newCard });
@@ -132,7 +122,7 @@ module.exports.getCardsPatient = (req, res, next) => {
 
 module.exports.getAllCardsPatients = (req, res, next) => {
     Card.find()
-    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+
     .then((card) => {
         res.send(card)
     })

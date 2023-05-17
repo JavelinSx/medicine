@@ -15,7 +15,7 @@ router.patch('/:cardId', updateCardPatient)
 
 router.use(doctorCheck)
 
-router.get('/all/cards-patient', getAllCardsPatients)
+router.get('/all/info', getAllCardsPatients)
 router.post('/delete/:cardId', deleteCardPatient)
 router.post('/:patientId', createCard)
 

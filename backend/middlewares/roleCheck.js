@@ -13,7 +13,7 @@ module.exports.adminCheck = (req, res, next) => {
 
 module.exports.doctorCheck = (req, res, next) => {
     const {role} = req.body.user ||req
-    if (role === 'doctor' || role === 'registrar' || role === 'nurse' || role === 'admin') {
+    if (role !== 'patient') {
         return next();
     }else{
         next(new BadAuthError(ERRORS_MESSAGE.badAuth.messageUncorrectedData));
