@@ -134,6 +134,29 @@ class Api {
             }
         })
     }
+
+    createCard(id){
+        return this._request({
+            url: `/cards/${id}`,
+            options:{
+                method: 'POST',
+                credentials: 'include',
+                headers: this._headers,
+                body: ''
+            }
+        })
+    }
+
+    getCards(){
+        return this._request({
+            url: `/cards/all/info`,
+            options:{
+                method: 'GET',
+                credentials: 'include',
+                headers: this._headers,
+            }
+        })
+    }
 }
 
 const MainApi = new Api(

@@ -24,8 +24,7 @@ function FormCardSurvey() {
   };
 
   // функция для обработки отправки формы
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleCheckForm = () => {
 
     // проверяем, что в каждой группе есть активный checkbox
     const isValid = Object.keys(checkedItems).length === checkBoxData.length;
@@ -73,7 +72,7 @@ function FormCardSurvey() {
       {
         isOpen ? 
         <div>
-          <form onSubmit={handleSubmit}>
+
             {checkBoxData.map((group) => (
               <div key={group.nameGroup}>
                 <h3>{group.nameGroup}</h3>
@@ -103,8 +102,8 @@ function FormCardSurvey() {
             <input type='range' min={1} max={100} step={1} onChange={handleChangeRange} value={valueRange}></input>
             <input type='number' min={1} max={100} value={valueRange} onChange={handleChangeRangeInput}></input>
             {error && <span>{error}</span>}
-            <button type="submit">Сохранить</button>
-          </form>
+            <button type="button" onClick={handleCheckForm}>Сохранить</button>
+
         </div>
         :
         ''

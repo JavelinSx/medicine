@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import {useForm, Controller} from 'react-hook-form'
 import {fetchUpdateUser} from '../../ducks/usersUpdate'
+import {fetchCreateCard} from '../../ducks/usersPost'
 import DatePicker from 'react-date-picker';
 import {dateSend} from '../../utils/dateParsing'
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import Card from '../Card/Card';
+import PopupConfirmation from '../CreateCard/CreateCard'
+import CreateCard from '../CreateCard/CreateCard';
+import Cards from '../Cards/Cards';
+import { fetchGetAllCards } from '../../ducks/usersGet';
 function PatientProfile() {
     
     const dispatch = useDispatch();
@@ -29,6 +34,12 @@ function PatientProfile() {
             updatedUser: user
         }))
     };
+
+    const handleCreateCard = () => {
+        console.log(user)
+        dispatch(fetchCreateCard(user._id))
+        .then(() => fetchGetAllCards())
+    }
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,7 +66,8 @@ function PatientProfile() {
                 {errors.exampleRequired && <span>This field is required</span>}
                 <button type="submit">Изменить</button>
             </form>
-            <Card></Card>
+            <Cards />
+            <CreateCard onConfirm={handleCreateCard} text={`Вы действительно хотите создать карточку для ${user?.name}`} />
         </>
     );
 }

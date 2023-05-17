@@ -3,26 +3,17 @@ import React, {useState, useMemo, useEffect} from 'react'
 
 import {  useSelector, useDispatch } from 'react-redux';
 
-import { selectRoleUser } from '../../utils/constant';
 import ListPersonal from '../ListPersonal/ListPersonal';
 import PopupInteractionUser from '../PopupInteractionUser/PopupInteractionUser';
 import { toggleStatePatient, toggleStateDoctor, toggleStateRegistrar, toggleStateNurse } from '../../ducks/listState'
-import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars } from '../../ducks/usersGet';
+import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars, fetchGetAllCards } from '../../ducks/usersGet';
 
 function Personal() {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
 
-    const { patients, doctors, registrars, nurses} = useSelector((state) => state.usersGet)
+    const { patients, doctors, registrars, nurses, cards} = useSelector((state) => state.usersGet)
     const { listStatePatient, listStateDoctor, listStateNurse, listStateRegistrar } = useSelector((state) => state.listState)
-    const [userRole, setUserRole] = useState(null)
-
-    //Необходимо отображать выбранный список пользователей с возможностью перехода в профиль
-    //Необходимо вырезать создание пользователя в отдельный попап вызываемый по кнопке
-    //Необходима кнопка обновить список, для каждого и для всей информации с дизейблд таймаутом
-    //
-
-    const [listState, setListState] = useState(false)
 
     const toggleListPatient = () => {
         dispatch(toggleStatePatient())
@@ -36,7 +27,6 @@ function Personal() {
     const toggleListRegistrar = () => {
         dispatch(toggleStateRegistrar())
     }
-
     const updatePatientsList = () => {
         dispatch(fetchInfoPatients())
     }
@@ -63,6 +53,9 @@ function Personal() {
             }
             if(nurses.length===0){
                 dispatch(fetchInfoNurses('nurses'));
+            }  
+            if(cards.length===0){
+                dispatch(fetchGetAllCards());
             }  
         }
     }, []);

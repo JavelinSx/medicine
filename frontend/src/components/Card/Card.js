@@ -7,7 +7,7 @@ function Card() {
         <>
             
             <FormCard />
-            <FormCardSurvey />
+
         </>
      );
 }

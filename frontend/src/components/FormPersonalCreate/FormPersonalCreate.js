@@ -8,12 +8,7 @@ function FormPersonalCreate({roleList}) {
     //добвить ресет на форму
     const dispatch = useDispatch()
     const { loadingPost, errorPost } = useSelector((state) => state.usersPost)
-
-
-
     const [createState, setCreateState] = useState(false)
-    console.log(roleList)
-
 
     const toggleCreateUser = () => {
         setCreateState(!createState)
