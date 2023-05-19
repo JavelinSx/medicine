@@ -10,7 +10,7 @@ const cardSchema = new mongoose.Schema({
     symptoms: {
         type: String
     },
-    comment: {
+    comments: {
         type: String
     },
     mrtFile: {
@@ -24,6 +24,10 @@ const cardSchema = new mongoose.Schema({
     },
     resultForm: {
         type: Array,
+    },
+    status: {
+        type: String,
+        enum: ['new', 'updated', 'confirmed']
     },
     patient: {
         type: mongoose.Schema.Types.ObjectId,

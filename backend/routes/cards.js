@@ -4,14 +4,15 @@ const {
     getCardsPatient,
     getAllCardsPatients,
     deleteCardPatient,
-    updateCardPatient,
+    updateCardPatientFiles,
     getFileCard
 } = require('../controllers/cards')
 const { doctorCheck } = require('../middlewares/roleCheck')
-
+const {files} = require('../middlewares/multer')
+const {uploadFormidable} = require('../middlewares/formidable')
 
 router.get('/:patientId', getCardsPatient)
-router.patch('/:cardId', updateCardPatient)
+router.patch('/:cardId', uploadFormidable, updateCardPatientFiles)
 
 router.use(doctorCheck)
 

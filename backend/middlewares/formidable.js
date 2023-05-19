@@ -39,7 +39,7 @@ module.exports.uploadFormidable = (req, res, next) => {
         })
 
         Promise.all(filePromises)
-            .then(() => next())
+            .then(() => {console.log('hello'); next()})
             .catch((err) => next(new BadRequestError(err)))
     })
 }

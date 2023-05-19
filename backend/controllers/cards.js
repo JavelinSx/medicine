@@ -1,5 +1,6 @@
 const fs = require('fs')
-
+const multer = require('multer')
+const upload = require('../middlewares/multer')
 
 const {ERRORS_MESSAGE} = require('../utils/constant')
 const BadRequestError = require('../errors/bad_request');
@@ -14,11 +15,15 @@ module.exports.createCard = (req, res, next) => {
   
       Patient.findById(patientId)
         .then(() => {
-            const newCard = Card.create({
+            Card.create({
                 patient: patientId,
+                status: 'new'
             });
         
-            res.send({ newCard });
+            res.send({
+                patient: patientId,
+                status: 'new',
+            });
         })
         .catch(() => {
             next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))   
@@ -62,21 +67,75 @@ module.exports.updateCardPatient = (req, res, next) => {
         next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
     })
 }
+
+// module.exports.updateCardPatientFiles = (req, res, next) => {
+//   upload.array(['fileMRT', 'fileKT'])(req, res, function(err) {
+//     if (err) {
+//       return next(err);
+//     }
+//     const {
+//       patientId,
+//       cardId,
+//       dateVisit,
+//       markerCA,
+//       symptoms,
+//       comments,
+//       healthScore,
+//       resultForm,
+//       mrtFile,
+//       ctFile
+//     } = req.body;
+//     console.log(req.files)
+//     Patient.findById(patientId)
+//       .then(() => {
+//         Card.findByIdAndUpdate(
+//           cardId,
+//           {
+//             dateVisit,
+//             markerCA,
+//             symptoms,
+//             comments,
+//             healthScore,
+//             resultForm,
+//             mrtFile,
+//             ctFile,
+//             status: 'updated'
+//           },
+//           {
+//             new: true,
+//             runValidators: true
+//           }
+//         )
+//           .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+//           .then(card => {
+//             res.send(card);
+//           })
+//           .catch(err => {
+//             next(err);
+//           });
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+//   });
+// };
+
+
 module.exports.updateCardPatientFiles = (req, res, next) => {
+
     const {
-        patient,
+        patientId,
         cardId, 
         dateVisit, 
         markerCA, 
         symptoms, 
-        comment, 
+        comments, 
         healthScore, 
         resultForm,
-        mrtFile,
-        ctFile
     } = req.body
-
-    Card.find({patient: patient})
+    console.log(req.files)
+    console.log(req.file)
+    Patient.findById(patientId)
         .then(() => {
             Card.findByIdAndUpdate(
                 cardId,
@@ -84,15 +143,15 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
                     dateVisit,
                     markerCA,
                     symptoms,
-                    comment,
+                    comments,
                     healthScore,
                     resultForm,
-                    mrtFile,
-                    ctFile
+
+                    status: 'updated'
                 },
                 {
-                  new: true,
-                  runValidators: true,
+                    new: true,
+                    runValidators: true,
                 },
             )
                 .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
@@ -106,6 +165,7 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
         .catch((err) => {
             console.log(err)
         })
+      
 }
 
 module.exports.getCardsPatient = (req, res, next) => {
