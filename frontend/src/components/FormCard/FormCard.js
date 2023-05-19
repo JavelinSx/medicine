@@ -1,20 +1,48 @@
+import { useState, useEffect, useDebugValue } from 'react';
 import {useForm, Controller} from 'react-hook-form'
+import {  useSelector, useDispatch } from 'react-redux';
+import {fetchUpdateCard} from '../../ducks/usersUpdate'
 import DatePicker from 'react-date-picker';
-import {dateSend} from '../../utils/dateParsing'
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import FormCardSurvey from '../FormCardSurvey/FormCardSurvey';
+import './FormCard.css'
 function FormCard() {
-
-    const {register, handleSubmit, formState: { errors }, control, setError} = useForm({
+    const dispatch = useDispatch()
+    const {user} = useSelector((state) => state.popupInteractionUser)
+    const {card} = useSelector((state) => state.card)
+    const [surveyData, setSurveyData] = useState({})
+    const [validSurvey, setValidSurvey] = useState(false)
+    const dateVisit = card?.dateVisit ? new Date(card?.dateVisit) : new Date()
+    const {register, handleSubmit, formState: { errors, isValid }, control, setError} = useForm({
         mode: 'onBlur',
         defaultValues:{
-
+            dateVisit: dateVisit,
+            markerCA: card?.markerCA || '',
+            symptoms: card?.symptoms || '',
+            comments: card?.comments || '',
+            fileMRT: null,
+            fileKT: null,
         }
     })
+    
+    const handleFormCardSurveySubmit = (surveyData) => {
+        setSurveyData(surveyData)
+        setValidSurvey(true)
+    };
 
     const onSubmit = (data) => {
         console.log(data)
+        const formData = new FormData();
+        Object.keys(data).map((key) => {
+            formData.append(key, data[key])
+            console.log(key, data[key])
+        })
+        Object.keys(surveyData).map((key) => formData.append(key, surveyData[key]))
+        formData.append('cardId', card._id)
+        formData.append('patientId', user._id)
+
+        dispatch(fetchUpdateCard(formData))
     };
 
     const handleFileChange = (event) => {
@@ -36,16 +64,21 @@ function FormCard() {
             })
             return
         }
-        console.log('hello')
+    }
+
+    const checkForm = () => {
+        if(isValid){
+            return !validSurvey
+        }else return true
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <div >
+            <form className='form-card' onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                 <Controller
-                    name='dayVisit'
+                    name='dateVisit'
                     control={control}
-
+                    rules={{required: true}}
                     render={({ field }) => (
                         <DatePicker
                             required
@@ -56,7 +89,7 @@ function FormCard() {
                     )}
                     
                 />
-                <input {...register('markerCA')} placeholder='Маркер СА' required/>
+                <input {...register('markerCA', {required: true})} placeholder='Маркер СА'/>
                 <textarea {...register('symptoms')} placeholder='Симптомы' />
                 <textarea {...register('comments')} placeholder='Комментарии для врача' />
                 <input 
@@ -83,10 +116,9 @@ function FormCard() {
                             {errors.fileKT.message}
                         </span>
                     )}
-                <FormCardSurvey />
-                {errors && <span>This field is required</span>}
-                {console.log(Object.keys(errors))}
-                <button type="submit" disabled={Object.keys(errors).length!==0}>Сохранить</button>
+                <FormCardSurvey onSubmit={handleFormCardSurveySubmit}/>
+                {errors && <span></span>}
+                <button type="submit" disabled={checkForm()}>Сохранить</button>
             </form>
         </div>
     );

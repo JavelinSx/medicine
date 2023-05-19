@@ -157,6 +157,21 @@ class Api {
             }
         })
     }
+
+    updateCard(data){
+        const cardId = data.get('cardId')
+        delete this._headers['Content-Type'];
+
+        return this._request({
+            url: `/cards/${cardId}`,
+            options:{
+                method: 'PATCH',
+                credentials: 'include',
+                headers: this._headers,
+                body: data
+            }
+        })
+    }
 }
 
 const MainApi = new Api(

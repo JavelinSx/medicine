@@ -36,9 +36,10 @@ function PatientProfile() {
     };
 
     const handleCreateCard = () => {
-        console.log(user)
         dispatch(fetchCreateCard(user._id))
-        .then(() => fetchGetAllCards())
+        .then(() => {
+            dispatch(fetchGetAllCards())
+        })
     }
     return (
         <>

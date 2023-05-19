@@ -1,6 +1,9 @@
 export const setPatients = (patients) => sessionStorage.setItem('patients', JSON.stringify(patients))
 export const getPatients = JSON.parse(sessionStorage.getItem('patients'))
 
+export const setPatient = (patient) => sessionStorage.setItem('patient', JSON.stringify(patient))
+export const getPatient = JSON.parse(sessionStorage.getItem('patient'))
+
 export const setDoctors = (doctors) => sessionStorage.setItem('doctors', JSON.stringify(doctors))
 export const getDoctors = JSON.parse(sessionStorage.getItem('doctors'))
 

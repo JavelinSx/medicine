@@ -7,6 +7,7 @@ import usersUpdateReducer from './ducks/usersUpdate.js';
 import usersDeleteReducer from './ducks/usersDelete.js'
 import popupInteractionUserReducer from './ducks/popupInteractionUser.js';
 import listStateReducer from './ducks/listState.js'
+import cardReducer from './ducks/card.js'
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   usersUpdate: usersUpdateReducer,
   usersDelete: usersDeleteReducer,
   popupInteractionUser: popupInteractionUserReducer,
-  listState: listStateReducer
+  listState: listStateReducer,
+  card: cardReducer
 });
 
 export default rootReducer;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ConfirmationButton({text, onConfirm }) {
+function CreateCard({text, onConfirm }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleConfirmation = () => {
@@ -31,4 +31,4 @@ function ConfirmationButton({text, onConfirm }) {
   );
 }
 
-export default ConfirmationButton;
+export default CreateCard;
