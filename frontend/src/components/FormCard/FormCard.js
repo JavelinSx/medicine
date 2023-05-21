@@ -8,6 +8,7 @@ import 'react-calendar/dist/Calendar.css';
 import FormCardSurvey from '../FormCardSurvey/FormCardSurvey';
 import './FormCard.css'
 function FormCard() {
+    const formData = new FormData();
     const dispatch = useDispatch()
     const {user} = useSelector((state) => state.popupInteractionUser)
     const {card} = useSelector((state) => state.card)
@@ -32,23 +33,36 @@ function FormCard() {
     };
 
     const onSubmit = (data) => {
-        console.log(data)
-        const formData = new FormData();
-        Object.keys(data).map((key) => {
-            formData.append(key, data[key])
-            console.log(key, data[key])
-        })
-        Object.keys(surveyData).map((key) => formData.append(key, surveyData[key]))
-        formData.append('cardId', card._id)
-        formData.append('patientId', user._id)
-
-        dispatch(fetchUpdateCard(formData))
+        Object.keys(data).forEach((key) => {
+          if (data[key] instanceof FileList) {
+            // Если поле является FileList, переберите его и добавьте каждый файл в formData
+            for (let i = 0; i < data[key].length; i++) {
+              formData.append(key, data[key][i]);
+            }
+          } else {
+            // Если поле не является FileList, добавьте его в formData
+            formData.append(key, data[key]);
+          }
+        });
+      
+        Object.keys(surveyData).forEach((key) => formData.append(key, surveyData[key]));
+        formData.append('cardId', card._id);
+        formData.append('patientId', user._id);
+        
+        dispatch(fetchUpdateCard(formData));
     };
 
     const handleFileChange = (event) => {
 
         const file = event.target.files[0]
+
+        if (!file || file.length === 0) {
+            return;
+        }
+
         const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf']
+        const maxSizeInBytes = 2 * 1024 * 1024;
+
         if(!allowedTypes.includes(file.type)){
             setError(event.target.name, {
                 type: 'invalidFileType',
@@ -56,7 +70,7 @@ function FormCard() {
             })
             return
         }
-        const maxSizeInBytes = 2 * 1024 * 1024;
+
         if(file.size > maxSizeInBytes){
             setError(event.target.name, {
                 type: 'fileSizeExceeded',
@@ -64,6 +78,9 @@ function FormCard() {
             })
             return
         }
+        
+        const fieldName = event.target.name;
+        formData.set(fieldName, file);
     }
 
     const checkForm = () => {

@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import { useDispatch } from 'react-redux';
-import { openPopup} from '../../ducks/popupInteractionUser';
+import { openPopup } from '../../ducks/popupInteractionUser';
 
 function ListPersonalItem({user}) {
 
     const dispatch = useDispatch()
-
     return ( 
         <>
                 

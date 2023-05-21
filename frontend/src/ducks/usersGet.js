@@ -6,11 +6,13 @@ import {
     getNurses, 
     getRegistrars,
     getCards,
+    getCard,
     setPatients,
     setDoctors,
     setNurses,
     setRegistrars,
-    setCards
+    setCards,
+    setCard
 } from "../utils/sessionStorageInfo";
 
 const PATIENTS_INFO_FETCH = '/info/patients'
@@ -18,6 +20,7 @@ const DOCTORS_INFO_FETCH = '/info/doctors'
 const NURSES_INFO_FETCH = '/info/nurses'
 const REGISTRARS_INFO_FETCH = '/info/registrars'
 const GET_ALL_CARDS_FETCH = '/cards'
+const GET_CARD_FETCH = '/card'
 
 const initialState = {
     patients: getPatients || [],
@@ -25,9 +28,16 @@ const initialState = {
     nurses: getNurses || [],
     registrars: getRegistrars || [],
     cards: getCards || [],
+    card: getCard || {},
     loadingGet: false,
     errorGet: null,
 }
+
+export const fetchGetCardFile = createAsyncThunk(GET_CARD_FETCH, async() => {
+    return await MainApi.getCardFile()
+    .then((user) => user)
+    .catch((err) => {throw err})
+})
 
 export const fetchInfoDoctors = createAsyncThunk(DOCTORS_INFO_FETCH, async() => {
     return await MainApi.getDoctors()
@@ -67,6 +77,20 @@ const usersGet = createSlice({
     },
     extraReducers: builder => {
         builder
+        //fetchGetAllCards
+            .addCase(fetchGetCardFile.pending, (state, action) => {
+                state.loadingGet = true
+            })
+            .addCase(fetchGetCardFile.fulfilled, (state, action) => {
+                state.card = action.payload;
+                state.loadingGet = false;
+                state.errorGet = null;
+                setCard(action.payload)
+            })
+            .addCase(fetchGetCardFile.rejected, (state, action) => {
+                state.errorGet = action.error.message;
+                state.loadingGet = false;
+            })
         //fetchGetAllCards
             .addCase(fetchGetAllCards.pending, (state, action) => {
                 state.loadingGet = true

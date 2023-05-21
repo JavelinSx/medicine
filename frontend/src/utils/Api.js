@@ -158,12 +158,24 @@ class Api {
         })
     }
 
+    getCardFile(){
+        return this._request({
+            url: `/getFile/:patientId/:cardId`,
+            options:{
+                method: 'GET',
+                credentials: 'include',
+                headers: this._headers,
+            }
+        })
+    }
+
     updateCard(data){
         const cardId = data.get('cardId')
+        const patientId = data.get('patientId')
         delete this._headers['Content-Type'];
-
+        console.log(data.get('patientId'))
         return this._request({
-            url: `/cards/${cardId}`,
+            url: `/cards/${patientId}/${cardId}`,
             options:{
                 method: 'PATCH',
                 credentials: 'include',

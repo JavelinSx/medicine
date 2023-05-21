@@ -3,6 +3,7 @@ import { setPatient } from '../../utils/sessionStorageInfo';
 import {  useSelector, useDispatch } from 'react-redux';
 import {selectCard} from '../../ducks/card'
 import Card from '../Card/Card';
+import {fetchGetCardFile} from '../../ducks/usersGet'
 function Cards() {
     const dispatch = useDispatch()
     const {cards} = useSelector((state) => state.usersGet)
@@ -13,7 +14,9 @@ function Cards() {
     const handleOpenCard = (id, event) => {
         if (event.target.tagName.toLowerCase() === 'li') {
             const card = patientCards.filter((card) => card._id === id);
+            console.log(Object.keys(card[0]).filter((field) => field==='fileMRT' || field==='fileKT'))
             setCard(card);
+            // dispatch(fetchGetCardFile())
             dispatch(selectCard(card));
         }
     }
