@@ -1,6 +1,5 @@
 const fs = require('fs')
-const multer = require('multer')
-const upload = require('../middlewares/multer')
+const path = require('path')
 
 const {ERRORS_MESSAGE} = require('../utils/constant')
 const BadRequestError = require('../errors/bad_request');
@@ -68,59 +67,6 @@ module.exports.updateCardPatient = (req, res, next) => {
     })
 }
 
-// module.exports.updateCardPatientFiles = (req, res, next) => {
-//   upload.array(['fileMRT', 'fileKT'])(req, res, function(err) {
-//     if (err) {
-//       return next(err);
-//     }
-//     const {
-//       patientId,
-//       cardId,
-//       dateVisit,
-//       markerCA,
-//       symptoms,
-//       comments,
-//       healthScore,
-//       resultForm,
-//       mrtFile,
-//       ctFile
-//     } = req.body;
-//     console.log(req.files)
-//     Patient.findById(patientId)
-//       .then(() => {
-//         Card.findByIdAndUpdate(
-//           cardId,
-//           {
-//             dateVisit,
-//             markerCA,
-//             symptoms,
-//             comments,
-//             healthScore,
-//             resultForm,
-//             mrtFile,
-//             ctFile,
-//             status: 'updated'
-//           },
-//           {
-//             new: true,
-//             runValidators: true
-//           }
-//         )
-//           .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
-//           .then(card => {
-//             res.send(card);
-//           })
-//           .catch(err => {
-//             next(err);
-//           });
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   });
-// };
-
-
 module.exports.updateCardPatientFiles = (req, res, next) => {
 
     const {
@@ -133,8 +79,24 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
         healthScore, 
         resultForm,
     } = req.body
-    console.log(req.files)
-    console.log(req.file)
+
+    const {fileMRT, fileKT} = req.files
+    let pathToDirMRT= ''
+    let pathToDirKT= ''
+
+    if(fileMRT){
+        const fileExtension = fileMRT[0].originalname.split('.').pop();
+        const fileName = `${fileMRT[0].fieldname}.${fileExtension}`;
+        pathToDirMRT = path.resolve('uploads', patientId, cardId, fileName);
+
+    }
+    if(fileKT){
+        const fileExtension = fileKT[0].originalname.split('.').pop();
+        const fileName = `${fileKT[0].fieldname}.${fileExtension}`;
+        pathToDirKT = path.resolve('uploads', patientId, cardId, fileName);
+
+    }
+
     Patient.findById(patientId)
         .then(() => {
             Card.findByIdAndUpdate(
@@ -146,7 +108,8 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
                     comments,
                     healthScore,
                     resultForm,
-
+                    fileMRT: pathToDirMRT,
+                    fileKT: pathToDirKT,
                     status: 'updated'
                 },
                 {
@@ -156,14 +119,17 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
             )
                 .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
                 .then(card => {
+                    console.log('hello')
                     res.send(card)
                 })
                 .catch((err) => {
+                    console.log('hello1')
                     next(err)
                 })
         })
         .catch((err) => {
-            console.log(err)
+            console.log('hello2')
+            next(err)
         })
       
 }
@@ -177,6 +143,26 @@ module.exports.getCardsPatient = (req, res, next) => {
         })
         .catch(() => {
             next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
+        })
+}
+
+module.exports.getCardFile = (req, res, next) => {
+    const {patientId, cardId} = req.params
+    Patient.findById(patientId)
+        .then(() => {
+            Card.findById(cardId)
+                .then((card) => {
+                    if(card?.fileMRT.length > 0){
+                        const fileName = path.basename(card.fileMRT);
+                        fs.promises.readFile(card.fileMRT, 'utf-8')
+                            .then((fileContent) => {
+                                // Логика для работы с содержимым файла
+                            })
+                            .catch((err) => {
+                                // Обработка ошибки чтения файла
+                            });
+                    }
+                })
         })
 }
 

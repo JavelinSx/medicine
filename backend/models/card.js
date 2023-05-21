@@ -13,10 +13,10 @@ const cardSchema = new mongoose.Schema({
     comments: {
         type: String
     },
-    mrtFile: {
+    fileMRT: {
         type: String,
     },
-    ctFile: {
+    fileKT: {
         type: String,
     },
     healthScore: {
