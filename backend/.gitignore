@@ -29,6 +29,9 @@ node_modules
 # production
 /build
 
+# upload test dev
+/uploads
+
 # misc
 .DS_Store
 .env.local
