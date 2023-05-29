@@ -1,23 +1,31 @@
-import { setCard } from '../../utils/sessionStorageInfo';
-import { setPatient } from '../../utils/sessionStorageInfo';
+import { useEffect } from 'react';
 import {  useSelector, useDispatch } from 'react-redux';
-import {selectCard} from '../../ducks/card'
+import {selectCard} from '../../ducks/cards'
 import Card from '../Card/Card';
-import {fetchGetCardFile} from '../../ducks/usersGet'
+import {fetchGetCardFile, fetchGetAllCardsFromPatient} from '../../ducks/cards'
+
 function Cards() {
     const dispatch = useDispatch()
-    const {cards} = useSelector((state) => state.usersGet)
+    const {selectedCard, cardsPatient} = useSelector((state) => state.cards)
     const {user} = useSelector((state) => state.popupInteractionUser)
-    const {selectedCard} = useSelector((state) => state.card)
-    const patientCards = cards.filter((card) => card.patient === user?._id)
+
+    useEffect(() => {
+        if(user?._id){
+            dispatch(fetchGetAllCardsFromPatient(user?._id))
+        }
+    }, [])
+    
+    
+    console.log(cardsPatient)
 
     const handleOpenCard = (id, event) => {
         if (event.target.tagName.toLowerCase() === 'li') {
-            const card = patientCards.filter((card) => card._id === id);
-            console.log(Object.keys(card[0]).filter((field) => field==='fileMRT' || field==='fileKT'))
-            setCard(card);
-            // dispatch(fetchGetCardFile())
-            dispatch(selectCard(card));
+            const card = cardsPatient.filter((card) => card._id === id);
+            dispatch(fetchGetAllCardsFromPatient(user._id))
+            dispatch(fetchGetCardFile({cardId:card[0]._id, patientId: user._id}))
+                .then(() => {
+                    dispatch(selectCard(card))
+                }) 
         }
     }
 
@@ -25,10 +33,10 @@ function Cards() {
         <>
             <ul>
                 {
-                    patientCards.map((card) => 
+                    cardsPatient.map((card) => 
                         <li key={card._id}  onClick={(event) => handleOpenCard(card._id, event)}>
-                            {card.patient}
-                            {card.status}
+                            patientId: {card.patientId};
+                            status: {card.status};
                             {selectedCard === card._id ? <Card card={card} /> : ''}
                         </li>
                     )

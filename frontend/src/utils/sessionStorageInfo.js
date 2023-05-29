@@ -18,3 +18,7 @@ export const getCard = JSON.parse(sessionStorage.getItem('card'))
 
 export const setCards = (cards) => sessionStorage.setItem('cards', JSON.stringify(cards))
 export const getCards = JSON.parse(sessionStorage.getItem('cards'))
+
+export const setCardsPatient = (cards) => sessionStorage.setItem('cardsPatient', JSON.stringify(cards))
+export const getCardsPatient = JSON.parse(sessionStorage.getItem('cardsPatient'))
+

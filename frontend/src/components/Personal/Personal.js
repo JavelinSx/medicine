@@ -6,13 +6,15 @@ import {  useSelector, useDispatch } from 'react-redux';
 import ListPersonal from '../ListPersonal/ListPersonal';
 import PopupInteractionUser from '../PopupInteractionUser/PopupInteractionUser';
 import { toggleStatePatient, toggleStateDoctor, toggleStateRegistrar, toggleStateNurse } from '../../ducks/listState'
-import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars, fetchGetAllCards } from '../../ducks/usersGet';
+import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars,  } from '../../ducks/usersGet';
+import {fetchGetAllCards} from '../../ducks/cards'
 
 function Personal() {
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
+    const { userAuth } = useSelector((state) => state.auth);
 
-    const { patients, doctors, registrars, nurses, cards} = useSelector((state) => state.usersGet)
+    const { patients, doctors, registrars, nurses } = useSelector((state) => state.usersGet)
+    const { cards } = useSelector((state) => state.cards)
     const { listStatePatient, listStateDoctor, listStateNurse, listStateRegistrar } = useSelector((state) => state.listState)
 
     const toggleListPatient = () => {
@@ -41,7 +43,7 @@ function Personal() {
     }
 
     useEffect(() => {
-        if(user.role!=='patient'){
+        if(userAuth.role!=='patient'){
             if(patients.length===0){
                 dispatch(fetchInfoPatients('patients'))
             }
@@ -100,8 +102,8 @@ function Personal() {
             
             <ul className='personal__list-info'>
                 <li>Мои данные</li>
-                <li>{user.login}</li>
-                <li>{user.role}</li>
+                <li>{userAuth.login}</li>
+                <li>{userAuth.role}</li>
             </ul>
 
 

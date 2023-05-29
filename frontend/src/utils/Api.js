@@ -10,16 +10,22 @@ class Api {
     async _request({url, options}){
 
             const response = await fetch(this._baseUrl + url, options)
-            const responseJson = await response.json()
-            return new Promise((resolve, reject) => {
-                responseJson.message ? reject(responseJson.message) : resolve(responseJson)
-            })
-        
-
+            if (options.responseType === 'arraybuffer'){
+                const responseArrayBuffer = await response.arrayBuffer()
+                return new Promise((resolve, reject) => {
+                    responseArrayBuffer.message ? reject(responseArrayBuffer.message) : resolve(responseArrayBuffer)
+                })
+            } else{
+                const responseJson = await response.json()
+                return new Promise((resolve, reject) => {
+                    responseJson.message ? reject(responseJson.message) : resolve(responseJson)
+                })
+            }
     }
 
     login(data){
         const {login, password, userRoleLogin} = data
+        console.log(JSON.stringify({login, password}))
         return this._request({
             url: `/signin/${userRoleLogin}`,
             options:{
@@ -98,14 +104,15 @@ class Api {
     }
 
     createUser(data){
-        const{infoCopy, roleList} = data
+        const{roleList} = data
+        console.log(data)
         return this._request({
             url: `/create/${roleList}`,
             options:{
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
-                body: JSON.stringify(infoCopy)
+                body: JSON.stringify(data)
             }
         })
     }
@@ -124,6 +131,7 @@ class Api {
 
     updateUser(data){
         const {updatedUser, updatedData} = data
+        console.log(updatedData)
         return this._request({
             url: `/update/${updatedUser.role}/${updatedUser._id}`,
             options:{
@@ -147,6 +155,18 @@ class Api {
         })
     }
 
+    deleteCard(id){
+        return this._request({
+            url: `/cards/delete/${id}`,
+            options:{
+                method: 'POST',
+                credentials: 'include',
+                headers: this._headers,
+                body: ''
+            }
+        })
+    }
+
     getCards(){
         return this._request({
             url: `/cards/all/info`,
@@ -158,9 +178,9 @@ class Api {
         })
     }
 
-    getCardFile(){
+    getCardsPatient(data){
         return this._request({
-            url: `/getFile/:patientId/:cardId`,
+            url: `/cards/${data}`,
             options:{
                 method: 'GET',
                 credentials: 'include',
@@ -169,11 +189,23 @@ class Api {
         })
     }
 
+    getCardFile(data){
+        const{cardId, patientId} = data
+        return this._request({
+            url: `/cards/getFile/${patientId}/${cardId}`,
+            options:{
+                method: 'GET',
+                credentials: 'include',
+                headers: this._headers,
+                responseType: 'arraybuffer',
+            }
+        })
+    }
+
     updateCard(data){
-        const cardId = data.get('cardId')
+        const cardId = data.get('_id')
         const patientId = data.get('patientId')
         delete this._headers['Content-Type'];
-        console.log(data.get('patientId'))
         return this._request({
             url: `/cards/${patientId}/${cardId}`,
             options:{

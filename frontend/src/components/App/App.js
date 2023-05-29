@@ -19,21 +19,21 @@ import PersonalProfile from '../PersonalProfile/PersonalProfile'
 function App (){
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, userAuth } = useSelector((state) => state.auth);
   const [userRoleLogin, setUserRoleLogin] = useState('patient')
 
   useEffect(() => {
     if(isAuthenticated){
-      dispatch(fetchCookie(user.role))
+      dispatch(fetchCookie(userAuth.role))
     }
   }, []);
 
   useEffect(() => {
-    user && user.role==='patient' ? 
+    userAuth && userAuth.role==='patient' ? 
     navigate(`/profile/patient/me`)
     :
     navigate (`/profile/personal/me`)
-  },[user])
+  },[userAuth])
 
 
   const handleSelectLoginRole = (loginRole) => {

@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import {useForm, Controller} from 'react-hook-form'
 import {fetchUpdateUser} from '../../ducks/usersUpdate'
-import {fetchCreateCard} from '../../ducks/usersPost'
 import DatePicker from 'react-date-picker';
 import {dateSend} from '../../utils/dateParsing'
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
-import Card from '../Card/Card';
-import PopupConfirmation from '../CreateCard/CreateCard'
 import CreateCard from '../CreateCard/CreateCard';
 import Cards from '../Cards/Cards';
-import { fetchGetAllCards } from '../../ducks/usersGet';
+import { fetchGetAllCards, fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
 function PatientProfile() {
     
     const dispatch = useDispatch();
     const {user} = useSelector((state) => state.popupInteractionUser)
-
+    const {userAuth} = useSelector((state) => state.auth)
     const {register, handleSubmit, formState: { errors }, control} = useForm({
         mode: 'onBlur',
         defaultValues:{
@@ -27,10 +24,11 @@ function PatientProfile() {
             birthDay: user?.birthDay ? new Date(user?.birthDay) : new Date()
         }
     })
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     const onSubmit = (data) => {
         dispatch(fetchUpdateUser({
-            updatedData: {...data, birthDay: dateSend(data.birthDay)},
+            updatedData: {...data, birthDay: data.birthDay.toString()},
             updatedUser: user
         }))
     };
@@ -38,11 +36,24 @@ function PatientProfile() {
     const handleCreateCard = () => {
         dispatch(fetchCreateCard(user._id))
         .then(() => {
-            dispatch(fetchGetAllCards())
+            dispatch(fetchGetAllCardsFromPatient(user._id))
         })
     }
+
+    const updateCards = () => {
+        setIsButtonDisabled(true);
+        dispatch(fetchGetAllCards())
+        setTimeout(() => {
+            setIsButtonDisabled(false);
+          }, 5000); // 5000 миллисекунд = 5 секунд
+
+    }
+
     return (
         <>
+            <button onClick={updateCards} disabled={isButtonDisabled}>
+                    Обновить данные карточек
+            </button>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <input {...register('surName')} placeholder='Фамилия' />
                 <input {...register('name')} placeholder='Имя' />
@@ -64,11 +75,13 @@ function PatientProfile() {
                         />
                     )}
                 />
-                {errors.exampleRequired && <span>This field is required</span>}
+                {errors.exampleRequired && <span>Это поле обязательно</span>}
                 <button type="submit">Изменить</button>
             </form>
             <Cards />
-            <CreateCard onConfirm={handleCreateCard} text={`Вы действительно хотите создать карточку для ${user?.name}`} />
+            {
+                userAuth.role === 'patient' ? null : <CreateCard onConfirm={handleCreateCard} text={`Вы действительно хотите создать карточку для ${user?.name}`} />
+            }
         </>
     );
 }

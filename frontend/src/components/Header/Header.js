@@ -15,6 +15,7 @@ function Header() {
 
     const logout = () => {
         dispatch(fetchLogout())
+        sessionStorage.clear()
     }
 
     const goBack = () => {

@@ -3,8 +3,8 @@ import MainApi from "../utils/Api";
 import {
   setIsAuthenticated,
   getIsAuthenticated,
-  setUser,
-  getUser
+  getUserAuth, 
+  setUserAuth
 } from '../utils/localStorageInfo'
 // Constants
 const LOGIN_FETCH = 'auth/fetchLogin'
@@ -13,30 +13,30 @@ const LOGOUT_FETCH = 'auth/fetchLogout'
 
 // Initial State
 const initialState = {
-  user: getUser,
-  userAuth: null,
+  userAuth: getUserAuth,
   isAuthenticated: getIsAuthenticated || false,
   loadingAuth: false,
   errorAuth: null,
 };
 
-export const fetchAuth = createAsyncThunk(LOGIN_FETCH, async (data, thunkAPI) => {
+export const fetchAuth = createAsyncThunk(LOGIN_FETCH, async (data) => {
+  console.log(data)
   return await MainApi.login(data)
     .then((user) => user)
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
   
 })
 
-export const fetchCookie = createAsyncThunk(AUTH_FETCH, async (data, thunkAPI) => {
+export const fetchCookie = createAsyncThunk(AUTH_FETCH, async (data) => {
  return await MainApi.getUser(data)
   .then((data)=> data)
-  .catch((err)=> thunkAPI.rejectWithValue(err.message))
+  .catch((err) => {throw err})
 })
 
-export const fetchLogout = createAsyncThunk(LOGOUT_FETCH, async (_, thunkAPI) => {
+export const fetchLogout = createAsyncThunk(LOGOUT_FETCH, async () => {
   return await MainApi.logout()
     .then(() => localStorage.clear())
-    .catch((err) => thunkAPI.rejectWithValue(err.message))
+    .catch((err) => {throw err})
 })
 
 const authSlice = createSlice({
@@ -51,11 +51,11 @@ const authSlice = createSlice({
               state.loadingAuth = true
             })
             .addCase(fetchAuth.fulfilled, (state, action) => {
-              state.user = action.payload;
+              state.userAuth = action.payload;
               state.loadingAuth = false;
               state.isAuthenticated = true;
               state.errorAuth = null
-              setUser(action.payload)
+              setUserAuth(action.payload)
               setIsAuthenticated(true)
             })
             .addCase(fetchAuth.rejected, (state, action) => {
@@ -69,11 +69,11 @@ const authSlice = createSlice({
               state.isAuthenticated = false;
             })
             .addCase(fetchCookie.fulfilled, (state, action) => {
-              state.user = action.payload;
+              state.userAuth = action.payload;
               state.loadingAuth = false;
               state.isAuthenticated = true;
               state.errorAuth = null
-              setUser(action.payload)
+              setUserAuth(action.payload)
               setIsAuthenticated(true)
             })
             .addCase(fetchCookie.rejected, (state, action) => {
@@ -86,7 +86,7 @@ const authSlice = createSlice({
               state.loadingAuth = true
             })
             .addCase(fetchLogout.fulfilled, (state, action) => {
-              state.user = null;
+              state.userAuth = null;
               state.loadingAuth = false;
               state.isAuthenticated = false;
               state.errorAuth = null

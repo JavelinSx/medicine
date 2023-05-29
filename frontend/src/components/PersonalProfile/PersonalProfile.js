@@ -28,7 +28,7 @@ function PersonalProfile() {
                 <input {...register('surName')} placeholder='Фамилия' />
                 <input {...register('name')} placeholder='Имя' />
                 <input {...register('middleName')} placeholder='Отчество' />
-                {errors.exampleRequired && <span>This field is required</span>}
+                {errors.exampleRequired && <span>Это поле обязательно</span>}
                 <button type="submit">Изменить</button>
             </form>
         </>

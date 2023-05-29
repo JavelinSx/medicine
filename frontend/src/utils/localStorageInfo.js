@@ -8,6 +8,9 @@ export const getUser = JSON.parse(localStorage.getItem('user'))
 export const setUserRoleLogin = (role) => localStorage.setItem('userRoleLogin', JSON.stringify(role))
 export const getUserRoleLogin = JSON.parse(localStorage.getItem('userRoleLogin'))
 
+export const setUserAuth = (user) => localStorage.setItem('user', JSON.stringify(user))
+export const getUserAuth = JSON.parse(localStorage.getItem('user'))
+
 
 
 

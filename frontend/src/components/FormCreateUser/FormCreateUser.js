@@ -8,21 +8,28 @@ import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import {dateSend} from '../../utils/dateParsing'
+import { fetchInfoPatients } from '../../ducks/usersGet';
 function FormCreateUser({roleList}) {
 
     const dispatch = useDispatch()
     const { loadingPost, errorPost } = useSelector((state) => state.usersPost)
 
-    const {register, handleSubmit, formState: {errors}, control} = useForm({
+    const {register, handleSubmit, formState: {errors}, control, reset} = useForm({
         mode: 'onBlur'
     })
 
     const onSubmit = (info) => {
-        const infoCopy = {...info, birthDay: dateSend(info.birthDay)}
-        dispatch(fetchCreateUser({
-            infoCopy,
-            roleList,
-        }))
+
+        dispatch(
+            fetchCreateUser({
+              ...info,
+              birthDay: info.birthDay.toString(),
+              roleList,
+            })
+        )
+            .then(() => reset())
+            .then(() => dispatch(fetchInfoPatients()))
+
     }
 
     return ( 
@@ -31,9 +38,9 @@ function FormCreateUser({roleList}) {
                 <Controller
                     name='birthDay'
                     control={control}
-
                     render={({ field }) => (
                         <DatePicker
+                            defaultValue={new Date(1980,1,1)}
                             value={field.value}
                             selected={new Date()}
                             onChange={(date) => field.onChange(date)}
