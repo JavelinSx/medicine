@@ -9,8 +9,11 @@ const {
     deleteCardPatient,
     updateCardPatientFiles,
     getCardFile,
+    deleteCard,
 } = require('../controllers/cards')
 const { doctorCheck } = require('../middlewares/roleCheck')
+const {ERRORS_MESSAGE} = require('../utils/constant')
+const BadFile = require('../errors/bad_file');
 // Настройка хранилища для multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -25,38 +28,52 @@ const storage = multer.diskStorage({
         }
         cb(null, pathToDir);
       })
-
     },
     filename: (req, file, cb) => {
+
       const fileExtension = file.originalname.split('.').pop();
       const fileName = `${file.fieldname}.${fileExtension}`;
       cb(null, fileName);
-    }
+    },
+    // fileFilter: (req, file, cb) => {
+    //   // Проверка, является ли поле файлом
+    //   if (typeof req.body.fileMRT === 'string') {
+    //     // Поле является файлом
+    //     cb(null, false);
+    //   } else if (typeof req.body.fileKT === 'string') {
+    //     // Поле содержит строку
+    //     cb(null, false);
+    //   } else {
+    //     cb(null, true)
+    //   }
+    // }
+
   });
-  
-  // Проверка типов файлов (опционально)
-  const fileFilter = (req, file, cb) => {
-    // Проверьте расширение или тип файла, если это необходимо
-    // Например, можно проверить, что только MRT и KT файлы принимаются
-    // иначе вызовите cb(new Error('Invalid file type'), false);
-    cb(null, true);
-};
+
   
   // Настройка multer с использованием заданного хранилища и фильтра файлов
   const upload = multer({
     storage: storage,
-    fileFilter: fileFilter
-  });
+  }).fields([
+    { name: 'fileMRT', maxCount: 1 },
+    { name: 'fileKT', maxCount: 1 }
+  ]);
 
 router.get('/:patientId', getCardsPatient)
 router.get('/getFile/:patientId/:cardId', getCardFile)
-router.patch('/:patientId/:cardId', upload.fields([
-    { name: 'fileMRT', maxCount: 1 },
-    { name: 'fileKT', maxCount: 1 }
-  ]), updateCardPatientFiles)
+router.patch('/:patientId/:cardId', (req, res, next) => {
+  upload(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+          console.log(err)
+          next(new BadFile(ERRORS_MESSAGE.badFile.messageDefault))
+      }
+      next();
+  });
+} , updateCardPatientFiles)
 
 router.use(doctorCheck)
 
+router.post('/delete/:cardId', deleteCard)
 router.get('/all/info', getAllCardsPatients)
 router.post('/delete/:cardId', deleteCardPatient)
 router.post('/:patientId', createCard)

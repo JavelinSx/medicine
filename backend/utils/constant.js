@@ -24,6 +24,9 @@ module.exports.ERRORS_MESSAGE = {
     permissionConfilct: {
       messageDefault: 'Недостаточно прав'
     },
+    badFile: {
+      messageDefault: 'Ошибка при обработке файлов'
+    },
     defautl: {
       messageDefault: 'Ошибка сервера',
     },

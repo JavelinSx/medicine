@@ -1,10 +1,10 @@
 const fs = require('fs')
 const path = require('path')
-
+const archiver = require('archiver');
 const {ERRORS_MESSAGE} = require('../utils/constant')
 const BadRequestError = require('../errors/bad_request');
 const NotFoundError = require('../errors/not_found_error');
-
+const {searchFile} = require('../utils/searchFile')
 const Card = require('../models/card');
 const Patient = require('../models/patient');
 
@@ -15,92 +15,60 @@ module.exports.createCard = (req, res, next) => {
       Patient.findById(patientId)
         .then(() => {
             Card.create({
-                patient: patientId,
+                patientId: patientId,
                 status: 'new'
-            });
-        
-            res.send({
-                patient: patientId,
-                status: 'new',
-            });
+            })
+                .then(() => {
+                    res.send({
+                        patientId: patientId,
+                        status: 'new',
+                    });
+                })
         })
         .catch(() => {
             next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))   
         })
 }
 
-module.exports.updateCardPatient = (req, res, next) => {
-    const { date,
-            markerSA,
-            symptoms,
-            patientComment,
-            healthScore,
-            formResult } = req.formData.body.card;
-    const { cardId } = req.params
-    const { mrtFile,
-            ctFile } = req.formData
-    const mrtFileRead =  fs.readFileSync(mrtFile)
-    const ctFileRead = fs.readFileSync(ctFile)
-    console.log(req.body)    
-    Card.findByIdAndUpdate(
-        cardId,
-        {   date,
-            markerSA,
-            symptoms,
-            patientComment,
-            mrtFileRead,
-            ctFileRead,
-            healthScore,
-            formResult
-        },
-        {
-            new: true,
-            runValidators: true,
-        }
-    )
-    .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
-    .then((user) => {
-        res.send(user)
-    })
-    .catch(() => {
-        next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
-    })
-}
-
 module.exports.updateCardPatientFiles = (req, res, next) => {
 
     const {
         patientId,
-        cardId, 
+        _id, 
         dateVisit, 
         markerCA, 
         symptoms, 
         comments, 
         healthScore, 
         resultForm,
+        status,
     } = req.body
-
+    
     const {fileMRT, fileKT} = req.files
+
     let pathToDirMRT= ''
     let pathToDirKT= ''
 
     if(fileMRT){
         const fileExtension = fileMRT[0].originalname.split('.').pop();
         const fileName = `${fileMRT[0].fieldname}.${fileExtension}`;
-        pathToDirMRT = path.resolve('uploads', patientId, cardId, fileName);
-
+        pathToDirMRT = path.resolve('uploads', patientId, _id, fileName);
+    } else {
+        pathToDirMRT = req.body.fileMRT
     }
+
     if(fileKT){
         const fileExtension = fileKT[0].originalname.split('.').pop();
         const fileName = `${fileKT[0].fieldname}.${fileExtension}`;
-        pathToDirKT = path.resolve('uploads', patientId, cardId, fileName);
-
+        pathToDirKT = path.resolve('uploads', patientId, _id, fileName);
+    }else {
+        pathToDirKT = req.body.fileKT
     }
 
     Patient.findById(patientId)
         .then(() => {
             Card.findByIdAndUpdate(
-                cardId,
+                _id,
                 { 
                     dateVisit,
                     markerCA,
@@ -110,7 +78,7 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
                     resultForm,
                     fileMRT: pathToDirMRT,
                     fileKT: pathToDirKT,
-                    status: 'updated'
+                    status: status ? status : 'update'
                 },
                 {
                     new: true,
@@ -119,19 +87,31 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
             )
                 .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
                 .then(card => {
-                    console.log('hello')
                     res.send(card)
                 })
                 .catch((err) => {
-                    console.log('hello1')
                     next(err)
                 })
-        })
+            })
         .catch((err) => {
-            console.log('hello2')
             next(err)
         })
       
+}
+
+module.exports.deleteCard = (req, res, next) => {
+    const {cardId} = req.params
+    Card.findByIdAndRemove(cardId)
+        .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+        .then((card) => {
+            res.send(card)
+        })
+        .catch((err) => {
+            if (err.name === 'CastError') {
+              return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
+            }
+            return next(err);
+        });
 }
 
 module.exports.getCardsPatient = (req, res, next) => {
@@ -147,24 +127,40 @@ module.exports.getCardsPatient = (req, res, next) => {
 }
 
 module.exports.getCardFile = (req, res, next) => {
-    const {patientId, cardId} = req.params
+    const { patientId, cardId } = req.params;
     Patient.findById(patientId)
-        .then(() => {
-            Card.findById(cardId)
-                .then((card) => {
-                    if(card?.fileMRT.length > 0){
-                        const fileName = path.basename(card.fileMRT);
-                        fs.promises.readFile(card.fileMRT, 'utf-8')
-                            .then((fileContent) => {
-                                // Логика для работы с содержимым файла
-                            })
-                            .catch((err) => {
-                                // Обработка ошибки чтения файла
-                            });
-                    }
-                })
-        })
-}
+      .then(() => {
+        Card.findById(cardId)
+          .then((card) => {
+            if (card?.fileMRT.length > 0 || card?.fileKT.length > 0) {
+              const archive = archiver('zip');
+              const files = [];
+              if (card?.fileMRT.length > 0) {
+                files.push(card.fileMRT);
+              }
+  
+              if (card?.fileKT.length > 0) {
+                files.push(card.fileKT);
+              }
+  
+              files.forEach((file) => {
+                archive.file(file, { name: path.basename(file) }); // Устанавливаем имя файла в архиве
+              });
+  
+              archive.on('error', (err) => {
+                throw err;
+              });
+  
+              res.attachment('files.zip'); // Устанавливаем имя файла для скачивания
+              archive.pipe(res);
+              archive.finalize();
+            } else {
+              // Отправить сообщение, что файлов нет
+              res.send({ message: 'Файлов не найдено' });
+            }
+          });
+      });
+  };
 
 module.exports.getAllCardsPatients = (req, res, next) => {
     Card.find()

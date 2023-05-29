@@ -2,34 +2,43 @@ const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema({
     dateVisit: {
-        type: Date
+        type: Date,
+        default: new Date()
     },
     markerCA: {
-        type: Number
+        type: Number,
+        default: 0,
     },
     symptoms: {
-        type: String
+        type: String,
+        default: '',
     },
     comments: {
-        type: String
+        type: String,
+        default: '',
     },
     fileMRT: {
         type: String,
+        default: ''
     },
     fileKT: {
         type: String,
+        default: ''
     },
     healthScore: {
-        type: Number
+        type: Number,
+        default: 0,
     },
     resultForm: {
         type: Array,
+        default: [],
     },
     status: {
         type: String,
-        enum: ['new', 'updated', 'confirmed']
+        enum: ['new', 'updated', 'confirmed'],
+        default: 'new'
     },
-    patient: {
+    patientId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patient'
     },

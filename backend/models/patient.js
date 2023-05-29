@@ -15,10 +15,11 @@ const patientSchema = new mongoose.Schema({
         enum: ['male', 'female']
     },
     birthDay: {
-        type: Date,
+        type: String,
     },
     role: {
         type: String,
+        required: true,
         default: 'patient'
     },
     login:{
@@ -35,14 +36,15 @@ const patientSchema = new mongoose.Schema({
 
 patientSchema.statics.findUserByCredentials = function findPatient(login, password){
     return this.findOne({login}).select('+password')
-    .then((patient) => bcrypt
-        .compare(password, patient.password)
-        .then((matched) => {
-            if(!matched){
-                return Promise.reject(new Error('Ошибка авторизации'))
-            }
-            return patient;
-        })
+    .then((patient) => 
+        bcrypt
+            .compare(password, patient.password)
+            .then((matched) => {
+                if(!matched){
+                    return Promise.reject(new Error('Ошибка авторизации'))
+                }
+                return patient;
+            })
     )
 }
 
