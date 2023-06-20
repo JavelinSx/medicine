@@ -34,7 +34,7 @@ module.exports.loginPatient = (req, res, next) => {
                 login: user.login,
                 role: user.role,
                 name: user.name,
-                surName: user.serName,
+                surName: user.surName,
                 middleName: user.middleName,
                 gender: user.gender,
                 birthDay: user.birthDay
