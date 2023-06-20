@@ -1,0 +1,56 @@
+body {
+  margin: 0;
+  color: $secondary-color;
+}
+button {
+  font-family: 'Lato-light', sans-serif;
+}
+input {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  outline: none;
+}
+input:hover {
+  cursor: pointer;
+}
+textarea:hover {
+  cursor: pointer;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin: 0;
+  padding: 0;
+}
+textarea {
+  width: auto;
+  height: auto;
+}
+#root {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: $primary-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Lato-light', sans-serif;
+}

@@ -1,0 +1,16 @@
+.input{
+    padding: 10px;
+    border: 1px solid $border-color;
+    border-radius: .3rem;
+    color: $secondary-color;
+    font-weight: 400;
+
+    transition: all .3s;
+}
+.input:hover{
+    border: 1px solid $border-hover-color
+
+}
+.input::placeholder{
+    color: $secondary-color;
+}

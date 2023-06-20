@@ -1,0 +1,29 @@
+@import './variables';
+@import './reset';
+@import './fonts/fonts';
+
+@import './styles/Button.scss';
+@import './styles/Input.scss';
+@import './styles/ReactCalendar.scss';
+@import './styles/Error.scss';
+
+@import './components/MySelectComponent/MySelectComponent.scss';
+
+@import './components/App/App.scss';
+@import './components/Header/Header.scss';
+@import './components/Login/Login.scss';
+@import './components/Form/Form.scss';
+@import './components/ButtonLoader/ButtonLoader.scss';
+@import './components/ConfirmationDialog/ConfirmationDialog.scss';
+@import './components/SelectRole/SelectRole.scss';
+@import './components/Personal/Personal.scss';
+@import './components/ListPersonal/ListPeronsonal.scss';
+@import './components/ListPersonalItem/ListPeronslItem.scss';
+@import './components/PopupInteractionUser/PopupInteractionUser.scss';
+@import './components/PatientProfile/PatientProfile.scss';
+@import './components/Card/Card.scss';
+@import './components/FormCreateUser/FormCreateUser.scss';
+@import './components/FormCreatePersonal/FormCreatePersonal.scss';
+@import './components/PersonalProfile/PersonalProfile';
+
+@import './components/Patient/Patient.scss';

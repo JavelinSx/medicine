@@ -18,7 +18,7 @@ function CreateCard({text, onConfirm }) {
 
   return (
     <div>
-      <button onClick={handleConfirmation}>Создать карточку</button>
+      <button className='button' onClick={handleConfirmation}>Создать карточку</button>
 
       {showConfirmation && (
         <div className="confirmation-modal">

@@ -1,4 +1,4 @@
-import './App.css'
+
 import '../Login/Login'
 
 import React, {useState, useMemo, useEffect} from 'react'
@@ -41,8 +41,11 @@ function App (){
 }
 
   return (
-    <div className='App'>
-      <Header />
+    <div className='App' id='app'>
+      {
+        isAuthenticated ? <Header /> : null
+      }
+      
       <Routes>
         <Route 
           exact path='/select-role' 

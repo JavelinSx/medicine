@@ -40,9 +40,13 @@ function ButtonLoader(props) {
         setShowConfirmation(false);
     };
 
+    const handleCancel = () => {
+        setShowConfirmation(false);
+    }
+
     return ( 
         <>
-        <button onClick={handleClick}>Загрузить файл</button>
+        <button className='button button__load' onClick={handleClick}>Загрузить файл</button>
         <input 
             ref={hiddenFileInput} 
             onChange={handleChange} 
@@ -50,12 +54,12 @@ function ButtonLoader(props) {
             style={{display:'none'}}
         ></input>
         {selectedFile && (
-            <div>
-                <img className="form__image" src={selectedFile} alt="файл" />
+            <div className='button-loader__image-wrapper'>
+                <img className="button-loader__image" src={selectedFile} alt="файл" />
             </div>
         )}
         {showConfirmation && (
-        <ConfirmationDialog function={handleConfirm} />
+        <ConfirmationDialog functionConfirm={handleConfirm} functionCancel={handleCancel}/>
       )}
         </>
      );

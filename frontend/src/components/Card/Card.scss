@@ -1,0 +1,40 @@
+.card__button {
+  margin-top: 5px;
+}
+//доп классы для статуса карточки
+.card-new {
+  border: 1px solid $card-new;
+  border-radius: 0.3rem;
+  transition: 0.5s;
+}
+.card-new:hover {
+  -webkit-box-shadow: 0px 0px 10px 0px $card-new;
+  -moz-box-shadow: 0px 0px 10px 0px $card-new;
+  box-shadow: 0px 0px 10px 0px $card-new;
+  cursor: pointer;
+}
+
+.card-updated {
+  border: 1px solid $card-updated;
+  border-radius: 0.3rem;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.card-updated:hover {
+  -webkit-box-shadow: 0px 0px 10px 0px $card-updated;
+  -moz-box-shadow: 0px 0px 10px 0px $card-updated;
+  box-shadow: 0px 0px 10px 0px $card-updated;
+}
+
+.card-confirmed {
+  border: 1px solid $card-complete;
+  border-radius: 0.3rem;
+  transition: 0.5s;
+}
+
+.card-confirmed:hover {
+  -webkit-box-shadow: 0px 0px 10px 0px $card-complete;
+  -moz-box-shadow: 0px 0px 10px 0px $card-complete;
+  box-shadow: 0px 0px 10px 0px $card-complete;
+  cursor: pointer;
+}

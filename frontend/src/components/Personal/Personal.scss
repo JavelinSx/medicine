@@ -1,0 +1,11 @@
+.personal__list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.personal__list-info{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}

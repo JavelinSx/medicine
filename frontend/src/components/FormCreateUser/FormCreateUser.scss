@@ -1,0 +1,30 @@
+.form-create-user{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.form-create-user__container{
+    border: 1px solid $border-color;
+    border-radius: .3rem;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.form-create-user__wrapper-input{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.form-create-user__label-input{
+    position: absolute;
+    background-color: $primary-color;
+    z-index: 10000;
+    font-size: .7rem;
+    color: $secondary-color;
+    top: -6px;
+    left: 10px;
+    padding-left: 3px;
+    padding-right: 4px;
+}
+.form-create-user__input{
+    
+}

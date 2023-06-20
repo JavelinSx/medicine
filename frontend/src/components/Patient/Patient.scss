@@ -1,0 +1,70 @@
+.patient-me__profile {
+  display: flex;
+  flex-direction: column;
+  padding-top: 0.5rem;
+  gap: 0.5rem;
+}
+.patient-me__profile-container {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 25px;
+  border: 1px solid $border-color;
+  border-left: none;
+  border-right: none;
+  box-sizing: border-box;
+}
+.patient-me__form-card-container {
+  display: flex;
+  flex-direction: column;
+}
+.patient-me-profile__title {
+  text-align: center;
+  color: $secondary-color;
+  font-weight: 400;
+  margin: 10px;
+}
+.patient-me__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.patient-me__form-container {
+  position: relative;
+}
+
+.patient-me__form-label {
+  position: absolute;
+  background-color: $primary-color;
+  z-index: 10000;
+  font-size: 0.7rem;
+  color: $secondary-color;
+  top: -6px;
+  left: 10px;
+  padding-left: 3px;
+  padding-right: 4px;
+}
+.patient-me__form-input {
+  min-width: 260px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.patient-me__cards {
+}
+.patient-me__cards-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 0.3rem;
+}
+
+.patient-me__cards-item-status {
+  white-space: pre-line;
+  padding: 10px;
+  text-align: left;
+}
+.patient-me__cards-item-title {
+  border-radius: 0.3rem;
+  padding: 10px;
+}

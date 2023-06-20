@@ -1,0 +1,63 @@
+.react-date-picker{
+    flex-direction: column;
+    width: 100%;
+}
+.react-date-picker__wrapper{
+    border: 1px solid $secondary-color !important;
+    border-radius: .3rem;
+    min-height: 38px;
+    padding-left: 6px;
+    padding-right: 6px;
+    color: $secondary-color;
+    transition: all .3s
+}
+.react-date-picker__wrapper:hover{
+    border: 1px solid $border-hover-color !important;
+}
+.react-date-picker__calendar{
+    position: relative !important;
+    inset: 0 0 0 0 !important;
+    width: 100% !important;
+    max-width: 400px !important;
+}
+.react-calendar{
+    font-family: 'Lato-regular';
+    color: $secondary-color;
+
+    background: $primary-color !important;
+
+    border: 1px solid $secondary-color !important;
+    border-radius: .3rem;
+    width: 100% !important;
+    
+     &button{
+        border-radius: .3rem;
+     }
+
+}
+.react-calendar__navigation button:disabled{
+    background-color: $primary-color !important;
+}
+.react-calendar__navigation__arrow{
+    color: $secondary-color;
+    font-size: 2rem;
+}
+.react-calendar__navigation__label{
+    color: $secondary-color;
+    font-size: 1rem;
+}
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+    border: 1px solid $secondary-color;
+    border-radius: .3rem;
+    background-color: inherit !important;
+}
+.react-calendar__month-view__days__day--neighboringMonth{
+    color: $secondary-color !important;
+}
+.react-calendar__tile--active{
+    background: $date-select !important;
+}
+.react-calendar__tile--now{
+    background: $date-now !important;
+}

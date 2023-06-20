@@ -1,0 +1,27 @@
+.form-create-personal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.form-create-personal__container {
+  border: 1px solid $border-color;
+  border-radius: 0.3rem;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.form-create-personal__wrapper-input {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.form-create-personal__label-input {
+  position: absolute;
+  background-color: $primary-color;
+  z-index: 10000;
+  font-size: 0.7rem;
+  color: $secondary-color;
+  top: -6px;
+  left: 10px;
+  padding-left: 3px;
+  padding-right: 4px;
+}

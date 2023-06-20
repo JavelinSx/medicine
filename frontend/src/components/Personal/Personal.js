@@ -1,13 +1,12 @@
-import './Personal.css'
-import React, {useState, useMemo, useEffect} from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 
-import {  useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import ListPersonal from '../ListPersonal/ListPersonal';
 import PopupInteractionUser from '../PopupInteractionUser/PopupInteractionUser';
 import { toggleStatePatient, toggleStateDoctor, toggleStateRegistrar, toggleStateNurse } from '../../ducks/listState'
-import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars,  } from '../../ducks/usersGet';
-import {fetchGetAllCards} from '../../ducks/cards'
+import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars, } from '../../ducks/usersGet';
+import { fetchGetAllCards } from '../../ducks/cards'
 
 function Personal() {
     const dispatch = useDispatch();
@@ -43,73 +42,65 @@ function Personal() {
     }
 
     useEffect(() => {
-        if(userAuth.role!=='patient'){
-            if(patients.length===0){
+        if (userAuth.role !== 'patient') {
+            if (patients.length === 0) {
                 dispatch(fetchInfoPatients('patients'))
             }
-            if(doctors.length===0){
+            if (doctors.length === 0) {
                 dispatch(fetchInfoDoctors('doctors'));
             }
-            if(registrars.length===0){
+            if (registrars.length === 0) {
                 dispatch(fetchInfoRegistrars('registrars'));
             }
-            if(nurses.length===0){
+            if (nurses.length === 0) {
                 dispatch(fetchInfoNurses('nurses'));
-            }  
-            if(cards.length===0){
+            }
+            if (cards.length === 0) {
                 dispatch(fetchGetAllCards());
-            }  
+            }
         }
     }, []);
 
 
 
-    return ( 
-        <>
-            <PopupInteractionUser/>
-            <ListPersonal 
-                nameList={'Пациенты'} 
-                list={patients} 
-                roleList='patient' 
-                toggleListUser={toggleListPatient} 
+    return (
+        <div className='personal__list-container'>
+            <PopupInteractionUser />
+            <ListPersonal
+                nameList={'Пациенты'}
+                list={patients}
+                roleList='patient'
+                toggleListUser={toggleListPatient}
                 listState={listStatePatient}
                 updateList={updatePatientsList}
             />
-            <ListPersonal 
-                nameList={'Доктора'} 
-                list={doctors} 
-                roleList='doctor' 
-                toggleListUser={toggleListDoctor} 
+            <ListPersonal
+                nameList={'Доктора'}
+                list={doctors}
+                roleList='doctor'
+                toggleListUser={toggleListDoctor}
                 listState={listStateDoctor}
                 updateList={updateDoctorsList}
             />
-            <ListPersonal 
-                nameList={'Регистраторы'} 
-                list={registrars} 
-                roleList='registrar' 
-                toggleListUser={toggleListRegistrar} 
+            <ListPersonal
+                nameList={'Регистраторы'}
+                list={registrars}
+                roleList='registrar'
+                toggleListUser={toggleListRegistrar}
                 listState={listStateRegistrar}
                 updateList={updateRegistrarsList}
             />
-            <ListPersonal 
-                nameList={'Медсестры'} 
-                list={nurses} 
-                roleList='nurse' 
-                toggleListUser={toggleListNurse} 
+            <ListPersonal
+                nameList={'Медсестры'}
+                list={nurses}
+                roleList='nurse'
+                toggleListUser={toggleListNurse}
                 listState={listStateNurse}
                 updateList={updateNursesList}
             />
-            
-            <ul className='personal__list-info'>
-                <li>Мои данные</li>
-                <li>{userAuth.login}</li>
-                <li>{userAuth.role}</li>
-            </ul>
+        </div>
 
 
-        </>
-
-        
     );
 }
 

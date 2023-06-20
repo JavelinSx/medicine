@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAuth } from '../../ducks/auth';
 import { useNavigate } from 'react-router-dom';
 
-function Login({userRoleLogin}) {
+function Login({ userRoleLogin }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loadingAuth, errorAuth } = useSelector((state) => state.auth);
@@ -12,11 +12,7 @@ function Login({userRoleLogin}) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    dispatch(fetchAuth({login, password, userRoleLogin}))
-  };
-
-  const handleGoBack = () => {
-    navigate(-1); // перейти на предыдущую страницу
+    dispatch(fetchAuth({ login, password, userRoleLogin }))
   };
 
   const handleSelectRole = () => {
@@ -24,28 +20,30 @@ function Login({userRoleLogin}) {
   }
 
   return (
-    <div>
-      <h1>Welcome to my app</h1>
-      <form onSubmit={handleSubmit}>
+    <div className='login'>
+      <form className='login-form' onSubmit={handleSubmit}>
+
         <input
+          className='input login-form__input'
           type="text"
-          placeholder="Username"
+          placeholder="Логин"
           value={login}
           onChange={(event) => setLogin(event.target.value)}
         />
         <input
+          className='input login-form__input'
           type="password"
-          placeholder="Password"
+          placeholder="Пароль"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <button type="submit" disabled={loadingAuth}>
-          {loadingAuth ? 'Loading...' : 'Login'}
+        <button className='button' type="submit" disabled={loadingAuth}>
+          {loadingAuth ? 'Вход...' : 'Войти'}
         </button>
-        {errorAuth && <p>{errorAuth}</p>}
+        <button className='button' onClick={handleSelectRole}>Вход для персонала</button>
+        {errorAuth && <p className='error'>{errorAuth}</p>}
       </form>
-      <button onClick={handleGoBack}>Вернуться назад</button>
-      <button onClick={handleSelectRole}>Вход для персонала</button>
+
     </div>
   );
 }

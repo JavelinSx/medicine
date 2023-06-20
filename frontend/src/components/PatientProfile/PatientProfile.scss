@@ -1,0 +1,36 @@
+.patient-profile{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+}
+.patient-profile__form-container{
+    
+}
+.patient-profile__form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.patient-profile__input-wrapper{
+    position: relative;
+}
+.patient-profile__input{
+    box-sizing: border-box;
+    width: 100%;
+}
+.patient-profile__label{
+    position: absolute;
+    background-color: $primary-color;
+    z-index: 10000;
+    font-size: .7rem;
+    color: $secondary-color;
+    top: -6px;
+    left: 10px;
+    padding-left: 3px;
+    padding-right: 4px;
+}
+.patient-profile__button{
+    margin-top: 10px;
+    width: 100%;
+}

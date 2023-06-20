@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { map } from "lodash";
 import MainApi from "../utils/Api";
 import { getFileZip } from '../utils/getFileZip';
 import {
@@ -109,9 +110,14 @@ const card = createSlice({
                 state.loadingUpdate = true
             })
             .addCase(fetchGetAllCardsFromPatient.fulfilled, (state, action) => {
-                state.cardsPatient = action.payload;
+                state.cardsPatient = action.payload?.map((card) => {
+                    const colorCard = card.status==='new' ? 'card-new' : card.status==='updated' ? 'card-updated' : card.status==='confirmed' ? 'card-confirmed' : null
+                    const statusRU = card.status==='new' ? 'новая' : card.status==='updated' ? 'изменённая' : card.status==='confirmed' ? 'закрытая' : null
+                    const modifiedCard = {...card, colorCard: colorCard, statusRU: statusRU}
+                    return modifiedCard
+                });
                 state.loadingUpdate = false;
-                setCardsPatient(action.payload)
+                setCardsPatient(state.cardsPatient)
             })
             .addCase(fetchGetAllCardsFromPatient.rejected, (state, action) => {
                 state.errorUpdate = action.payload;
@@ -175,7 +181,14 @@ const card = createSlice({
                 state.loadingGet = true
             })
             .addCase(fetchGetAllCards.fulfilled, (state, action) => {
-                state.cards = action.payload;
+                state.cards = action.payload?.map((card) => {
+                    const colorCard = card.status==='new' ? 'card-new' : card.status==='updated' ? 'card-updated' : card.status==='confirmed' ? 'card-confirmed' : null
+                    const statusRU = card.status==='new' ? 'новая' : card.status==='updated' ? 'изменённая' : card.status==='confirmed' ? 'закрытая' : null
+                    const modifiedCard = {...card, colorCard: colorCard, statusRU: statusRU}
+                    console.log(statusRU, 'statusRU')
+                    console.log(modifiedCard, 'modifiedCard')
+                    return modifiedCard
+                });
                 state.loadingGet = false;
                 state.errorGet = null;
                 setCards(action.payload)

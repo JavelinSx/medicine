@@ -1,4 +1,3 @@
-import './ListPeronslItem.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,34 +8,36 @@ function ListPersonalItem({user}) {
 
     const dispatch = useDispatch()
     return ( 
-        <>
-                
-                {user.login}
-                <button 
-                    type="button" 
-                    className='button__list-item_edit button__list-item'
-                    onClick={() => dispatch(openPopup({
-                        text:`Вы хотите перейти в профиль ${user.name+' '+user.login}?`, 
-                        purpose: 'edit',
-                        user: user,
-                    }))}
-                >
-                    <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+        <div className='list-personal-item__container'>
+                <h3 className='list-personal-item__title'>{user.login}</h3>
 
-                </button>
-                <button 
-                    type="button" 
-                    className='button__list-item_delete button__list-item'
-                    onClick={() => dispatch(openPopup({
-                        text:`Вы хотите удалить ${user.name+' '+user.login}?`, 
-                        purpose: 'delete',
-                        user: user
-                    }))}
-                >
-                    <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-                </button>
+                <div className='list-personal-item__button-container'>
+                    <button 
+                        type="button" 
+                        className='button'
+                        onClick={() => dispatch(openPopup({
+                            text:`Вы хотите перейти в профиль ${user.name+' '+user.surName}?`, 
+                            purpose: 'edit',
+                            user: user,
+                        }))}
+                    >
+                        <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
 
-        </>
+                    </button>
+
+                    <button 
+                        type="button" 
+                        className='button'
+                        onClick={() => dispatch(openPopup({
+                            text:`Вы хотите удалить ${user.name+' '+user.login}?`, 
+                            purpose: 'delete',
+                            user: user
+                        }))}
+                    >
+                        <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+                    </button>
+                </div>
+        </div>
      );
 }
 
