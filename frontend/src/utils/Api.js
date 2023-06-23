@@ -1,46 +1,46 @@
-import {urlDev} from './constant'
+import { urlProd } from './constant'
 
 class Api {
 
-    constructor(baseUrl, headers){
+    constructor(baseUrl, headers) {
         this._baseUrl = baseUrl;
         this._headers = headers;
     }
 
-    async _request({url, options}){
+    async _request({ url, options }) {
 
-            const response = await fetch(this._baseUrl + url, options)
-            if (options.responseType === 'arraybuffer'){
-                const responseArrayBuffer = await response.arrayBuffer()
-                return new Promise((resolve, reject) => {
-                    responseArrayBuffer.message ? reject(responseArrayBuffer.message) : resolve(responseArrayBuffer)
-                })
-            } else{
-                const responseJson = await response.json()
-                return new Promise((resolve, reject) => {
-                    responseJson.message ? reject(responseJson.message) : resolve(responseJson)
-                })
-            }
+        const response = await fetch(this._baseUrl + url, options)
+        if (options.responseType === 'arraybuffer') {
+            const responseArrayBuffer = await response.arrayBuffer()
+            return new Promise((resolve, reject) => {
+                responseArrayBuffer.message ? reject(responseArrayBuffer.message) : resolve(responseArrayBuffer)
+            })
+        } else {
+            const responseJson = await response.json()
+            return new Promise((resolve, reject) => {
+                responseJson.message ? reject(responseJson.message) : resolve(responseJson)
+            })
+        }
     }
 
-    login(data){
-        const {login, password, userRoleLogin} = data
-        console.log(JSON.stringify({login, password}))
+    login(data) {
+        const { login, password, userRoleLogin } = data
+        console.log(JSON.stringify({ login, password }))
         return this._request({
             url: `/signin/${userRoleLogin}`,
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
-                body: JSON.stringify({login, password})
+                body: JSON.stringify({ login, password })
             }
         })
     }
 
-    logout(){
+    logout() {
         return this._request({
             url: '/signout',
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
@@ -48,10 +48,10 @@ class Api {
         })
     }
 
-    getUser(role){
+    getUser(role) {
         return this._request({
             url: `/info/${role}`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -59,10 +59,10 @@ class Api {
         })
     }
 
-    getPatients(){
+    getPatients() {
         return this._request({
             url: `/info-all/patients`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -70,10 +70,10 @@ class Api {
         })
     }
 
-    getDoctors(){
+    getDoctors() {
         return this._request({
             url: `/info-all/doctors`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -81,10 +81,10 @@ class Api {
         })
     }
 
-    getRegistrars(){
+    getRegistrars() {
         return this._request({
             url: `/info-all/registrars`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -92,10 +92,10 @@ class Api {
         })
     }
 
-    getNurses(){
+    getNurses() {
         return this._request({
             url: `/info-all/nurses`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -103,12 +103,12 @@ class Api {
         })
     }
 
-    createUser(data){
-        const{roleList} = data
+    createUser(data) {
+        const { roleList } = data
         console.log(data)
         return this._request({
             url: `/create/${roleList}`,
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
@@ -117,11 +117,11 @@ class Api {
         })
     }
 
-    deleteUser(data){
+    deleteUser(data) {
         console.log(data)
         return this._request({
             url: `/delete/${data.role}/${data._id}`,
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
@@ -129,12 +129,12 @@ class Api {
         })
     }
 
-    updateUser(data){
-        const {updatedUser, updatedData} = data
+    updateUser(data) {
+        const { updatedUser, updatedData } = data
         console.log(updatedData)
         return this._request({
             url: `/update/${updatedUser.role}/${updatedUser._id}`,
-            options:{
+            options: {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: this._headers,
@@ -143,10 +143,10 @@ class Api {
         })
     }
 
-    createCard(id){
+    createCard(id) {
         return this._request({
             url: `/cards/${id}`,
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
@@ -155,10 +155,10 @@ class Api {
         })
     }
 
-    deleteCard(id){
+    deleteCard(id) {
         return this._request({
             url: `/cards/delete/${id}`,
-            options:{
+            options: {
                 method: 'POST',
                 credentials: 'include',
                 headers: this._headers,
@@ -167,10 +167,10 @@ class Api {
         })
     }
 
-    getCards(){
+    getCards() {
         return this._request({
             url: `/cards/all/info`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -178,10 +178,10 @@ class Api {
         })
     }
 
-    getCardsPatient(data){
+    getCardsPatient(data) {
         return this._request({
             url: `/cards/${data}`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -189,11 +189,11 @@ class Api {
         })
     }
 
-    getCardFile(data){
-        const{cardId, patientId} = data
+    getCardFile(data) {
+        const { cardId, patientId } = data
         return this._request({
             url: `/cards/getFile/${patientId}/${cardId}`,
-            options:{
+            options: {
                 method: 'GET',
                 credentials: 'include',
                 headers: this._headers,
@@ -202,13 +202,13 @@ class Api {
         })
     }
 
-    updateCard(data){
+    updateCard(data) {
         const cardId = data.get('_id')
         const patientId = data.get('patientId')
         delete this._headers['Content-Type'];
         return this._request({
             url: `/cards/${patientId}/${cardId}`,
-            options:{
+            options: {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: this._headers,
@@ -219,11 +219,11 @@ class Api {
 }
 
 const MainApi = new Api(
-    urlDev,
+    urlProd,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: urlDev,
+        Origin: urlProd,
     }
 )
 
