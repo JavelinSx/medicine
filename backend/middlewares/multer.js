@@ -12,24 +12,21 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 const getFiles = upload.fields([
-{ name: 'fileMRT', maxCount: 1 },
-{ name: 'fileKT', maxCount: 1 }
+  { name: 'fileMRT', maxCount: 1 },
+  { name: 'fileKT', maxCount: 1 }
 ]);
 
 module.exports.files = (req, res, next) => {
 
-    getFiles(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-        // A Multer error occurred when uploading.
-        next(err);
-        } else if (err) {
-        // An unknown error occurred when uploading.
-        next(err);
-        }
-        console.log(storage.destination)
-        console.log(storage.filename)
-
-        next();
-        // Everything went fine.
-    });
+  getFiles(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading.
+      next(err);
+    } else if (err) {
+      // An unknown error occurred when uploading.
+      next(err);
+    }
+    next();
+    // Everything went fine.
+  });
 };

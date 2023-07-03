@@ -1,5 +1,5 @@
 const formidable = require('formidable');
-const {ERRORS_MESSAGE} = require('../utils/constant')
+const { ERRORS_MESSAGE } = require('../utils/constant')
 const BadRequestError = require('../errors/bad_request');
 const path = require('path');
 const fs = require('fs');
@@ -11,7 +11,7 @@ module.exports.uploadFormidable = (req, res, next) => {
         if (err) {
             return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
         }
-        const {cardId} = fields
+        const { cardId } = fields
         const fileKeys = Object.keys(files)
 
         req.body = fields
@@ -39,7 +39,7 @@ module.exports.uploadFormidable = (req, res, next) => {
         })
 
         Promise.all(filePromises)
-            .then(() => {console.log('hello'); next()})
+            .then(() => next())
             .catch((err) => next(new BadRequestError(err)))
     })
 }

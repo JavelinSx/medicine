@@ -14,11 +14,8 @@ const Admin = require('../models/admin')
 
 module.exports.loginAdmin = (req, res, next) => {
     const { login, password } = req.body;
-    // bcryptjs.hash('test',10)
-    //     .then((data) => console.log(data))
 
     Admin.findUserByCredentials(login, password)
-        .orFail(() => this.registerAdmin(req, res, next))
         .then((user) => {
 
             const token = jwt.sign(

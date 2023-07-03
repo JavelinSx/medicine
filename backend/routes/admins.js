@@ -44,8 +44,8 @@ const {
     getFileCard
 } = require('../controllers/cards')
 
-const {uploadFormidable} = require('../middlewares/formidable')
-const {adminCheck} = require('../middlewares/roleCheck')
+const { uploadFormidable } = require('../middlewares/formidable')
+const { adminCheck } = require('../middlewares/roleCheck')
 
 router.patch('/update-card-file', uploadFormidable, updateCardPatientFiles)
 router.get('/uploads/:cardId/:fileName', getFileCard);
@@ -65,12 +65,6 @@ router.get('/get-nurses', getNurses)
 router.get('/get-registrars', getRegistrars)
 router.get('/get-patients', getPatients)
 
-
-// router.get('/doctor/profile', getDoctor)
-// router.get('/nurse/profile', getNurse)
-// router.get('/registrar/profile', getRegistrar)
-// router.get('/patient/profile', getPatient)
-
 router.patch('/update-admin/:id', updateAdmin)
 router.patch('/update-doctor/:id', updateDoctor)
 router.patch('/update-nurse/:id', updateNurse)
@@ -87,6 +81,5 @@ router.get('/patient-card/:patientId', getCardsPatient)
 router.get('/all/cards-patients', getAllCardsPatients)
 router.post('/delete-card/:cardId', deleteCardPatient)
 router.post('/create-card/:patientId', createCard)
-// router.patch('/update-card/:cardId', updateCardPatient)
 
 module.exports = router

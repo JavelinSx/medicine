@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 
 module.exports.cleanDir = async (req, res, next) => {
     const { fileKT, fileMRT, patientId, _id } = req.body;
-    console.log(req.body)
+
     const folderPath = path.resolve('uploads', patientId, _id);
     let isFileMRTProcessed = false;
     let isFileKTProcessed = false;

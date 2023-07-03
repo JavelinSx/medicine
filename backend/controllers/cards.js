@@ -131,7 +131,6 @@ module.exports.getCardFile = (req, res, next) => {
         .then(() => {
             Card.findById(cardId)
                 .then((card) => {
-                    console.log(card)
                     if (card?.fileMRT.length > 0 || card?.fileKT.length > 0) {
                         const archive = archiver('zip');
                         const files = [];
