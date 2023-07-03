@@ -219,11 +219,11 @@ class Api {
 }
 
 const MainApi = new Api(
-    urlDev,
+    urlProd,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: urlDev,
+        Origin: urlProd,
     }
 )
 
