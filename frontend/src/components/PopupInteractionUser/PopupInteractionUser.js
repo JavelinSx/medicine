@@ -1,45 +1,42 @@
 import { createPortal } from 'react-dom';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {dismissPopup} from '../../ducks/popupInteractionUser'
-import {setUserInfo} from '../../ducks/auth'
+import { dismissPopup } from '../../ducks/popupInteractionUser'
+import { setUserInfo } from '../../ducks/auth'
 import { fetchDeletePatient } from '../../ducks/usersDelete';
 import { setUserUpdated } from '../../ducks/usersUpdate';
 import { fetchGetAllCards, fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
-import {fetchDeleteCard} from '../../ducks/cards'
-import {useNavigate} from 'react-router-dom'
+import { fetchDeleteCard } from '../../ducks/cards'
+import { useNavigate } from 'react-router-dom'
 const PopupInteractionUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
-    const {card} = useSelector((state) => state.cards)
-    const {isOpen, text, purpose, user} = useSelector((state) => state.popupInteractionUser)
+
+    const { card } = useSelector((state) => state.cards)
+    const { isOpen, text, purpose, user } = useSelector((state) => state.popupInteractionUser)
 
     const handleConfirm = () => {
 
-        if(purpose==='edit'){
+        if (purpose === 'edit') {
             const pathPatient = `/profile/patient/${user._id}`
             const pathPersonal = `/profile/personal/${user._id}`
             dispatch(setUserUpdated(user))
-            user.role==='patient' ? navigate(pathPatient) : navigate(pathPersonal)
+            user.role === 'patient' ? navigate(pathPatient) : navigate(pathPersonal)
 
         }
 
-        if(purpose==='delete'){
-
+        if (purpose === 'delete') {
             dispatch(fetchDeletePatient(user))
-
         }
 
-        if(purpose==='create'){
+        if (purpose === 'create') {
             dispatch(fetchCreateCard(user._id))
                 .then(() => {
                     dispatch(fetchGetAllCardsFromPatient(user._id))
                 })
-
         }
 
-        if(purpose==='delete-card'){
+        if (purpose === 'delete-card') {
             dispatch(fetchDeleteCard(card._id))
         }
 
@@ -49,7 +46,7 @@ const PopupInteractionUser = () => {
     const handleCancel = () => {
         dispatch(dismissPopup())
     };
-    console.log(isOpen)
+
     return isOpen
         ? createPortal(
             <div className="popup-interaction-user">

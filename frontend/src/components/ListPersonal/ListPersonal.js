@@ -37,7 +37,6 @@ function ListPersonal({ nameList, roleList, list, listState, toggleListUser, upd
         {
           listState ?
             <>
-              <button className='button list-personal__button' onClick={updateList}>Обновить список</button>
               <button className='button list-personal__button' onClick={toggleCreateUser}>Создать пользователя</button>
               {
                 createState ?

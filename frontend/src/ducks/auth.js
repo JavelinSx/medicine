@@ -20,11 +20,9 @@ const initialState = {
 };
 
 export const fetchAuth = createAsyncThunk(LOGIN_FETCH, async (data) => {
-  console.log(data)
   return await MainApi.login(data)
     .then((user) => user)
     .catch((err) => { throw err })
-
 })
 
 export const fetchCookie = createAsyncThunk(AUTH_FETCH, async (data) => {
@@ -43,9 +41,15 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+
     setUserInfo: (state, action) => {
       state.user = action.payload.user
+    },
+
+    resetErrorAuth: (state, action) => {
+      state.errorAuth = null
     }
+
   },
   extraReducers: builder => {
     builder
@@ -102,5 +106,5 @@ const authSlice = createSlice({
       })
   }
 })
-export const { setUserInfo } = authSlice.actions;
+export const { setUserInfo, resetErrorAuth } = authSlice.actions;
 export default authSlice.reducer

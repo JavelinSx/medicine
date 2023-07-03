@@ -67,4 +67,9 @@
 .patient-me__cards-item-title {
   border-radius: 0.3rem;
   padding: 10px;
+  padding-top: 50px;
+  padding-bottom: 30px;
+  &:hover {
+    cursor: pointer;
+  }
 }

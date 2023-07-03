@@ -1,13 +1,21 @@
-.App{
-    display: flex;
-    flex-direction: column;
-    padding-top: 30px;
-    padding-bottom: 30px;
-    min-height: 100vh;
-    max-width: 420px;
-    min-width: 300px;
-    box-sizing: border-box;
-    justify-content: center;
-    position: relative;
-}
+.App {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  min-height: 100vh;
+  width: 285px;
+  box-sizing: border-box;
+  justify-content: center;
+  position: relative;
+  transition: width 0.5s;
 
+  @include respond-to($breakpoint-small) {
+    width: 73%;
+    min-width: 285px;
+  }
+  @include respond-to($breakpoint-medium) {
+    width: 85%;
+    max-width: 420px;
+  }
+}

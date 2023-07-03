@@ -1,36 +1,60 @@
-.patient-profile{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    box-sizing: border-box;
+.patient-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
 }
-.patient-profile__form-container{
-    
+.patient-profile__profile {
+  border: 1px solid $border-color;
+  border-radius: 0.3rem;
+  padding: 10px;
+  margin-bottom: 10px;
 }
-.patient-profile__form{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.patient-profile__cards {
+  border: 1px solid $border-color;
+  border-radius: 0.3rem;
+  padding: 10px;
+  margin-bottom: 10px;
 }
-.patient-profile__input-wrapper{
-    position: relative;
+.patient-profile__title {
+  text-align: center;
+  line-height: 2rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $border-color;
 }
-.patient-profile__input{
-    box-sizing: border-box;
-    width: 100%;
+.patient-profile__cards-title {
+  text-align: center;
+  line-height: 2rem;
+  margin: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid $border-color;
 }
-.patient-profile__label{
-    position: absolute;
-    background-color: $primary-color;
-    z-index: 10000;
-    font-size: .7rem;
-    color: $secondary-color;
-    top: -6px;
-    left: 10px;
-    padding-left: 3px;
-    padding-right: 4px;
+.patient-profile__form-container {
 }
-.patient-profile__button{
-    margin-top: 10px;
-    width: 100%;
+.patient-profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.patient-profile__input-wrapper {
+  position: relative;
+}
+.patient-profile__input {
+  box-sizing: border-box;
+  width: 100%;
+}
+.patient-profile__label {
+  position: absolute;
+  background-color: $primary-color;
+  z-index: 10000;
+  font-size: 0.7rem;
+  color: $secondary-color;
+  top: -6px;
+  left: 10px;
+  padding-left: 3px;
+  padding-right: 4px;
+}
+.patient-profile__button {
+  width: 100%;
 }

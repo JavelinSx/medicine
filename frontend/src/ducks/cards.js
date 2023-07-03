@@ -19,16 +19,19 @@ const CARD_UPDATE_FETCH = 'card/update'
 const GET_CARDS_PATIENT_FETCH = 'card/patient'
 // здесь в полученной карточке, мы смотрим resultForm['1,2,2,1,1'] содержащий строку, конвертируем в массив чисел
 const parseArray = (obj) => {
-    if (obj.resultForm.length>0) {
-      const resultFormString = obj.resultForm[0];
-      const resultFormArray = resultFormString.split(',');
-      const resultFormNumbers = resultFormArray.map(Number);
-  
-      return { ...obj, resultForm: resultFormNumbers };
+
+    if (obj.resultForm.length > 0) {
+
+        const resultFormString = obj.resultForm[0];
+        const resultFormArray = resultFormString.split(',');
+        const resultFormNumbers = resultFormArray.map(Number);
+
+        return { ...obj, resultForm: resultFormNumbers };
+
     }
-  
+
     return obj;
-  };
+};
 
 const initialState = {
     card: getCard || {},
@@ -38,50 +41,49 @@ const initialState = {
     createdCard: null,
     deletedCard: {},
     selectedCard: null,
-
 }
 
 export const fetchGetCardFile = createAsyncThunk(
     GET_CARD_FETCH,
     async (data) => {
-      try {
-        const response = await MainApi.getCardFile(data);
-        const fileData = await getFileZip(response); // Передаем response напрямую в getFileZip
-        return fileData;
-      } catch (error) {
-        throw error;
-      }
+        try {
+            const response = await MainApi.getCardFile(data);
+            const fileData = await getFileZip(response); // Передаем response напрямую в getFileZip
+            return fileData;
+        } catch (error) {
+            throw error;
+        }
     }
 );
 
-export const fetchGetAllCardsFromPatient = createAsyncThunk(GET_CARDS_PATIENT_FETCH, async(data) => {
+export const fetchGetAllCardsFromPatient = createAsyncThunk(GET_CARDS_PATIENT_FETCH, async (data) => {
     return await MainApi.getCardsPatient(data)
         .then((cards) => cards)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
-export const fetchGetAllCards = createAsyncThunk(GET_ALL_CARDS_FETCH, async() => {
+export const fetchGetAllCards = createAsyncThunk(GET_ALL_CARDS_FETCH, async () => {
     return await MainApi.getCards()
         .then((card) => card)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
-export const fetchDeleteCard = createAsyncThunk(DELETE_CARD_FETCH, async(data) => {
+export const fetchDeleteCard = createAsyncThunk(DELETE_CARD_FETCH, async (data) => {
     return await MainApi.deleteCard(data)
         .then((cards) => cards)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
-export const fetchCreateCard = createAsyncThunk(CREATE_CARD_FETCH, async(id) => {
+export const fetchCreateCard = createAsyncThunk(CREATE_CARD_FETCH, async (id) => {
     return MainApi.createCard(id)
         .then((user) => user)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
-export const fetchUpdateCard = createAsyncThunk(CARD_UPDATE_FETCH, async(data) => {
+export const fetchUpdateCard = createAsyncThunk(CARD_UPDATE_FETCH, async (data) => {
     return await MainApi.updateCard(data)
         .then((user) => user)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
 
@@ -89,7 +91,7 @@ export const fetchUpdateCard = createAsyncThunk(CARD_UPDATE_FETCH, async(data) =
 const card = createSlice({
     name: 'card',
     initialState,
-    reducers:{
+    reducers: {
         selectCard: (state, action) => {
 
             const updatedCard = parseArray(action.payload[0]);
@@ -99,21 +101,21 @@ const card = createSlice({
                 previewFileMRT: state.cardFiles?.fileMRT,
                 previewFileKT: state.cardFiles?.fileKT,
             }
-            state.selectedCard = state.selectedCard === cardId ? null : cardId;  
-            setCard(state.selectedCard);   
+            state.selectedCard = state.selectedCard === cardId ? null : cardId;
+            setCard(state.selectedCard);
         },
     },
     extraReducers: builder => {
         builder
-        //fetchCreatePatient
+            //fetchCreatePatient
             .addCase(fetchGetAllCardsFromPatient.pending, (state, action) => {
                 state.loadingUpdate = true
             })
             .addCase(fetchGetAllCardsFromPatient.fulfilled, (state, action) => {
                 state.cardsPatient = action.payload?.map((card) => {
-                    const colorCard = card.status==='new' ? 'card-new' : card.status==='updated' ? 'card-updated' : card.status==='confirmed' ? 'card-confirmed' : null
-                    const statusRU = card.status==='new' ? 'новая' : card.status==='updated' ? 'изменённая' : card.status==='confirmed' ? 'закрытая' : null
-                    const modifiedCard = {...card, colorCard: colorCard, statusRU: statusRU}
+                    const colorCard = card.status === 'new' ? 'card-new' : card.status === 'updated' ? 'card-updated' : card.status === 'confirmed' ? 'card-confirmed' : null
+                    const statusRU = card.status === 'new' ? 'новая' : card.status === 'updated' ? 'изменённая' : card.status === 'confirmed' ? 'закрытая' : null
+                    const modifiedCard = { ...card, colorCard: colorCard, statusRU: statusRU }
                     return modifiedCard
                 });
                 state.loadingUpdate = false;
@@ -122,8 +124,8 @@ const card = createSlice({
             .addCase(fetchGetAllCardsFromPatient.rejected, (state, action) => {
                 state.errorUpdate = action.payload;
                 state.loadingUpdate = false;
-            })  
-        //fetchCreatePatient
+            })
+            //fetchCreatePatient
             .addCase(fetchUpdateCard.pending, (state, action) => {
                 state.loadingUpdate = true
             })
@@ -134,8 +136,8 @@ const card = createSlice({
             .addCase(fetchUpdateCard.rejected, (state, action) => {
                 state.errorUpdate = action.payload;
                 state.loadingUpdate = false;
-            })   
-        //fetchCreateCard
+            })
+            //fetchCreateCard
             .addCase(fetchCreateCard.pending, (state, action) => {
                 state.loadingPost = true
             })
@@ -148,7 +150,7 @@ const card = createSlice({
                 state.errorPost = action.error.message;
                 state.loadingPost = false;
             })
-        //fetchGetAllCards
+            //fetchGetAllCards
             .addCase(fetchDeleteCard.pending, (state, action) => {
                 state.loadingGet = true
             })
@@ -161,7 +163,7 @@ const card = createSlice({
                 state.errorGet = action.error.message;
                 state.loadingGet = false;
             })
-        //fetchGetCardFile
+            //fetchGetCardFile
             .addCase(fetchGetCardFile.pending, (state, action) => {
                 state.loadingGet = true
             })
@@ -176,15 +178,15 @@ const card = createSlice({
                 state.errorGet = action.error.message;
                 state.loadingGet = false;
             })
-        //fetchGetAllCards
+            //fetchGetAllCards
             .addCase(fetchGetAllCards.pending, (state, action) => {
                 state.loadingGet = true
             })
             .addCase(fetchGetAllCards.fulfilled, (state, action) => {
                 state.cards = action.payload?.map((card) => {
-                    const colorCard = card.status==='new' ? 'card-new' : card.status==='updated' ? 'card-updated' : card.status==='confirmed' ? 'card-confirmed' : null
-                    const statusRU = card.status==='new' ? 'новая' : card.status==='updated' ? 'изменённая' : card.status==='confirmed' ? 'закрытая' : null
-                    const modifiedCard = {...card, colorCard: colorCard, statusRU: statusRU}
+                    const colorCard = card.status === 'new' ? 'card-new' : card.status === 'updated' ? 'card-updated' : card.status === 'confirmed' ? 'card-confirmed' : null
+                    const statusRU = card.status === 'new' ? 'новая' : card.status === 'updated' ? 'изменённая' : card.status === 'confirmed' ? 'закрытая' : null
+                    const modifiedCard = { ...card, colorCard: colorCard, statusRU: statusRU }
                     console.log(statusRU, 'statusRU')
                     console.log(modifiedCard, 'modifiedCard')
                     return modifiedCard

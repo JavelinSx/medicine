@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAuth } from '../../ducks/auth';
+import { fetchAuth, resetErrorAuth } from '../../ducks/auth';
 import { useNavigate } from 'react-router-dom';
 
 function Login({ userRoleLogin }) {
@@ -16,6 +16,7 @@ function Login({ userRoleLogin }) {
   };
 
   const handleSelectRole = () => {
+    dispatch(resetErrorAuth())
     navigate('/select-role')
   }
 

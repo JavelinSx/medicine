@@ -1,4 +1,4 @@
-import { urlProd } from './constant'
+import { urlProd, urlDev } from './constant'
 
 class Api {
 
@@ -25,7 +25,7 @@ class Api {
 
     login(data) {
         const { login, password, userRoleLogin } = data
-        console.log(JSON.stringify({ login, password }))
+
         return this._request({
             url: `/signin/${userRoleLogin}`,
             options: {
@@ -219,11 +219,11 @@ class Api {
 }
 
 const MainApi = new Api(
-    urlProd,
+    urlDev,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: urlProd,
+        Origin: urlDev,
     }
 )
 

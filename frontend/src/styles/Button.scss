@@ -1,27 +1,42 @@
 .button {
-    display: inline-block;
-    padding: 8px 20px;
-    background-color: $primary-color;
-    border: 1px solid $border-color;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 1rem;
+  display: inline-block;
+  padding: 8px 20px;
+  background-color: $primary-color;
+  border: 1px solid $border-color;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
 
-    &:hover {
-      background-color: lighten($primary-color, 10%);
-    }
-  
-    &:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-  
-    &.clicked {
-      background-color: $accent-color;
-    }
+  &:hover {
+    background-color: lighten($primary-color, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.clicked {
+    background-color: $accent-color;
+  }
 }
-.button__load{
+.button__load {
   width: 100%;
+}
+.button__profile {
+  width: 100px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+}
+.button__delete {
+  padding: 4px 10px;
+  position: absolute;
+  right: 20px;
+  background-color: $error-color;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: lighten($error-color, 10%);
+  }
 }

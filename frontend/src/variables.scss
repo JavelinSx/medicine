@@ -13,6 +13,14 @@ $card-new: rgb(127, 219, 255);
 
 $error-color: #de6f63;
 
-$bs: 320px;
-$bm: 768px;
-$bl: 1080px;
+$breakpoint-small: 320px;
+$breakpoint-medium: 480px;
+$breakpoint-large: 768px;
+$breakpoint-xlarge: 992px;
+$breakpoint-xxlarge: 1200px;
+
+@mixin respond-to($breakpoint) {
+  @media screen and (min-width: $breakpoint) {
+    @content;
+  }
+}

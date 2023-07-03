@@ -1,6 +1,5 @@
 import React from 'react';
 import DatePicker from 'react-date-picker';
-import DropZone from '../DropZone/DropZone';
 import { useEffect, useState, useRef } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 import { checkBoxData } from '../../utils/constant';
@@ -69,20 +68,16 @@ const Form = () => {
   };
 
   const onSubmit = (data) => {
+
     const formData = new FormData()
 
     data = {
       ...data,
-
       resultForm: selectedCheckboxes
     }
-    console.log(data)
+
     const filePromises = [];
-    //здесь необходима логика преобразования blob в File,
-    // для случая, если пользователь загрузил свою карточку
-    // и либо изменил одну из картинок, либо не изменял их вовсе
-    // тогда на вход FormData будет поуступать blob(так как присутствует предварительный просмотр),
-    // который мы должны конвертировать в File, для успешной обработки на сервере.
+
     Object.keys(data).forEach((key) => {
 
       if (typeof data[key] === 'string' && data[key].includes('blob')) {
@@ -122,7 +117,8 @@ const Form = () => {
       {
 
         userAuth.role !== 'patient' ?
-          <div>
+          <div className='form__container'>
+            <label className='form__label'>Статус карточки</label>
             <Controller
               name='status'
               control={control}
@@ -140,18 +136,13 @@ const Form = () => {
                 />
               )}
             />
-            {/* <select {...register('status')}>
-              <option value="new">Пустая</option>
-              <option value="updated">Частично заполненная</option>
-              <option value="confirmed">Подтверждённая и закрытая</option>
-          </select> */}
           </div>
           :
           null
       }
 
       <div className='form__container'>
-        <label className='form__label'>Дата рождения</label>
+        <label className='form__label'>Дата визита</label>
         <Controller
           name="dateVisit"
           control={control}
@@ -167,13 +158,11 @@ const Form = () => {
       </div>
 
       <div className='form__container'>
-        <label className='form__label'>Маркер СА</label>
+        <label className='form__label'>Онкомаркер СА-125</label>
         <input
           className='input form__input'
           type="number"
-
           {...register('markerCA')}
-
         />
       </div>
 
@@ -181,7 +170,6 @@ const Form = () => {
         <label className='form__label'>Симптомы</label>
         <textarea
           className='input form__input form__textarea'
-
           {...register('symptoms')}
         />
       </div>
@@ -190,7 +178,6 @@ const Form = () => {
         <label className='form__label'>Комментарии для врача</label>
         <textarea
           className='input form__input form__textarea'
-
           {...register('comments')}
         />
       </div>
@@ -224,12 +211,13 @@ const Form = () => {
         />
         {errors.fileKT && <span>{errors.fileKT.message}</span>}
       </div>
+
       <div className='form__checkboxs-wrapper'>
         <h2 className='form__label-survey'> Анкета здоровья </h2>
         <ul className='form__checkboxs'>
           {checkBoxData.map((group, groupIndex) => (
             <li className='form__checkboxs-item' key={groupIndex}>
-              <h3 className='form__checkboxs-title'>{group.nameGroup}</h3>
+              <h4 className='form__checkboxs-title'>{group.nameGroup}</h4>
               {group.boxes.map((box, checkboxIndex) => (
                 <div className='form__checkboxs-wrapper-input' key={checkboxIndex}>
                   <input
@@ -244,11 +232,6 @@ const Form = () => {
                   <label className='form__checkboxs-label' htmlFor={`checkbox-${groupIndex}-${checkboxIndex}`}>{Object.values(box)[0]}</label>
                 </div>
               ))}
-              {errors.resultForm &&
-                errors.resultForm[groupIndex] &&
-                errors.resultForm[groupIndex].type === 'validate' && (
-                  <span>Выберите хотябы один пункт из группы</span>
-                )}
             </li>
           ))}
         </ul>
@@ -257,7 +240,7 @@ const Form = () => {
 
       <div className='form__container-range'>
         <div className='form__container form__range'>
-          <label>Шкала здоровья</label>
+          <label className='form__range-title'>Шкала здоровья</label>
           <input
             {...register('healthScore')}
             className='form__input-range'
@@ -271,13 +254,15 @@ const Form = () => {
           />
           <div className='form__number-range-view'>
             <span className='form__number-range-value'>0</span>
+
             <span className='form__number-range-value'>50</span>
+
             <span className='form__number-range-value'>100</span>
           </div>
         </div>
 
         <div className='form__container form__range-number'>
-          <label>Ваши очки здоровья: </label>
+          <label className='form__range-title'>Ваши очки здоровья: </label>
           <input
             {...register('healthScore')}
             type="number"
@@ -292,18 +277,16 @@ const Form = () => {
       </div>
 
       <div>
-        {
-          (userAuth.role === 'patient' && card.status === 'confirmed') ?
-            <span>Карточка подтверждена врачом и закрыта</span>
-            :
-            null
-        }
-
         <button
           className='button form__button'
           type="submit"
           disabled={(userAuth.role === 'patient' && card.status === 'confirmed') || Object.values(errorsFiles)[0]?.length > 0 ? 'disabled' : undefined}
-        >Сохранить данные карточки
+        > {
+            (userAuth.role === 'patient' && card.status === 'confirmed') ?
+              <span>Карточка подтверждена врачом и закрыта</span>
+              :
+              'Сохранить данные карточки'
+          }
         </button>
       </div>
     </form>
