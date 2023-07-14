@@ -15,7 +15,6 @@ function Cards() {
     const { user } = useSelector((state) => state.popupInteractionUser)
 
     useEffect(() => {
-        console.log(cardsPatient)
         if (user?._id) {
             dispatch(fetchGetAllCardsFromPatient(user?._id))
         }

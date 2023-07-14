@@ -17,7 +17,7 @@ function FormCreateUser({ roleList }) {
     const dispatch = useDispatch()
     const { patientsLogins } = useSelector((state) => state.usersGet)
     const { loadingPost, errorPost } = useSelector((state) => state.usersPost)
-    const { register, handleSubmit, formState: { errors }, control, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues, reset } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
     })
@@ -27,38 +27,34 @@ function FormCreateUser({ roleList }) {
 
     const onSubmit = async (info) => {
         try {
-            dispatch(
+            await dispatch(
                 fetchCreateUser({
                     ...info,
                     birthDay: info.birthDay.toString(),
                     roleList,
                 })
             )
-                .then((data) => {
+            if (errorPost) {
+                setErrorViewServerMessage(true)
+                setTimeout(() => {
+                    setErrorViewServerMessage(false)
+                }, 5000)
+            } else {
+                reset()
+                setSuccessfullyCreateMessage(true)
+                setTimeout(() => {
+                    setSuccessfullyCreateMessage(false)
+                }, 5000)
+                dispatch(fetchInfoPatients())
+            }
 
-                    if (data.type.includes('fulfilled')) {
-                        reset()
-                        setSuccessfullyCreateMessage(true)
-                        setTimeout(() => {
-                            setSuccessfullyCreateMessage(false)
-                        }, 5000)
-                        dispatch(fetchInfoPatients())
-                    }
-
-                    if (errorPost) {
-                        setErrorViewServerMessage(true)
-                        setTimeout(() => {
-                            setErrorViewServerMessage(false)
-                        }, 5000)
-                    }
-                })
         } catch (error) {
             console.log(error)
         }
     }
 
     return (
-        <FormProvider {...{ formState: { errors }, register }}>
+        <FormProvider {...{ register, handleSubmit, formState: { errors }, control, watch, setValue, getValues }}>
             <div className='form-create-user__container'>
                 <form className='form-create-user' onSubmit={handleSubmit(onSubmit)}>
 
@@ -81,21 +77,17 @@ function FormCreateUser({ roleList }) {
 
                     <div className='form-create-user__wrapper-input'>
                         <label className="form-create-user__label-input">Пол</label>
-                        <Controller
+                        <MySelectComponent
                             name='gender'
-                            control={control}
-                            render={({ field }) => (
-                                <MySelectComponent
-                                    {...field}
-                                    optionsProps={
-                                        [
-                                            { value: 'male', label: 'Муж.' },
-                                            { value: 'female', label: 'Жен.' },
-                                        ]
-                                    }
-                                />
-                            )}
+                            defaultValue={'male'}
+                            optionsProps={
+                                [
+                                    { value: 'male', label: 'Муж.' },
+                                    { value: 'female', label: 'Жен.' },
+                                ]
+                            }
                         />
+
                     </div>
 
                     <InputText

@@ -23,7 +23,7 @@ function HelpPopup() {
     const [successfullyCreateMessage, setSuccessfullyCreateMessage] = useState(false)
     const [errorViewServerMessage, setErrorViewServerMessage] = useState(false)
 
-    const { register, handleSubmit, formState: { errors }, control, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues, reset } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
     })
@@ -90,7 +90,7 @@ function HelpPopup() {
         helpPopup &&
         <>
             <div className='form-change-password__container'>
-                <FormProvider {...{ formState: { errors }, register }}>
+                <FormProvider {...{ register, handleSubmit, formState: { errors }, control, watch, setValue, getValues }}>
                     {renderForm()}
                     {
                         errorGet && <span className='error'>{errorGet}</span>

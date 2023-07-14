@@ -114,6 +114,7 @@ function Patient() {
                             <div className='patient-me__form-container'>
                                 <label className="patient-me__form-label">Пол</label>
                                 <MySelectComponent
+                                    name='gender'
                                     defaultValue={userAuth.gender}
                                     optionsProps={
                                         [

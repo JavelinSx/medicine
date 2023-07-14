@@ -44,7 +44,6 @@ function Personal() {
             dispatch(fetchGetAllCards());
 
             if (userAuth.role === 'doctor') {
-                console.log(userAuth)
                 dispatch(fetchInfoDoctorMessage(userAuth._id))
             }
 

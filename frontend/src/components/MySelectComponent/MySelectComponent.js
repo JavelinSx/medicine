@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react'
 import { useFormContext, useController } from 'react-hook-form'
 
-const MySelectComponent = ({ optionsProps, defaultValue }) => {
+const MySelectComponent = ({ optionsProps, defaultValue, name }) => {
     const { control } = useFormContext();
     const { field } = useController({
-        name: "gender",
+        name: name,
         control,
         defaultValue,
     });

@@ -101,6 +101,7 @@ function PatientProfile() {
                                 <div className='patient-profile__input-wrapper'>
                                     <label className="patient-profile__label">Пол</label>
                                     <MySelectComponent
+                                        name='gender'
                                         defaultValue={updatedUser?.gender}
                                         optionsProps={
                                             [

@@ -72,7 +72,6 @@ const usersGet = createSlice({
                 state.loadingGet = true
             })
             .addCase(fetchInfoDoctorMessage.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.helpMessage = action.payload;
                 state.loadingGet = false;
                 state.errorGet = null;

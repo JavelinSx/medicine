@@ -17,29 +17,31 @@ function FormCreatePersonal({ roleList }) {
         reValidateMode: 'onChange'
     })
 
-    const onSubmit = (info) => {
-        dispatch(fetchCreateUser({
-            ...info,
-            roleList,
-        }))
-            .then((data) => {
+    const onSubmit = async (info) => {
+        try {
+            await dispatch(fetchCreateUser({
+                ...info,
+                roleList,
+            }))
 
-                if (data.type.includes('fulfilled')) {
-                    reset()
-                    setSuccessfullyCreateMessage(true)
-                    setTimeout(() => {
-                        setSuccessfullyCreateMessage(false)
-                    }, 5000)
-                    dispatch(fetchInfoDoctors())
-                }
+            if (errorPost) {
+                setErrorViewServerMessage(true)
+                setTimeout(() => {
+                    setErrorViewServerMessage(false)
+                }, 5000)
+            } else {
+                reset()
+                setSuccessfullyCreateMessage(true)
+                setTimeout(() => {
+                    setSuccessfullyCreateMessage(false)
+                }, 5000)
+                dispatch(fetchInfoDoctors())
+            }
 
-                if (errorPost) {
-                    setErrorViewServerMessage(true)
-                    setTimeout(() => {
-                        setErrorViewServerMessage(false)
-                    }, 5000)
-                }
-            })
+        } catch (error) {
+
+        }
+
     }
     return (
         <div className='form-create-personal__container'>

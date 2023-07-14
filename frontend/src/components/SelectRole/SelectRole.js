@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function SelectRole({handleSelectLoginRole}) {
+function SelectRole({ handleSelectLoginRole }) {
     const navigate = useNavigate();
 
     const handleGoBack = () => {
@@ -12,26 +12,26 @@ function SelectRole({handleSelectLoginRole}) {
     const handleSubmit = (event) => {
         event.preventDefault()
         const roleText = event.target.textContent
-        if(roleText==='Доктор'){
+        if (roleText === 'Доктор') {
             handleSelectLoginRole('doctor')
             navigate('/signin/doctor')
         }
-        if(roleText==='Регистратор'){
+        if (roleText === 'Регистратор') {
             handleSelectLoginRole('registrar')
             navigate('/signin/registrar')
         }
-        if(roleText==='Медсестра'){
+        if (roleText === 'Медсестра') {
             handleSelectLoginRole('nurse')
             navigate('/signin/nurse')
         }
-        if(roleText==='Админ'){
-            handleSelectLoginRole('admin')
-            navigate('/signin/admin')
-        }
-        
+        // if(roleText==='Админ'){
+        //     handleSelectLoginRole('admin')
+        //     navigate('/signin/admin')
+        // }
+
     }
 
-    return ( 
+    return (
         <>
             <div className='select-role-header'>
                 <button className='button' onClick={handleGoBack}>Назад</button>
@@ -40,11 +40,11 @@ function SelectRole({handleSelectLoginRole}) {
                 <button className='button' onClick={handleSubmit}>Доктор</button>
                 <button className='button' onClick={handleSubmit}>Регистратор</button>
                 <button className='button' onClick={handleSubmit}>Медсестра</button>
-                <button className='button' onClick={handleSubmit}>Админ</button>
+                {/* <button className='button' onClick={handleSubmit}>Админ</button> */}
             </div>
         </>
 
-     );
+    );
 }
 
 export default SelectRole;

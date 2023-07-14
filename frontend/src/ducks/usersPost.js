@@ -22,7 +22,7 @@ export const fetchCreateUser = createAsyncThunk(USER_CREATE_FETCH, async (data) 
 
 export const fetchHelp = createAsyncThunk(USER_HELP_FETCH, async (data) => {
     return MainApi.help(data)
-        .then((data) => { console.log(data); return data })
+        .then((data) => data)
         .catch((err) => { throw err })
 })
 
@@ -56,8 +56,11 @@ const usersPost = createSlice({
                 state.errorPost = null
             })
             .addCase(fetchCreateUser.rejected, (state, action) => {
-                state.errorPost = action.error.message;
-                state.loadingPost = false;
+                if (action.error.message !== 'Пользователь создан') {
+                    state.errorPost = action.error.message;
+                    state.loadingPost = false;
+                }
+
             })
             //fetchHelp
             .addCase(fetchHelp.pending, (state, action) => {
