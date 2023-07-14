@@ -59,19 +59,33 @@ function Patient() {
                     const card = cardsPatient.find((card) => card._id === id);
 
                     if (card) {
-                        if (!card.imageUrl) {
-                            // Загрузить URL изображения, если он еще не загружен
-                            const imageData = await dispatch(fetchGetCardFile({
+                        if (!card.isDataLoaded) {
+                            // Отметить, что данные еще не загружены
+                            card.isDataLoaded = false;
+
+                            // Выполнить запрос для получения дополнительной информации о карточке
+                            dispatch(fetchGetCardFile({
                                 cardId: card._id,
                                 patientId: userAuth._id,
-                            }));
-                            // Сохранить URL изображения в состоянии или внутри объекта card
-                            card.imageUrl = imageData.url;
+                            }))
+                                .then((imageData) => {
+                                    // Обновить состояние карточки с полученными данными
+                                    card.imageUrl = imageData.url;
+                                    card.isDataLoaded = true;
+                                    dispatch(selectCard(card));
+                                    setCard(card);
+                                    setOpenedCardId(id);
+                                })
+                                .catch((error) => {
+                                    // Обработка ошибок при загрузке данных
+                                    console.log('Ошибка загрузки данных карточки:', error);
+                                });
+                        } else {
+                            // Данные уже загружены, просто обновляем состояние карточки
+                            dispatch(selectCard(card));
+                            setCard(card);
+                            setOpenedCardId(id);
                         }
-
-                        dispatch(selectCard(card));
-                        setCard(card);
-                        setOpenedCardId(id);
                     }
                 }
             }

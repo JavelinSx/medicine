@@ -20,14 +20,19 @@ function Cards() {
         }
     }, [])
 
-    const handleOpenCard = (id) => {
-        const card = cardsPatient.filter((card) => card._id === id);
-        dispatch(fetchGetAllCardsFromPatient(user._id))
-        dispatch(fetchGetCardFile({ cardId: card[0]._id, patientId: user._id }))
-            .then(() => {
-                dispatch(selectCard(card))
-                setCard(card)
-            })
+    const handleOpenCard = async (id) => {
+        try {
+            const card = cardsPatient.filter((card) => card._id === id);
+            dispatch(fetchGetAllCardsFromPatient(user._id))
+            dispatch(fetchGetCardFile({ cardId: card[0]._id, patientId: user._id }))
+                .then(() => {
+                    dispatch(selectCard(card))
+                    setCard(card)
+                })
+        } catch (error) {
+
+        }
+
     }
 
 
