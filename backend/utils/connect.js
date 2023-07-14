@@ -7,7 +7,7 @@ async function connected(app) {
       useNewUrlParser: true,
     });
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
   app.listen(PORT, () => {
     console.log(`App listeind o port ${PORT}`);
