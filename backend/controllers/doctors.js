@@ -1,5 +1,6 @@
 require('dotenv').config()
 const Doctor = require('../models/doctor')
+const HelpMessage = require('../models/helpMessage')
 
 const { ERRORS_MESSAGE } = require('../utils/constant')
 const BadRequestError = require('../errors/bad_request');
@@ -31,14 +32,16 @@ module.exports.loginDoctor = (req, res, next) => {
                 secure: true,
             })
                 .send({
+                    _id: user._id,
                     login: user.login,
                     role: user.role,
                     name: user.name,
-                    surName: user.serName,
+                    surName: user.surName,
                     middleName: user.middleName,
                 })
         })
         .catch(() => {
+            console.log('hello')
             next(new BadAuthError(ERRORS_MESSAGE.badAuth.messageUncorrectedData))
         })
 }
@@ -48,31 +51,61 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.registerDoctor = (req, res, next) => {
-    const { login, password } = req.body
-    const { role } = req.user
-    role === 'admin' || role === 'doctor' ?
-        bcryptjs.hash(password, 10)
-            .then((hash) => Doctor.create({ login, password: hash }))
-            .then((user) => {
-                res.send({
-                    login: user.login, _id: user._id
-                })
+    const { login, password, name, surName, middleName } = req.body
+    bcryptjs.hash(password, 10)
+        .then((hash) => Doctor.create({ login, password: hash, name, surName, middleName }))
+        .then(() => {
+            res.send({
+                message: "Пользователь создан"
             })
-            .catch((err) => {
-                if (err.name === 'ValidationError') {
-                    return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
-                }
-                if (err.code === 11000) {
-                    return next(new ExistLoginError(ERRORS_MESSAGE.existConflict.messageDefault));
-                }
-                return next(err);
-            })
-        : next(new BadAuthError(ERRORS_MESSAGE.permissionConfilct.messageDefault))
+        })
+        .catch((err) => {
+            if (err.name === 'ValidationError') {
+                return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
+            }
+            if (err.code === 11000) {
+                return next(new ExistLoginError(ERRORS_MESSAGE.existConflict.messageDefault));
+            }
+            return next(err);
+        })
+
+}
+module.exports.getMessagePatient = (req, res, next) => {
+    const { id } = req.params
+    HelpMessage.find({ doctorId: id })
+        .then((message) => {
+            res.send(message)
+        })
+        .catch((err) => {
+            if (err.name === 'ValidationError') {
+                return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
+            }
+            if (err.code === 11000) {
+                return next(new ExistLoginError(ERRORS_MESSAGE.existConflict.messageDefault));
+            }
+            return next(err);
+        })
+}
+
+module.exports.deleteMessagePatient = (req, res, next) => {
+    const { id } = req.body
+    HelpMessage.findByIdAndDelete({ _id: id })
+        .then((message) => {
+            res.send(message)
+        })
+        .catch((err) => {
+            if (err.name === 'ValidationError') {
+                return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
+            }
+            if (err.code === 11000) {
+                return next(new ExistLoginError(ERRORS_MESSAGE.existConflict.messageDefault));
+            }
+            return next(err);
+        })
 }
 
 module.exports.getDoctors = (req, res, next) => {
     Doctor.find({})
-        .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUsers))
         .then((user) => {
             res.send(user)
         })
@@ -80,7 +113,7 @@ module.exports.getDoctors = (req, res, next) => {
 }
 
 module.exports.getDoctor = (req, res, next) => {
-    Doctor.findOne({ _id: req.body._id })
+    Doctor.findOne({ _id: req.user._id })
         .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
         .then((user) => {
             res.send(user)

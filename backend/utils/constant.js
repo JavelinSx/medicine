@@ -7,13 +7,15 @@ module.exports.ERRORS_MESSAGE = {
   },
   badAuth: {
     messageNeedAuth: 'Необходима авторизация',
+    messageUncorectedRole: 'Нет прав',
     messageUncorrectedData: 'Переданные некорректные данные логин или пароль',
   },
   notFound: {
     messageDefault: 'Запрашиваемый ресурс не найден',
-    messageSearchCard: 'Карточка с таким id не найден',
+    messageSearchCard: 'Карточка с таким id не найдена',
     messageSearchUser: 'Пользователь с таким id не найден',
-    messageSearchUsers: 'Пользователи не найдены'
+    messageSearchUsers: 'Пользователи не найдены',
+    messageSearchUserHelp: 'Такой пользователь не найден'
   },
   forbidden: {
     messageDefault: 'Пользователь не имеет достаточно прав для этого действия',

@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fsExtra = require('fs-extra')
 const path = require('path')
 const archiver = require('archiver');
 const { ERRORS_MESSAGE } = require('../utils/constant')
@@ -44,7 +44,7 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
     } = req.body
 
     const { fileMRT, fileKT } = req.files
-
+    console.log(resultForm, 'before')
     let pathToDirMRT = ''
     let pathToDirKT = ''
 
@@ -74,7 +74,7 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
                     symptoms,
                     comments,
                     healthScore,
-                    resultForm,
+                    resultForm: !resultForm ? [] : resultForm,
                     fileMRT: pathToDirMRT,
                     fileKT: pathToDirKT,
                     status: status === 'new' ? 'updated' : status
@@ -86,6 +86,7 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
             )
                 .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
                 .then(card => {
+                    console.log(card.resultForm, 'after')
                     res.send(card)
                 })
                 .catch((err) => {
@@ -98,30 +99,17 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
 
 }
 
-module.exports.deleteCard = (req, res, next) => {
-    const { cardId } = req.params
-    Card.findByIdAndRemove(cardId)
-        .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
-        .then((card) => {
-            res.send(card)
-        })
-        .catch((err) => {
-            if (err.name === 'CastError') {
-                return next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData));
-            }
-            return next(err);
-        });
-}
 
 module.exports.getCardsPatient = (req, res, next) => {
     const { patientId } = req.params
-    Card.find({ patient: patientId })
-        .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
+
+    Card.find({ patientId: patientId })
+        .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchCard))
         .then((card) => {
             res.send(card)
         })
         .catch(() => {
-            next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
+            next(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchCard))
         })
 }
 
@@ -180,12 +168,17 @@ module.exports.getAllCardsPatients = (req, res, next) => {
 
 module.exports.deleteCardPatient = (req, res, next) => {
     const { cardId } = req.params
-    Card.findById(cardId)
+    Card.findByIdAndRemove(cardId)
         .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
         .then((card) => {
-            return Card.findByIdAndRemove(cardId)
-                .then(() => res.send(card))
+            if (card.fileMRT || card.fileKT) {
+                const path = card.fileMRT ?? card.fileKT ?? null;
+                fsExtra.remove(path.dirname(card.fileMRT))
+            }
 
+
+
+            res.send({ message: 'Карточка и файлы удалены' })
         })
         .catch(() => {
             next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))

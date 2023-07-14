@@ -14,7 +14,7 @@ const Admin = require('../models/admin')
 
 module.exports.loginAdmin = (req, res, next) => {
     const { login, password } = req.body;
-
+    console.log(login, password)
     Admin.findUserByCredentials(login, password)
         .then((user) => {
 

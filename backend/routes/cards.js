@@ -9,9 +9,8 @@ const {
   deleteCardPatient,
   updateCardPatientFiles,
   getCardFile,
-  deleteCard,
 } = require('../controllers/cards')
-const { doctorCheck } = require('../middlewares/roleCheck')
+const { roleCheck } = require('../middlewares/roleCheck')
 const { ERRORS_MESSAGE } = require('../utils/constant')
 const BadFile = require('../errors/bad_file');
 // Настройка хранилища для multer
@@ -59,9 +58,8 @@ router.patch('/:patientId/:cardId', (req, res, next) => {
   });
 }, updateCardPatientFiles)
 
-router.use(doctorCheck)
+router.use(roleCheck)
 
-router.post('/delete/:cardId', deleteCard)
 router.get('/all/info', getAllCardsPatients)
 router.post('/delete/:cardId', deleteCardPatient)
 router.post('/:patientId', createCard)

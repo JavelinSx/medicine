@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect index.js",
-    "dev": "nodemon --inspect index.js"
+    "start": "set NODE_ENV=production && node --inspect index.js",
+    "dev": "set NODE_ENV=development && nodemon --inspect index.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "express-rate-limit": "^6.7.0",
     "express-winston": "^4.2.0",
     "formidable": "^2.1.1",
+    "fs-extra": "^11.1.1",
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.9.2",
