@@ -7,6 +7,8 @@
   justify-content: center;
   position: relative;
   transition: width 0.5s;
+  padding-top: 30px;
+  padding-bottom: 30px;
 
   @include respond-to($breakpoint-small) {
     width: 73%;
