@@ -51,48 +51,23 @@ function Patient() {
 
     const handleOpenCard = async (id, event) => {
         try {
+
             if (event.target.tagName.toLowerCase() === 'span') {
-                if (openedCardId === id) {
-                    // Если карточка уже открыта, закрываем ее
-                    setOpenedCardId(null);
-                } else {
-                    const card = cardsPatient.find((card) => card._id === id);
+                const card = cardsPatient.filter((card) => card._id === id);
 
-                    if (card) {
-                        if (!card.isDataLoaded) {
-                            // Отметить, что данные еще не загружены
-                            card.isDataLoaded = false;
+                await dispatch(fetchGetCardFile({
+                    cardId: card[0]._id,
+                    patientId: userAuth._id
+                }))
+                await dispatch(selectCard(card))
+                setCard(card);
 
-                            // Выполнить запрос для получения дополнительной информации о карточке
-                            dispatch(fetchGetCardFile({
-                                cardId: card._id,
-                                patientId: userAuth._id,
-                            }))
-                                .then((imageData) => {
-                                    // Обновить состояние карточки с полученными данными
-                                    card.imageUrl = imageData.url;
-                                    card.isDataLoaded = true;
-                                    dispatch(selectCard(card));
-                                    setCard(card);
-                                    setOpenedCardId(id);
-                                })
-                                .catch((error) => {
-                                    // Обработка ошибок при загрузке данных
-                                    console.log('Ошибка загрузки данных карточки:', error);
-                                });
-                        } else {
-                            // Данные уже загружены, просто обновляем состояние карточки
-                            dispatch(selectCard(card));
-                            setCard(card);
-                            setOpenedCardId(id);
-                        }
-                    }
-                }
             }
         } catch (error) {
-            // Обработка ошибок
+
         }
-    };
+
+    }
 
     const onSubmit = async (data) => {
         try {
@@ -195,7 +170,7 @@ function Patient() {
                                     Карточка №: {index + 1} <br />
                                     Статус карточки: {card.statusRU}
                                 </span>
-                                {openedCardId === card._id && <CardForPatient card={card} />}
+                                {selectedCard === card._id ? <CardForPatient card={card} /> : ''}
                             </li>
                         )
                     }
