@@ -54,7 +54,7 @@ function ButtonLoader(props) {
             ></input>
             {selectedFile && (
                 <div className='button-loader__image-wrapper'>
-                    <img className="button-loader__image" src={selectedFile} alt="файл" />
+                    <img className="button-loader__image" src={selectedFile} alt="файл" loading='lazy' />
                 </div>
             )}
             {showConfirmation && (

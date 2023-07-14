@@ -93,7 +93,6 @@ const card = createSlice({
     initialState,
     reducers: {
         selectCard: (state, action) => {
-            console.log(state.cardFiles, 'cardFiles')
             const updatedCard = parseArray(action.payload[0]);
             const cardId = updatedCard._id;
             state.card = {

@@ -29,6 +29,7 @@ function Patient() {
     const { updatedUser } = useSelector((state) => state.usersUpdate)
     const { cardsPatient, selectedCard } = useSelector((state) => state.cards)
 
+    const [openedCardId, setOpenedCardId] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues } = useForm({
@@ -48,19 +49,36 @@ function Patient() {
 
 
 
-    const handleOpenCard = (id, event) => {
-        if (event.target.tagName.toLowerCase() === 'span') {
-            const card = cardsPatient.filter((card) => card._id === id);
-            dispatch(fetchGetCardFile({
-                cardId: card[0]._id,
-                patientId: userAuth._id
-            }))
-                .then(() => {
-                    dispatch(selectCard(card))
-                    setCard(card);
-                })
+    const handleOpenCard = async (id, event) => {
+        try {
+            if (event.target.tagName.toLowerCase() === 'span') {
+                if (openedCardId === id) {
+                    // Если карточка уже открыта, закрываем ее
+                    setOpenedCardId(null);
+                } else {
+                    const card = cardsPatient.find((card) => card._id === id);
+
+                    if (card) {
+                        if (!card.imageUrl) {
+                            // Загрузить URL изображения, если он еще не загружен
+                            const imageData = await dispatch(fetchGetCardFile({
+                                cardId: card._id,
+                                patientId: userAuth._id,
+                            }));
+                            // Сохранить URL изображения в состоянии или внутри объекта card
+                            card.imageUrl = imageData.url;
+                        }
+
+                        dispatch(selectCard(card));
+                        setCard(card);
+                        setOpenedCardId(id);
+                    }
+                }
+            }
+        } catch (error) {
+            // Обработка ошибок
         }
-    }
+    };
 
     const onSubmit = async (data) => {
         try {
@@ -163,7 +181,7 @@ function Patient() {
                                     Карточка №: {index + 1} <br />
                                     Статус карточки: {card.statusRU}
                                 </span>
-                                {selectedCard === card._id ? <CardForPatient card={card} /> : ''}
+                                {openedCardId === card._id && <CardForPatient card={card} />}
                             </li>
                         )
                     }
