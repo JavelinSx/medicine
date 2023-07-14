@@ -32,7 +32,6 @@ module.exports.doctorMessage = (req, res, next) => {
             res.status(200).send({ message: 'Сообщение успешно отправлено.' });
         })
         .catch((err) => {
-            console.log(err);
             return next(err);
         });
 };

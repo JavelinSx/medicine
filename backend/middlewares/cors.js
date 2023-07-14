@@ -1,5 +1,5 @@
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-const allowedOrigins = ['https://spb-obs.ru', 'https://api.spb-obs.ru'];
+const allowedOrigins = ['https://spb-obs.ru', 'https://api.spb-obs.ru', 'http://localhost:3001'];
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
@@ -20,4 +20,3 @@ module.exports = (req, res, next) => {
   next();
   return true;
 };
-

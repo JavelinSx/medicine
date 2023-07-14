@@ -44,7 +44,6 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
     } = req.body
 
     const { fileMRT, fileKT } = req.files
-    console.log(resultForm, 'before')
     let pathToDirMRT = ''
     let pathToDirKT = ''
 
