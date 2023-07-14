@@ -86,7 +86,6 @@ module.exports.updateCardPatientFiles = (req, res, next) => {
             )
                 .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
                 .then(card => {
-                    console.log(card.resultForm, 'after')
                     res.send(card)
                 })
                 .catch((err) => {

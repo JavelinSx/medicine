@@ -9,7 +9,6 @@ module.exports.patientCheck = (req, res, next) => {
     const { surName, name, middleName } = req.body
     Patient.patientCheck(surName, name, middleName)
         .then((data) => {
-            console.log(data)
             Doctor.find({})
                 .then((doctor) => res.send({ doctor }))
         })

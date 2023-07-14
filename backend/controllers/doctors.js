@@ -41,7 +41,6 @@ module.exports.loginDoctor = (req, res, next) => {
                 })
         })
         .catch(() => {
-            console.log('hello')
             next(new BadAuthError(ERRORS_MESSAGE.badAuth.messageUncorrectedData))
         })
 }
