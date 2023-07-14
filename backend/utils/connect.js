@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { PORT = 3000, DB_PATH_PROD, DB_PATH_DEV, NODE_ENV } = process.env;
 const mongoose = require('mongoose');
 async function connected(app) {
@@ -5,7 +6,6 @@ async function connected(app) {
     mongoose.connect(NODE_ENV === 'production' ? DB_PATH_PROD : DB_PATH_DEV, {
       useNewUrlParser: true,
     });
-    console.log(NODE_ENV === 'production' ? DB_PATH_PROD : DB_PATH_DEV)
   } catch (err) {
     console.log(err);
   }
