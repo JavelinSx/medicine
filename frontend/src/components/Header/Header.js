@@ -14,14 +14,10 @@ function Header() {
         sessionStorage.clear()
     }
 
-    const goBack = () => {
-        navigate(-1)
-    }
 
     return (
 
         <div className='header'>
-
             <button className='button' onClick={logout} type='button'>Выйти</button>
         </div>
 

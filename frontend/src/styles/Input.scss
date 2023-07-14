@@ -1,16 +1,26 @@
-.input{
-    padding: 10px;
-    border: 1px solid $border-color;
-    border-radius: .3rem;
+.input {
+  padding: 10px;
+  border: 1px solid $border-color;
+  border-radius: 0.3rem;
+  color: $secondary-color;
+  font-weight: 400;
+  transition: all 0.3s;
+  &:hover {
+    border: 1px solid $border-hover-color;
+  }
+  &::placeholder {
     color: $secondary-color;
-    font-weight: 400;
-
-    transition: all .3s;
+  }
 }
-.input:hover{
-    border: 1px solid $border-hover-color
 
+.input-error {
+  border: 1px solid $error-color;
+  &:hover {
+    border: 1px solid $error-color;
+  }
 }
-.input::placeholder{
-    color: $secondary-color;
+.input-search {
+  box-sizing: border-box;
+  width: 90%;
+  margin-top: 15px;
 }

@@ -1,9 +1,9 @@
 
 import '../Login/Login'
 
-import React, {useState, useMemo, useEffect} from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom';
-import {  useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchCookie } from '../../ducks/auth';
 
@@ -15,63 +15,66 @@ import Personal from '../Personal/Personal'
 import Patient from '../Patient/Patient';
 import PatientProfile from '../PatientProfile/PatientProfile'
 import PersonalProfile from '../PersonalProfile/PersonalProfile'
+import UnfamiliarPersonalProfile from '../UnfamiliarPersonalProfile/UnfamiliarPersonalProfile';
 
-function App (){
+function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isAuthenticated, userAuth } = useSelector((state) => state.auth);
   const [userRoleLogin, setUserRoleLogin] = useState('patient')
 
   useEffect(() => {
-    if(isAuthenticated){
+    if (isAuthenticated) {
       dispatch(fetchCookie(userAuth.role))
+    } else {
+      setUserRoleLogin('patient')
     }
   }, []);
 
   useEffect(() => {
-    userAuth && userAuth.role==='patient' ? 
-    navigate(`/profile/patient/me`)
-    :
-    navigate (`/profile/personal/me`)
-  },[userAuth])
+    userAuth && userAuth.role === 'patient' ?
+      navigate(`/profile/patient/me`)
+      :
+      navigate(`/profile/personal/me`)
+  }, [userAuth])
 
 
   const handleSelectLoginRole = (loginRole) => {
     setUserRoleLogin(loginRole)
-}
+  }
 
   return (
     <div className='App' id='app'>
       {
         isAuthenticated ? <Header /> : null
       }
-      
+
       <Routes>
-        <Route 
-          exact path='/select-role' 
-          element={<SelectRole handleSelectLoginRole={handleSelectLoginRole}/>} 
+        <Route
+          exact path='/select-role'
+          element={<SelectRole handleSelectLoginRole={handleSelectLoginRole} />}
         />
-        <Route 
-          exact path='/signin/:role' 
-          element={<Login userRoleLogin={userRoleLogin}/>} />
+        <Route
+          exact path='/signin/:role'
+          element={<Login userRoleLogin={userRoleLogin} />} />
         <Route exact path='/profile/patient/me' element={
-          <ProtectedRoute 
+          <ProtectedRoute
             component={Patient}
           />
         } />
         <Route exact path='/profile/personal/me' element={
-          <ProtectedRoute 
+          <ProtectedRoute
             component={Personal}
           />
         } />
         <Route exact path='/profile/patient/:id' element={
-          <ProtectedRoute 
+          <ProtectedRoute
             component={PatientProfile}
           />
         } />
         <Route exact path='/profile/personal/:id' element={
-          <ProtectedRoute 
-            component={PersonalProfile}
+          <ProtectedRoute
+            component={UnfamiliarPersonalProfile}
           />
         } />
 

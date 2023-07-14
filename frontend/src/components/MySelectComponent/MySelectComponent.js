@@ -1,38 +1,25 @@
-import {useState, useEffect, forwardRef, useMemo} from 'react'
+import { useState, useMemo } from 'react'
+import { useFormContext, useController } from 'react-hook-form'
 
-const MySelectComponent = forwardRef(({ optionsProps, defaultValue, onChange }, ref) => {
-    const [value, setValue] = useState('')
+const MySelectComponent = ({ optionsProps, defaultValue }) => {
+    const { control } = useFormContext();
+    const { field } = useController({
+        name: "gender",
+        control,
+        defaultValue,
+    });
+    const getValue = () => optionsProps?.find((option) => option.value === defaultValue)
+
+
     const [isOpen, setIsOpen] = useState(false)
     const [options, setOptions] = useState([])
-    const [selectedOption, setSelectedOption] = useState(null)
+    const [selectedOption, setSelectedOption] = useState(getValue()?.label)
 
-    const getValueFromObject = () => {
-        const filteredOptions = optionsProps.filter((option) => option.value === defaultValue);
-        return filteredOptions.map((option) => option.label);
-    };
-
-    const setValueForObject = () => {
-        const filteredOptions = optionsProps.filter((option) => option.label === value);
-        return filteredOptions.map((option) => option.value)[0]
-    }
 
     useMemo(() => {
         setOptions(optionsProps)
-        setValue(getValueFromObject())
+    }, [])
 
-    },[])
-
-    useEffect(() => {
-        if(selectedOption){
-            setValue(selectedOption)
-        }
-    },[selectedOption])
-
-    useEffect(() => {
-        if(value){
-            onChange(setValueForObject())
-        }
-    },[onChange, value])
 
     const handleOpenList = () => {
         setIsOpen(!isOpen)
@@ -40,29 +27,33 @@ const MySelectComponent = forwardRef(({ optionsProps, defaultValue, onChange }, 
 
     const handleSelectOption = (option) => {
         setSelectedOption(option.label)
+        field.onChange(option.value)
         setIsOpen(false)
     }
 
 
 
-    return ( 
+    return (
         <>
 
             <div className='myselect-wrapper'>
 
                 <div className='input myselect-container' onClick={handleOpenList}>
-                    {value}
+                    {selectedOption}
                 </div>
-                
-                <ul className={`myselect-list ${isOpen ? '' : 'myselect-list-hidden'}`}> 
+
+                <ul className={`myselect-list ${isOpen ? '' : 'myselect-list-hidden'}`}>
                     {
                         options?.map((option, index) => <li key={index} className='myselect-list__item' onClick={() => handleSelectOption(option)}>{option.label}</li>)
                     }
-                </ul> 
+                </ul>
             </div>
 
+
+
+
         </>
-     );
-})
+    );
+}
 
 export default MySelectComponent;

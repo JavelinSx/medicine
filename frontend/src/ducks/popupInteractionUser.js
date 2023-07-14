@@ -6,14 +6,15 @@ const initialState = {
     isOpen: false,
     text: '',
     purpose: null,
-    user: null
+    user: null,
+    cardId: null,
 }
 
 
 const popupInteractionUser = createSlice({
     name: 'popupConfirm',
     initialState,
-    reducers:{
+    reducers: {
         dismissPopup: (state) => {
             state.popupState = false;
             state.isOpen = false
@@ -26,9 +27,10 @@ const popupInteractionUser = createSlice({
             state.text = action.payload.text
             state.popupState = false;
             state.user = action.payload.user
+            state.cardId = action.payload.cardId
         }
     },
 })
 
-export const { dismissPopup, openPopup} = popupInteractionUser.actions;
+export const { dismissPopup, openPopup } = popupInteractionUser.actions;
 export default popupInteractionUser.reducer

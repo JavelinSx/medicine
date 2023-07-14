@@ -1,0 +1,27 @@
+.message-patient {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  gap: 5px;
+  padding-bottom: 10px;
+}
+.message-patient__item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-color;
+  border-radius: 0.3rem;
+  padding: 20px;
+  @include box-shadow-for-container;
+}
+.message-patient__button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 2px 10px;
+}
+.message-patient__name {
+  padding-bottom: 5px;
+}

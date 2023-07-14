@@ -1,7 +1,8 @@
-$fullhigh: 100vh;
-$percentHigh: 20%;
 .login {
-  min-width: 330px;
+  min-width: 285px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 .login-form {
   display: flex;

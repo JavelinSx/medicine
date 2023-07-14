@@ -1,8 +1,62 @@
 .form {
   display: flex;
   flex-direction: column;
+  position: relative;
   gap: 10px;
 }
+.form-blur {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  position: absolute;
+  width: 100%;
+  height: 0;
+  background-color: $date-select;
+  border-radius: 0.3rem;
+  z-index: 1000000000;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+.show-form-blur {
+  opacity: 0.5;
+  animation-name: fade-in;
+  height: 100%;
+}
+
+/* Анимация появления */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+  to {
+    opacity: 0.5;
+    height: 100%;
+  }
+}
+
+/* Скрываем элемент с анимацией */
+.hide-form-blur {
+  opacity: 0;
+  height: 0%;
+  animation-name: fade-out;
+}
+
+/* Анимация исчезновения */
+@keyframes fade-out {
+  from {
+    opacity: 0.5;
+    height: 100%;
+  }
+  to {
+    opacity: 0;
+    height: 0;
+  }
+}
+
 .form__input {
   width: 100%;
   box-sizing: border-box;
@@ -19,6 +73,9 @@
   border: 1px solid $border-color;
   padding: 10px;
   border-radius: 0.3rem;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
 }
 .form__input-file {
   color: transparent;
@@ -72,6 +129,9 @@
   padding: 10px;
   font-size: 0.8rem;
   margin-bottom: 5px;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
 }
 .form__checkboxs-wrapper-input {
   padding: 4px;
@@ -85,11 +145,17 @@
   display: inline-block;
   box-sizing: border-box;
   padding-left: 10px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .form__container-range {
   border: 1px solid $border-color;
   border-radius: 0.3rem;
   padding: 10px;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2) inset;
 }
 .form__range {
   display: flex;

@@ -22,3 +22,4 @@ export const getCards = JSON.parse(sessionStorage.getItem('cards'))
 export const setCardsPatient = (cards) => sessionStorage.setItem('cardsPatient', JSON.stringify(cards))
 export const getCardsPatient = JSON.parse(sessionStorage.getItem('cardsPatient'))
 
+

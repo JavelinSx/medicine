@@ -1,0 +1,18 @@
+.input-text {
+}
+.input-text__label {
+  position: absolute;
+  background-color: $primary-color;
+  z-index: 10000;
+  font-size: 0.7rem;
+  color: $secondary-color;
+  top: -6px;
+  left: 10px;
+  padding-left: 3px;
+  padding-right: 4px;
+}
+.input-text__wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}

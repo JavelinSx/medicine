@@ -1,61 +1,129 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import { fetchUpdateUser } from '../../ducks/usersUpdate'
+import MessagePatient from '../MessagePatient/MessagePatient';
+import InputText from '../InputText/InputText';
+import SubmitButton from '../SubmitButton/SubmitButton';
 function PersonalProfile() {
-    //необходимо скодить работу со списком получаемого на обновление пользователя
-    const { user } = useSelector((state) => state.popupInteractionUser)
+
+    const [openMessage, setOpenMessage] = useState(false)
+    const [successfullyCreateMessage, setSuccessfullyCreateMessage] = useState(false)
+    const [errorViewServerMessage, setErrorViewServerMessage] = useState(false)
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const { userAuth } = useSelector((state) => state.auth)
     const { updatedUser } = useSelector((state) => state.usersUpdate)
-    const { register, handleSubmit, formState: { errors }, setValue } = useForm({
-        mode: 'onBlur',
+    const { errorPost } = useSelector((state) => state.usersPost)
+
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues, reset } = useForm({
+        mode: 'onChange',
+        reValidateMode: 'onChange'
     })
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (updatedUser) {
-            Object.entries(updatedUser).forEach(([fieldName, value]) => {
-                setValue(fieldName, value);
-            })
-        }
-    })
+        Object.entries(userAuth).forEach(([fieldName, value]) => {
+            setValue(fieldName, value);
+        })
+        setFormSubmitted(false)
+    }, [setValue, userAuth])
 
-    const onSubmit = (data) => {
-        dispatch(fetchUpdateUser({
-            updatedData: data,
-            updatedUser: user
-        }))
+    const onSubmit = async (data) => {
+        try {
+            await dispatch(fetchUpdateUser({
+                updatedData: data,
+                updatedUser: userAuth
+            }))
+
+
+            if (errorPost) {
+                setErrorViewServerMessage(true)
+                setTimeout(() => {
+                    setErrorViewServerMessage(false)
+                }, 5000)
+            } else {
+                setSuccessfullyCreateMessage(true)
+                setTimeout(() => {
+                    setSuccessfullyCreateMessage(false)
+                }, 5000)
+            }
+            setFormSubmitted(true)
+
+        } catch (error) {
+            setFormSubmitted(false)
+        }
+
     };
 
     const handleGoBack = () => {
         navigate(-1)
     }
+    const handleOpenMessage = () => {
+        setOpenMessage(!openMessage)
+    }
 
     return (
         <div className='personal-profile'>
-            <button className='button personal-profile__back-button' onClick={handleGoBack}>Назад</button>
+            <div className='personal-profile__header'>
+                <button className='button' onClick={handleGoBack}>Назад</button>
+                {
+                    userAuth?.role === 'doctor' ?
+                        <button className='button' onClick={handleOpenMessage}>Сообщения пациентов</button> : ''
+                }
+            </div>
+            {
+                openMessage ? <MessagePatient /> : ''
+            }
+
+
             <div className='personal-profile__container'>
+                <FormProvider {...{ register, handleSubmit, formState: { errors }, control, watch, setValue, getValues }}>
+                    <form className='personal-profile__form' onSubmit={handleSubmit(onSubmit)}>
+                        <InputText
+                            name='surName'
+                            label='Фамилия'
+                            requiredMessage={'Это поле обязательно'}
+                            errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
+                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            type='text'
+                        />
+                        <InputText
+                            name='name'
+                            label='Имя'
+                            requiredMessage={'Это поле обязательно'}
+                            errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
+                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            type='text'
+                        />
+                        <InputText
+                            name='middleName'
+                            label='Отчество'
+                            requiredMessage={'Это поле обязательно'}
+                            errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
+                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            type='text'
+                        />
 
-                <form className='personal-profile__form' onSubmit={handleSubmit(onSubmit)}>
-                    <div className='personal-profile__wrapper-input'>
-                        <label className="personal-profile__label-input">Фамилия</label>
-                        <input className='input' {...register('surName')} />
-                    </div>
-                    <div className='personal-profile__wrapper-input'>
-                        <label className="personal-profile__label-input">Имя</label>
-                        <input className='input' {...register('name')} />
-                    </div>
-                    <div className='personal-profile__wrapper-input'>
-                        <label className="personal-profile__label-input">Отчество</label>
-                        <input className='input' {...register('middleName')} />
-                    </div>
 
+                        <SubmitButton
+                            data={updatedUser ? updatedUser : userAuth}
+                            formSubmitted={formSubmitted}
+                            onSubmit={onSubmit}
+                            classNamePrefix=''
+                            textButton='Изменить'
+                        />
+                        {
+                            errorViewServerMessage ? <span className='error'>{errorPost}</span> : null
+                        }
+                        {
+                            successfullyCreateMessage ? <span className='complete-message'>Профиль успешно изменён</span> : null
+                        }
+                    </form>
+                </FormProvider>
 
-                    {errors.exampleRequired && <span>Это поле обязательно</span>}
-                    <button className='button' type="submit">Изменить</button>
-                </form>
             </div>
         </div>
 

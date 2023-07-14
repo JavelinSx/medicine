@@ -1,19 +1,20 @@
 import { createPortal } from 'react-dom';
-import { useState } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { dismissPopup } from '../../ducks/popupInteractionUser'
-import { setUserInfo } from '../../ducks/auth'
+
 import { fetchDeletePatient } from '../../ducks/usersDelete';
 import { setUserUpdated } from '../../ducks/usersUpdate';
+import { fetchInfoPatients } from '../../ducks/usersGet';
 import { fetchGetAllCards, fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
 import { fetchDeleteCard } from '../../ducks/cards'
 import { useNavigate } from 'react-router-dom'
+
 const PopupInteractionUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { card } = useSelector((state) => state.cards)
-    const { isOpen, text, purpose, user } = useSelector((state) => state.popupInteractionUser)
+    const { isOpen, text, purpose, user, cardId } = useSelector((state) => state.popupInteractionUser)
 
     const handleConfirm = () => {
 
@@ -27,17 +28,17 @@ const PopupInteractionUser = () => {
 
         if (purpose === 'delete') {
             dispatch(fetchDeletePatient(user))
+                .then(() => dispatch(fetchInfoPatients()))
         }
 
         if (purpose === 'create') {
             dispatch(fetchCreateCard(user._id))
-                .then(() => {
-                    dispatch(fetchGetAllCardsFromPatient(user._id))
-                })
+                .then(() => dispatch(fetchGetAllCardsFromPatient(user._id)))
         }
 
         if (purpose === 'delete-card') {
-            dispatch(fetchDeleteCard(card._id))
+            dispatch(fetchDeleteCard(cardId))
+                .then(() => dispatch(fetchGetAllCardsFromPatient(user._id)))
         }
 
         return dispatch(dismissPopup())

@@ -15,6 +15,7 @@ function Cards() {
     const { user } = useSelector((state) => state.popupInteractionUser)
 
     useEffect(() => {
+        console.log(cardsPatient)
         if (user?._id) {
             dispatch(fetchGetAllCardsFromPatient(user?._id))
         }
@@ -51,6 +52,7 @@ function Cards() {
                                             text: `Вы действительно хотите удалить карточку?`,
                                             purpose: 'delete-card',
                                             user: updatedUser,
+                                            cardId: card._id
                                         }))}
                                     >
                                         X

@@ -1,6 +1,3 @@
-export const urlDev = 'http://localhost:3000'
-export const urlProd = 'https://api.spb-obs.ru'
-
 export const selectRoleUser = [
     { value: 'doctor', label: 'Доктор' },
     { value: 'patient', label: 'Пациент' },

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import MainApi from "../utils/Api";
 
 const USER_UPDATE_FETCH = 'update/user'
+const PASSWORD_UPDATE_FETCH = 'update/password'
 
 
 const initialState = {
@@ -9,29 +10,36 @@ const initialState = {
     updatedCard: null,
     loadingUpdate: false,
     errorUpdate: null,
+    helpPopup: false,
+
 }
 
-export const fetchUpdateUser = createAsyncThunk(USER_UPDATE_FETCH, async(data) => {
+export const fetchUpdateUser = createAsyncThunk(USER_UPDATE_FETCH, async (data) => {
     return await MainApi.updateUser(data)
         .then((user) => user)
-        .catch((err) => {throw err})
+        .catch((err) => { throw err })
 })
 
-
-
+export const fetchChangePassword = createAsyncThunk(PASSWORD_UPDATE_FETCH, async (data) => {
+    return await MainApi.changePassword(data)
+        .then((user) => user)
+        .catch((err) => { throw err })
+})
 
 const usersUpdate = createSlice({
     name: 'usersUpdate',
     initialState,
-    reducers:{
+    reducers: {
         setUserUpdated: (state, action) => {
-            console.log(action.payload)
             state.updatedUser = action.payload
+        },
+        openHelpPopup: (state, action) => {
+            state.helpPopup = action.payload
         }
     },
     extraReducers: builder => {
-        builder  
-        //fetchCreatePatient
+        builder
+            //fetchCreatePatient
             .addCase(fetchUpdateUser.pending, (state, action) => {
                 state.loadingUpdate = true
             })
@@ -42,8 +50,8 @@ const usersUpdate = createSlice({
             .addCase(fetchUpdateUser.rejected, (state, action) => {
                 state.errorUpdate = action.payload;
                 state.loadingUpdate = false;
-            })      
+            })
     }
 })
-export const {setUserUpdated} = usersUpdate.actions
+export const { setUserUpdated, openHelpPopup } = usersUpdate.actions
 export default usersUpdate.reducer

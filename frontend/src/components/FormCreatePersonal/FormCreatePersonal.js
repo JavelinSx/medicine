@@ -1,24 +1,45 @@
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { fetchCreateUser } from '../../ducks/usersPost';
-
+import { fetchInfoDoctors } from '../../ducks/usersGet';
 import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 
 function FormCreatePersonal({ roleList }) {
+    const [successfullyCreateMessage, setSuccessfullyCreateMessage] = useState(false)
+    const [errorViewServerMessage, setErrorViewServerMessage] = useState(false)
     const dispatch = useDispatch()
     const { loadingPost, errorPost } = useSelector((state) => state.usersPost)
 
-    const { register, handleSubmit } = useForm({
-        mode: 'onBlur'
+    const { register, handleSubmit, formState: { errors }, control, reset } = useForm({
+        mode: 'onChange',
+        reValidateMode: 'onChange'
     })
+
     const onSubmit = (info) => {
-        const infoCopy = { ...info }
         dispatch(fetchCreateUser({
-            infoCopy,
+            ...info,
             roleList,
         }))
+            .then((data) => {
+
+                if (data.type.includes('fulfilled')) {
+                    reset()
+                    setSuccessfullyCreateMessage(true)
+                    setTimeout(() => {
+                        setSuccessfullyCreateMessage(false)
+                    }, 5000)
+                    dispatch(fetchInfoDoctors())
+                }
+
+                if (errorPost) {
+                    setErrorViewServerMessage(true)
+                    setTimeout(() => {
+                        setErrorViewServerMessage(false)
+                    }, 5000)
+                }
+            })
     }
     return (
         <div className='form-create-personal__container'>
@@ -46,7 +67,12 @@ function FormCreatePersonal({ roleList }) {
 
                 <button className='button' type='submit' text='Создать'>Создать</button>
 
-                {errorPost && <span>{errorPost}</span>}
+                {
+                    errorViewServerMessage ? <span className='error'>{errorPost}</span> : null
+                }
+                {
+                    successfullyCreateMessage ? <span className='complete-message'>Пациент успешно создан</span> : null
+                }
             </form>
         </div>
     );

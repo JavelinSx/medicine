@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, FormProvider } from 'react-hook-form'
 
 import { isEqual } from 'lodash';
 
@@ -17,20 +17,24 @@ import '../../../node_modules/react-date-picker/dist/DatePicker.css'
 import CardForPatient from '../CardForPatient/CardForPatient';
 import MySelectComponent from '../MySelectComponent/MySelectComponent';
 
+import InputText from '../InputText/InputText';
+import SubmitButton from '../SubmitButton/SubmitButton';
+
 
 
 function Patient() {
 
     const dispatch = useDispatch();
     const { userAuth } = useSelector((state) => state.auth)
+    const { updatedUser } = useSelector((state) => state.usersUpdate)
     const { cardsPatient, selectedCard } = useSelector((state) => state.cards)
-    const [changedValues, setChangedValues] = useState(null)
-    const [checkedChangesValue, setCheckedChangesValue] = useState(false)
-    const { register, handleSubmit, formState: { errors }, control, setValue, watch, getValues } = useForm({
-        mode: 'onBlur',
-    })
 
-    const watchedValues = watch();
+    const [formSubmitted, setFormSubmitted] = useState(false);
+
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues } = useForm({
+        mode: 'onChange',
+        reValidateMode: 'onChange'
+    })
 
     useEffect(() => {
         dispatch(fetchGetAllCardsFromPatient(userAuth._id))
@@ -39,12 +43,10 @@ function Patient() {
                 setValue(fieldName, value);
             })
         }
-        setChangedValues(getValues())
+        setFormSubmitted(false)
     }, [setValue, userAuth])
 
-    useEffect(() => {
-        setCheckedChangesValue(isEqual(watchedValues, changedValues))
-    }, [watchedValues]);
+
 
     const handleOpenCard = (id, event) => {
         if (event.target.tagName.toLowerCase() === 'span') {
@@ -60,43 +62,58 @@ function Patient() {
         }
     }
 
-    const onSubmit = (data) => {
-        dispatch(fetchUpdateUser({
-            updatedData: {
-                ...data,
-                birthDay: data.birthDay.toString(),
-            },
-            updatedUser: userAuth
-        }))
+    const onSubmit = async (data) => {
+        try {
+            await dispatch(fetchUpdateUser({
+                updatedData: {
+                    ...data,
+                    birthDay: data.birthDay.toString(),
+                },
+                updatedUser: userAuth
+            }))
+            await dispatch(fetchGetAllCardsFromPatient(userAuth._id))
+            setFormSubmitted(true)
+        } catch (error) {
+            setFormSubmitted(false)
+        }
+
     };
 
 
     return (
-        <div className='patient-me__profile'>
-            <div className='patient-me__profile-container'>
-                <h3 className='patient-me-profile__title'>Ваш профиль</h3>
-                <form className='patient-me__form' onSubmit={handleSubmit(onSubmit)}>
-
-                    <div className='patient-me__form-container'>
-                        <label className='patient-me__form-label'>Фамилия</label>
-                        <input className='input patient-me__form-input' autoComplete="off" {...register('surName')} />
-                    </div>
-                    <div className='patient-me__form-container'>
-                        <label className='patient-me__form-label'>Имя</label>
-                        <input className='input patient-me__form-input' autoComplete="off" {...register('name')} />
-                    </div>
-                    <div className='patient-me__form-container'>
-                        <label className='patient-me__form-label'>Отчество</label>
-                        <input className='input patient-me__form-input' autoComplete="off" {...register('middleName')} />
-                    </div>
-                    <div className='patient-me__form-container'>
-                        <label className="patient-me__form-label">Пол</label>
-                        <Controller
-                            name='gender'
-                            control={control}
-                            render={({ field }) => (
+        <>
+            <FormProvider {...{ register, handleSubmit, formState: { errors }, control, watch, setValue, getValues }}>
+                <div className='patient-me__profile'>
+                    <div className='patient-me__profile-container'>
+                        <h3 className='patient-me-profile__title'>Ваш профиль</h3>
+                        <form className='patient-me__form' onSubmit={handleSubmit(onSubmit)}>
+                            <InputText
+                                name='surName'
+                                label='Фамилия'
+                                requiredMessage={'Это поле обязательно'}
+                                errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
+                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                type='text'
+                            />
+                            <InputText
+                                name='name'
+                                label='Имя'
+                                requiredMessage={'Это поле обязательно'}
+                                errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
+                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                type='text'
+                            />
+                            <InputText
+                                name='middleName'
+                                label='Отчество'
+                                requiredMessage={'Это поле обязательно'}
+                                errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
+                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                type='text'
+                            />
+                            <div className='patient-me__form-container'>
+                                <label className="patient-me__form-label">Пол</label>
                                 <MySelectComponent
-                                    {...field}
                                     defaultValue={userAuth.gender}
                                     optionsProps={
                                         [
@@ -105,27 +122,35 @@ function Patient() {
                                         ]
                                     }
                                 />
-                            )}
-                        />
-                    </div>
+                            </div>
 
-                    <div className='patient-me__form-container'>
-                        <label className='patient-me__form-label'>Дата рождения</label>
-                        <Controller
-                            name='birthDay'
-                            control={control}
-                            render={({ field }) => (
-                                <DatePicker
-                                    value={field.value}
-                                    selected={field.value || new Date(userAuth?.birthDay)}
-                                    onChange={(date) => field.onChange(date)}
+                            <div className='patient-me__form-container'>
+                                <label className='patient-me__form-label'>Дата рождения</label>
+                                <Controller
+                                    name='birthDay'
+                                    control={control}
+                                    render={({ field }) => (
+                                        <DatePicker
+                                            value={field.value}
+                                            selected={field.value || new Date(userAuth?.birthDay)}
+                                            onChange={(date) => field.onChange(date)}
+                                        />
+                                    )}
                                 />
-                            )}
-                        />
+                            </div>
+
+                            <SubmitButton
+                                data={updatedUser ? updatedUser : userAuth}
+                                formSubmitted={formSubmitted}
+                                onSubmit={onSubmit}
+                                classNamePrefix=''
+                                textButton='Изменить'
+                            />
+                        </form>
                     </div>
-                    <button className='button' type="submit" disabled={checkedChangesValue ? 'disabled' : null}>Изменить профиль</button>
-                </form>
-            </div>
+                </div>
+            </FormProvider>
+
 
             <div className='patient-me__form-card-container'>
                 <h3 className='patient-me-profile__title'>Ваши карточки</h3>
@@ -143,8 +168,8 @@ function Patient() {
                     }
                 </ul>
             </div>
+        </>
 
-        </div>
     );
 }
 

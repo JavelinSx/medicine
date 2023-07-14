@@ -19,6 +19,12 @@ $breakpoint-large: 768px;
 $breakpoint-xlarge: 992px;
 $breakpoint-xxlarge: 1200px;
 
+@mixin box-shadow-for-container {
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2) inset;
+  -moz-box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2) inset;
+  box-shadow: 0px 0px 10px 0px rgba(34, 60, 80, 0.2) inset;
+}
+
 @mixin respond-to($breakpoint) {
   @media screen and (min-width: $breakpoint) {
     @content;

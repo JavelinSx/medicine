@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import MainApi from "../utils/Api";
-import { 
-    getPatients, 
+import {
+    getPatients,
     getDoctors,
-    getNurses, 
+    getNurses,
     getRegistrars,
     setPatients,
     setDoctors,
@@ -15,49 +15,73 @@ const PATIENTS_INFO_FETCH = '/info/patients'
 const DOCTORS_INFO_FETCH = '/info/doctors'
 const NURSES_INFO_FETCH = '/info/nurses'
 const REGISTRARS_INFO_FETCH = '/info/registrars'
+const MESSAGE_INFO_FETCH = '/info/message'
 
 const initialState = {
     patients: getPatients || [],
+    patientsLogins: [],
     doctors: getDoctors || [],
     nurses: getNurses || [],
     registrars: getRegistrars || [],
     loadingGet: false,
     errorGet: null,
+    helpMessage: []
 }
 
-export const fetchInfoDoctors = createAsyncThunk(DOCTORS_INFO_FETCH, async() => {
+export const fetchInfoDoctors = createAsyncThunk(DOCTORS_INFO_FETCH, async () => {
     return await MainApi.getDoctors()
-    .then((user) => user)
-    .catch((err) => {throw err})
+        .then((user) => user)
+        .catch((err) => { throw err })
 })
 
-export const fetchInfoRegistrars = createAsyncThunk(REGISTRARS_INFO_FETCH, async() => {
+export const fetchInfoRegistrars = createAsyncThunk(REGISTRARS_INFO_FETCH, async () => {
     return await MainApi.getRegistrars()
-    .then((user) => user)
-    .catch((err) => {throw err})
+        .then((user) => user)
+        .catch((err) => { throw err })
 })
 
-export const fetchInfoNurses = createAsyncThunk(NURSES_INFO_FETCH, async() => {
+export const fetchInfoNurses = createAsyncThunk(NURSES_INFO_FETCH, async () => {
     return await MainApi.getNurses()
-    .then((user) => user)
-    .catch((err) => {throw err})
+        .then((user) => user)
+        .catch((err) => { throw err })
 })
 
-export const fetchInfoPatients = createAsyncThunk(PATIENTS_INFO_FETCH, async() => {
+export const fetchInfoPatients = createAsyncThunk(PATIENTS_INFO_FETCH, async () => {
     return await MainApi.getPatients()
-    .then((user) => user)
-    .catch((err) => {throw err})
+        .then((user) => user)
+        .catch((err) => { throw err })
+})
+
+export const fetchInfoDoctorMessage = createAsyncThunk(MESSAGE_INFO_FETCH, async (data) => {
+
+    return await MainApi.getHelpMessage(data)
+        .then((message) => message)
+        .catch((err) => { throw err })
 })
 
 const usersGet = createSlice({
     name: 'usersGet',
     initialState,
-    reducers:{
-        
+    reducers: {
+
     },
     extraReducers: builder => {
         builder
-        //fetchInfoPatients
+            //fetchInfoPatients
+            .addCase(fetchInfoDoctorMessage.pending, (state, action) => {
+                state.loadingGet = true
+            })
+            .addCase(fetchInfoDoctorMessage.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.helpMessage = action.payload;
+                state.loadingGet = false;
+                state.errorGet = null;
+            })
+            .addCase(fetchInfoDoctorMessage.rejected, (state, action) => {
+                state.errorGet = action.error.message;
+                state.loadingGet = false;
+            })
+            //fetchInfoPatients
             .addCase(fetchInfoPatients.pending, (state, action) => {
                 state.loadingGet = true
             })
@@ -66,12 +90,17 @@ const usersGet = createSlice({
                 state.loadingGet = false;
                 state.errorGet = null;
                 setPatients(action.payload)
+                state.patientsLogins = action.payload.map((patient) => patient.login)
             })
             .addCase(fetchInfoPatients.rejected, (state, action) => {
                 state.errorGet = action.error.message;
                 state.loadingGet = false;
+                if (action.error.message === 'Пользователи не найдены') {
+                    state.patients = []
+                    state.patientsLogins = []
+                }
             })
-        //fetchInfoDoctors
+            //fetchInfoDoctors
             .addCase(fetchInfoDoctors.pending, (state, action) => {
                 state.loadingGet = true
             })
@@ -85,7 +114,7 @@ const usersGet = createSlice({
                 state.errorGet = action.error.message;
                 state.loadingGet = false;
             })
-        //fetchInfoRegistrars
+            //fetchInfoRegistrars
             .addCase(fetchInfoRegistrars.pending, (state, action) => {
                 state.loadingGet = true
             })
@@ -99,7 +128,7 @@ const usersGet = createSlice({
                 state.errorGet = action.error.message;
                 state.loadingGet = false;
             })
-        //fetchInfoNurses
+            //fetchInfoNurses
             .addCase(fetchInfoNurses.pending, (state, action) => {
                 state.loadingGet = true
             })

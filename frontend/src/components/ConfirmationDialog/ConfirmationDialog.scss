@@ -1,4 +1,24 @@
-.confirmation-dialog{
-    display: flex;
-    flex-direction: column;
+.confirmation-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 235px;
+  height: 145px;
+  background-color: $primary-color;
+  border-radius: 0.3rem;
+  border: 1px solid $border-color;
+}
+.confirmation-dialog__container {
+  display: flex;
+  gap: 10px;
+}
+.confirmation-dialog__text {
+  text-align: center;
 }

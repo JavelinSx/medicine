@@ -2,4 +2,21 @@
   color: $error-color;
   font-size: 0.7rem;
   text-align: center;
+  padding: 5px;
+  @include respond-to($breakpoint-small) {
+    font-size: 0.5rem;
+  }
+  @include respond-to($breakpoint-medium) {
+    font-size: 0.8rem;
+  }
+}
+.complete-message {
+  color: $card-complete;
+  text-align: center;
+  @include respond-to($breakpoint-small) {
+    font-size: 0.6rem;
+  }
+  @include respond-to($breakpoint-medium) {
+    font-size: 0.8rem;
+  }
 }

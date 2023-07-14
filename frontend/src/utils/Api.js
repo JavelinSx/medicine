@@ -1,4 +1,5 @@
-import { urlProd, urlDev } from './constant'
+
+const { REACT_APP_URL_DEV, REACT_APP_URL_PROD, NODE_ENV } = process.env
 
 class Api {
 
@@ -21,6 +22,53 @@ class Api {
                 responseJson.message ? reject(responseJson.message) : resolve(responseJson)
             })
         }
+    }
+
+    help(data) {
+        return this._request({
+            url: `/help`,
+            options: {
+                method: 'POST',
+                credentials: 'include',
+                headers: this._headers,
+                body: JSON.stringify(data)
+            }
+        })
+    }
+
+    helpMessage(data) {
+        return this._request({
+            url: `/help-message`,
+            options: {
+                method: 'POST',
+                credentials: 'include',
+                headers: this._headers,
+                body: JSON.stringify(data)
+            }
+        })
+    }
+
+    getHelpMessage(data) {
+        return this._request({
+            url: `/info/doctor/help-message/${data}`,
+            options: {
+                method: 'GET',
+                credentials: 'include',
+                headers: this._headers,
+            }
+        })
+    }
+
+    deleteHelpMessage(data) {
+        return this._request({
+            url: `/info/doctor/help-message/delete`,
+            options: {
+                method: 'POST',
+                credentials: 'include',
+                headers: this._headers,
+                body: JSON.stringify(data)
+            }
+        })
     }
 
     login(data) {
@@ -105,7 +153,7 @@ class Api {
 
     createUser(data) {
         const { roleList } = data
-        console.log(data)
+
         return this._request({
             url: `/create/${roleList}`,
             options: {
@@ -118,7 +166,7 @@ class Api {
     }
 
     deleteUser(data) {
-        console.log(data)
+
         return this._request({
             url: `/delete/${data.role}/${data._id}`,
             options: {
@@ -131,7 +179,7 @@ class Api {
 
     updateUser(data) {
         const { updatedUser, updatedData } = data
-        console.log(updatedData)
+
         return this._request({
             url: `/update/${updatedUser.role}/${updatedUser._id}`,
             options: {
@@ -156,6 +204,7 @@ class Api {
     }
 
     deleteCard(id) {
+
         return this._request({
             url: `/cards/delete/${id}`,
             options: {
@@ -218,12 +267,14 @@ class Api {
     }
 }
 
+const url = NODE_ENV === 'production' ? REACT_APP_URL_PROD : REACT_APP_URL_DEV
+
 const MainApi = new Api(
-    urlProd,
+    url,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: urlProd,
+        Origin: url,
     }
 )
 

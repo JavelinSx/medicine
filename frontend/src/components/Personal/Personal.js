@@ -5,8 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import ListPersonal from '../ListPersonal/ListPersonal';
 import PopupInteractionUser from '../PopupInteractionUser/PopupInteractionUser';
 import { toggleStatePatient, toggleStateDoctor, toggleStateRegistrar, toggleStateNurse } from '../../ducks/listState'
-import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars, } from '../../ducks/usersGet';
+import { fetchInfoPatients, fetchInfoDoctors, fetchInfoNurses, fetchInfoRegistrars, fetchInfoDoctorMessage } from '../../ducks/usersGet';
 import { fetchGetAllCards } from '../../ducks/cards'
+import PersonalProfile from '../PersonalProfile/PersonalProfile';
 
 function Personal() {
     const dispatch = useDispatch();
@@ -28,36 +29,25 @@ function Personal() {
     const toggleListRegistrar = () => {
         dispatch(toggleStateRegistrar())
     }
-    const updatePatientsList = () => {
-        dispatch(fetchInfoPatients())
-    }
-    const updateDoctorsList = () => {
-        dispatch(fetchInfoDoctors())
-    }
-    const updateNursesList = () => {
-        dispatch(fetchInfoNurses())
-    }
-    const updateRegistrarsList = () => {
-        dispatch(fetchInfoRegistrars())
-    }
 
     useEffect(() => {
         if (userAuth.role !== 'patient') {
-            if (patients.length === 0) {
-                dispatch(fetchInfoPatients('patients'))
+
+            dispatch(fetchInfoPatients('patients'))
+
+            dispatch(fetchInfoDoctors('doctors'));
+
+            dispatch(fetchInfoRegistrars('registrars'));
+
+            dispatch(fetchInfoNurses('nurses'));
+
+            dispatch(fetchGetAllCards());
+
+            if (userAuth.role === 'doctor') {
+                console.log(userAuth)
+                dispatch(fetchInfoDoctorMessage(userAuth._id))
             }
-            if (doctors.length === 0) {
-                dispatch(fetchInfoDoctors('doctors'));
-            }
-            if (registrars.length === 0) {
-                dispatch(fetchInfoRegistrars('registrars'));
-            }
-            if (nurses.length === 0) {
-                dispatch(fetchInfoNurses('nurses'));
-            }
-            if (cards.length === 0) {
-                dispatch(fetchGetAllCards());
-            }
+
         }
     }, []);
 
@@ -66,38 +56,46 @@ function Personal() {
     return (
         <div className='personal__list-container'>
             <PopupInteractionUser />
-            <ListPersonal
-                nameList={'Пациенты'}
-                list={patients}
-                roleList='patient'
-                toggleListUser={toggleListPatient}
-                listState={listStatePatient}
-                updateList={updatePatientsList}
-            />
-            <ListPersonal
-                nameList={'Доктора'}
-                list={doctors}
-                roleList='doctor'
-                toggleListUser={toggleListDoctor}
-                listState={listStateDoctor}
-                updateList={updateDoctorsList}
-            />
-            <ListPersonal
-                nameList={'Регистраторы'}
-                list={registrars}
-                roleList='registrar'
-                toggleListUser={toggleListRegistrar}
-                listState={listStateRegistrar}
-                updateList={updateRegistrarsList}
-            />
-            <ListPersonal
-                nameList={'Медсестры'}
-                list={nurses}
-                roleList='nurse'
-                toggleListUser={toggleListNurse}
-                listState={listStateNurse}
-                updateList={updateNursesList}
-            />
+            <div className='personal__list-profile'>
+                <h3 className='personal__list-profile-title'>Ваш профиль</h3>
+                <PersonalProfile />
+            </div>
+            <div className='personal__list-managment'>
+                <h3 className='personal__list-profile-title'>Управление базой данных</h3>
+                <ListPersonal
+                    nameList={'Пациенты'}
+                    list={patients}
+                    roleList='patient'
+                    toggleListUser={toggleListPatient}
+                    listState={listStatePatient}
+
+                />
+                <ListPersonal
+                    nameList={'Доктора'}
+                    list={doctors}
+                    roleList='doctor'
+                    toggleListUser={toggleListDoctor}
+                    listState={listStateDoctor}
+
+                />
+                <ListPersonal
+                    nameList={'Регистраторы'}
+                    list={registrars}
+                    roleList='registrar'
+                    toggleListUser={toggleListRegistrar}
+                    listState={listStateRegistrar}
+
+                />
+                <ListPersonal
+                    nameList={'Медсестры'}
+                    list={nurses}
+                    roleList='nurse'
+                    toggleListUser={toggleListNurse}
+                    listState={listStateNurse}
+
+                />
+            </div>
+
         </div>
 
 

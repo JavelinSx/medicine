@@ -11,7 +11,7 @@ function ListPersonalItem({ user }) {
             <div className='list-personal-item__button-container'>
                 <button
                     type="button"
-                    className='button button__profile'
+                    className='button button__profile button__profile-edit'
                     onClick={() => dispatch(openPopup({
                         text: `Вы хотите перейти в профиль ${user.name + ' ' + user.surName}?`,
                         purpose: 'edit',
@@ -24,7 +24,7 @@ function ListPersonalItem({ user }) {
 
                 <button
                     type="button"
-                    className='button button__profile'
+                    className='button button__profile button__profile-delete'
                     onClick={() => dispatch(openPopup({
                         text: `Вы хотите удалить ${user.name + ' ' + user.login}?`,
                         purpose: 'delete',

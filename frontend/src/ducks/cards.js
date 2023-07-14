@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { map } from "lodash";
+import { identity, map } from "lodash";
 import MainApi from "../utils/Api";
 import { getFileZip } from '../utils/getFileZip';
 import {
@@ -36,7 +36,7 @@ const parseArray = (obj) => {
 const initialState = {
     card: getCard || {},
     cards: getCards || [],
-    cardsPatient: getCardsPatient || [],
+    cardsPatient: [],
     cardFiles: {},
     createdCard: null,
     deletedCard: {},
@@ -68,8 +68,8 @@ export const fetchGetAllCards = createAsyncThunk(GET_ALL_CARDS_FETCH, async () =
         .catch((err) => { throw err })
 })
 
-export const fetchDeleteCard = createAsyncThunk(DELETE_CARD_FETCH, async (data) => {
-    return await MainApi.deleteCard(data)
+export const fetchDeleteCard = createAsyncThunk(DELETE_CARD_FETCH, async (id) => {
+    return await MainApi.deleteCard(id)
         .then((cards) => cards)
         .catch((err) => { throw err })
 })
@@ -93,7 +93,7 @@ const card = createSlice({
     initialState,
     reducers: {
         selectCard: (state, action) => {
-
+            console.log(state.cardFiles, 'cardFiles')
             const updatedCard = parseArray(action.payload[0]);
             const cardId = updatedCard._id;
             state.card = {
@@ -124,6 +124,9 @@ const card = createSlice({
             .addCase(fetchGetAllCardsFromPatient.rejected, (state, action) => {
                 state.errorUpdate = action.payload;
                 state.loadingUpdate = false;
+                if (action.error.message === 'Карточка с таким id не найдена') {
+                    state.cardsPatient = []
+                }
             })
             //fetchCreatePatient
             .addCase(fetchUpdateCard.pending, (state, action) => {
@@ -168,7 +171,7 @@ const card = createSlice({
                 state.loadingGet = true
             })
             .addCase(fetchGetCardFile.fulfilled, (state, action) => {
-                console.log(action.payload)
+
                 state.cardFiles = action.payload
                 state.loadingGet = false;
                 state.errorGet = null;
@@ -187,8 +190,6 @@ const card = createSlice({
                     const colorCard = card.status === 'new' ? 'card-new' : card.status === 'updated' ? 'card-updated' : card.status === 'confirmed' ? 'card-confirmed' : null
                     const statusRU = card.status === 'new' ? 'новая' : card.status === 'updated' ? 'изменённая' : card.status === 'confirmed' ? 'закрытая' : null
                     const modifiedCard = { ...card, colorCard: colorCard, statusRU: statusRU }
-                    console.log(statusRU, 'statusRU')
-                    console.log(modifiedCard, 'modifiedCard')
                     return modifiedCard
                 });
                 state.loadingGet = false;

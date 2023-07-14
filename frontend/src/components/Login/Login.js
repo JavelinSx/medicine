@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAuth, resetErrorAuth } from '../../ducks/auth';
+import { openHelpPopup } from '../../ducks/usersUpdate';
 import { useNavigate } from 'react-router-dom';
-
+import FormChangePassword from '../FormChangePassword/FormChangePassword';
+import HelpPopup from '../HelpPopup/HelpPopup';
 function Login({ userRoleLogin }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,10 +22,15 @@ function Login({ userRoleLogin }) {
     navigate('/select-role')
   }
 
+  const handleOpenHelpPopup = () => {
+    dispatch(openHelpPopup(true))
+  }
+
+
   return (
     <div className='login'>
+      <HelpPopup />
       <form className='login-form' onSubmit={handleSubmit}>
-
         <input
           className='input login-form__input'
           type="text"
@@ -44,6 +51,7 @@ function Login({ userRoleLogin }) {
         <button className='button' onClick={handleSelectRole}>Вход для персонала</button>
         {errorAuth && <p className='error'>{errorAuth}</p>}
       </form>
+      <button className='button button-help' onClick={handleOpenHelpPopup}>Нужна помощь?</button>
 
     </div>
   );

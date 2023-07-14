@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { fetchCreateUser } from '../../ducks/usersPost';
 
 import DatePicker from 'react-date-picker';
@@ -8,92 +8,158 @@ import 'react-date-picker/dist/DatePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import { fetchInfoPatients } from '../../ducks/usersGet';
 import MySelectComponent from '../MySelectComponent/MySelectComponent'
+import { useState } from 'react';
+import InputText from '../InputText/InputText';
+
 
 function FormCreateUser({ roleList }) {
 
     const dispatch = useDispatch()
+    const { patientsLogins } = useSelector((state) => state.usersGet)
     const { loadingPost, errorPost } = useSelector((state) => state.usersPost)
     const { register, handleSubmit, formState: { errors }, control, reset } = useForm({
-        mode: 'onBlur'
+        mode: 'onChange',
+        reValidateMode: 'onChange'
     })
 
-    const onSubmit = (info) => {
+    const [successfullyCreateMessage, setSuccessfullyCreateMessage] = useState(false)
+    const [errorViewServerMessage, setErrorViewServerMessage] = useState(false)
 
-        dispatch(
-            fetchCreateUser({
-                ...info,
-                birthDay: info.birthDay.toString(),
-                roleList,
-            })
-        )
-            .then(() => reset())
-            .then(() => dispatch(fetchInfoPatients()))
+    const onSubmit = async (info) => {
+        try {
+            dispatch(
+                fetchCreateUser({
+                    ...info,
+                    birthDay: info.birthDay.toString(),
+                    roleList,
+                })
+            )
+                .then((data) => {
 
+                    if (data.type.includes('fulfilled')) {
+                        reset()
+                        setSuccessfullyCreateMessage(true)
+                        setTimeout(() => {
+                            setSuccessfullyCreateMessage(false)
+                        }, 5000)
+                        dispatch(fetchInfoPatients())
+                    }
+
+                    if (errorPost) {
+                        setErrorViewServerMessage(true)
+                        setTimeout(() => {
+                            setErrorViewServerMessage(false)
+                        }, 5000)
+                    }
+                })
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
-        <div className='form-create-user__container'>
-            <form className='form-create-user' onSubmit={handleSubmit(onSubmit)}>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Дата рождения</label>
-                    <Controller
-                        name='birthDay'
-                        control={control}
-                        render={({ field }) => (
-                            <DatePicker
-                                defaultValue={new Date(1980, 1, 1)}
-                                value={field.value}
-                                selected={new Date()}
-                                onChange={(date) => field.onChange(date)}
-                            />
-                        )}
-                    />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Пол</label>
-                    <Controller
-                        name='gender'
-                        control={control}
-                        render={({ field }) => (
-                            <MySelectComponent
-                                {...field}
-                                defaultValue='male'
-                                optionsProps={
-                                    [
-                                        { value: 'male', label: 'Муж.' },
-                                        { value: 'female', label: 'Жен.' },
-                                    ]
-                                }
-                            />
-                        )}
-                    />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Фамилия</label>
-                    <input className='input form-create-user__input' {...register('surName')} />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Имя</label>
-                    <input className='input form-create-user__input' {...register('name')} />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Отчество</label>
-                    <input className='input form-create-user__input' {...register('middleName')} />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Логин</label>
-                    <input className='input form-create-user__input' {...register('login')} />
-                </div>
-                <div className='form-create-user__wrapper-input'>
-                    <label className="form-create-user__label-input">Пароль</label>
-                    <input className='input form-create-user__input' {...register('password')} type='password' />
-                </div>
+        <FormProvider {...{ formState: { errors }, register }}>
+            <div className='form-create-user__container'>
+                <form className='form-create-user' onSubmit={handleSubmit(onSubmit)}>
 
-                <button className='button' type='submit' text='Создать'>Создать</button>
+                    <div className='form-create-user__wrapper-input'>
+                        <label className="form-create-user__label-input">Дата рождения</label>
+                        <Controller
+                            name='birthDay'
+                            control={control}
+                            render={({ field }) => (
+                                <DatePicker
+                                    defaultValue={new Date(1980, 1, 1)}
+                                    value={field.value}
+                                    selected={new Date()}
+                                    onChange={(date) => field.onChange(date)}
+                                    required
+                                />
+                            )}
+                        />
+                    </div>
 
-                {errorPost && <span>{errorPost}</span>}
-            </form>
-        </div>
+                    <div className='form-create-user__wrapper-input'>
+                        <label className="form-create-user__label-input">Пол</label>
+                        <Controller
+                            name='gender'
+                            control={control}
+                            render={({ field }) => (
+                                <MySelectComponent
+                                    {...field}
+                                    optionsProps={
+                                        [
+                                            { value: 'male', label: 'Муж.' },
+                                            { value: 'female', label: 'Жен.' },
+                                        ]
+                                    }
+                                />
+                            )}
+                        />
+                    </div>
+
+                    <InputText
+                        name='surName'
+                        label='Фамилия'
+                        requiredMessage={'Это поле обязательно'}
+                        errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
+                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        type='text'
+                    />
+                    <InputText
+                        name='name'
+                        label='Имя'
+                        requiredMessage={'Это поле обязательно'}
+                        errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
+                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        type='text'
+                    />
+                    <InputText
+                        name='middleName'
+                        label='Отчество'
+                        requiredMessage={'Это поле обязательно'}
+                        errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
+                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        type='text'
+                    />
+                    <InputText
+                        name='login'
+                        label='Логин'
+                        requiredMessage={'Это поле обязательно'}
+                        errorMessage={'Пожалуйста, введите логин, используя только латинские буквы'}
+                        patternRule={/^[a-zA-Z]+$/}
+                        loginList={patientsLogins}
+                        type='text'
+                    />
+                    <InputText
+                        name='password'
+                        label='Пароль'
+                        requiredMessage={'Это поле обязательно'}
+                        errorMessage={'Минимум 8 символов, одна или более букв верхнего регистра.'}
+                        patternRule={/(?=.*[A-Z])[\S]{8,}/}
+                        type='password'
+                    />
+
+                    <button
+                        className='button'
+                        type='submit'
+                        disabled={Object.values(errors).length > 0 ? 'disabled' : undefined}
+                    >
+                        {loadingPost ? '...' : 'Создать'}
+                    </button>
+
+
+                    {
+                        errorViewServerMessage ? <span className='error'>{errorPost}</span> : null
+                    }
+                    {
+                        successfullyCreateMessage ? <span className='complete-message'>Пациент успешно создан</span> : null
+                    }
+
+                </form>
+            </div>
+        </FormProvider>
+
 
     );
 }
