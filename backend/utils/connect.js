@@ -3,7 +3,7 @@ const { PORT = 3000, DB_PATH_PROD, DB_PATH_DEV, NODE_ENV } = process.env;
 const mongoose = require('mongoose');
 async function connected(app) {
   try {
-    mongoose.connect(NODE_ENV === 'production' ? DB_PATH_PROD : DB_PATH_DEV, {
+    mongoose.connect(DB_PATH_PROD, {
       useNewUrlParser: true,
     });
   } catch (err) {
