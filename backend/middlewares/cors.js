@@ -1,7 +1,5 @@
-require('dotenv').config()
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-const { CORS_ALLOWED } = process.env;
-const allowedOrigins = CORS_ALLOWED.split(',');
+const allowedOrigins = ['https://spb-obs.ru', 'https://api.spb-obs.ru'];
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
