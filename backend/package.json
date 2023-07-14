@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=production && set DB_PATH_PROD=mongodb://localhost:27017/spb-obs-prod && node --inspect index.js",
-    "dev": "set NODE_ENV=development && set DB_PATH_PROD=mongodb://localhost:27017/spb-obs-dev && nodemon --inspect index.js"
+    "dev": "set NODE_ENV=development && set DB_PATH_DEV=mongodb://localhost:27017/spb-obs-dev && nodemon --inspect index.js"
   },
   "keywords": [],
   "author": "",
