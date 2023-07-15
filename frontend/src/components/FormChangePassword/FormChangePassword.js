@@ -1,17 +1,16 @@
 
-import { useEffect } from 'react';
-import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import InputText from '../InputText/InputText';
-
+import { patternInputTextPassword } from '../../utils/constant'
 function FormChangePassword() {
 
     const dispatch = useDispatch();
 
     const { errorUpdate } = useSelector((state) => state.usersUpdate)
 
-    const { register, handleSubmit, formState: { errors }, control, reset } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
     })
@@ -36,7 +35,7 @@ function FormChangePassword() {
                             label='Старый пароль'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Минимум 8 символов, одна или более букв верхнего регистра.'}
-                            patternRule={/(?=.*[A-Z])[\S]{8,}/}
+                            patternRule={patternInputTextPassword}
                             type='password'
                         />
                         <InputText
@@ -44,7 +43,7 @@ function FormChangePassword() {
                             label='Новый пароль'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Минимум 8 символов, одна или более букв верхнего регистра.'}
-                            patternRule={/(?=.*[A-Z])[\S]{8,}/}
+                            patternRule={patternInputTextPassword}
                             type='password'
                         />
                         <InputText
@@ -52,7 +51,7 @@ function FormChangePassword() {
                             label='Новый пароль'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Минимум 8 символов, одна или более букв верхнего регистра.'}
-                            patternRule={/(?=.*[A-Z])[\S]{8,}/}
+                            patternRule={patternInputTextPassword}
                             type='password'
                         />
                         <button type='submit' className='button' disabled={Object.values(errors).length > 0 ? 'disabled' : undefined}>Изменить</button>

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm, Controller, FormProvider } from 'react-hook-form'
 
-import { isEqual } from 'lodash';
-
 import { setCard } from '../../utils/sessionStorageInfo';
 
 import { fetchUpdateUser } from '../../ducks/usersUpdate'
@@ -20,7 +18,7 @@ import MySelectComponent from '../MySelectComponent/MySelectComponent';
 import InputText from '../InputText/InputText';
 import SubmitButton from '../SubmitButton/SubmitButton';
 
-
+import { patternInputTextRu } from '../../utils/constant'
 
 function Patient() {
 
@@ -29,7 +27,6 @@ function Patient() {
     const { updatedUser } = useSelector((state) => state.usersUpdate)
     const { cardsPatient, selectedCard } = useSelector((state) => state.cards)
 
-    const [openedCardId, setOpenedCardId] = useState(null);
     const [formSubmitted, setFormSubmitted] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues } = useForm({
@@ -99,7 +96,7 @@ function Patient() {
                                 label='Фамилия'
                                 requiredMessage={'Это поле обязательно'}
                                 errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
-                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                patternRule={patternInputTextRu}
                                 type='text'
                             />
                             <InputText
@@ -107,7 +104,7 @@ function Patient() {
                                 label='Имя'
                                 requiredMessage={'Это поле обязательно'}
                                 errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
-                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                patternRule={patternInputTextRu}
                                 type='text'
                             />
                             <InputText
@@ -115,7 +112,7 @@ function Patient() {
                                 label='Отчество'
                                 requiredMessage={'Это поле обязательно'}
                                 errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
-                                patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                patternRule={patternInputTextRu}
                                 type='text'
                             />
                             <div className='patient-me__form-container'>

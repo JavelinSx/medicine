@@ -1,12 +1,17 @@
 import { useFormContext } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 function InputText({ name, label, requiredMessage, errorMessage, patternRule, loginList, type, disabled }) {
     const { formState: { errors }, register } = useFormContext()
     const errorKey = Object.keys(errors)
+    const [loginListUser, setLoginListUser] = useState(loginList)
+
+    useEffect(() => {
+        setLoginListUser(loginList)
+    }, [loginList])
 
     const customValidator = (val) => {
-        if (val && loginList.includes(val)) {
+        if (val && loginListUser.includes(val)) {
             return "Такой логин уже существует";
         }
         return true;

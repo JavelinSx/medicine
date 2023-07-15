@@ -97,3 +97,7 @@ export const checkBoxData = [
         ]
     },
 ]
+
+export const patternInputTextRu = /^[а-яёА-ЯЁ]+$/u
+export const patternInputTextEn = /^[a-zA-Z0-9]+$/
+export const patternInputTextPassword = /(?=.*[A-Z])[\S]{8,}/

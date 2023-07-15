@@ -1,4 +1,5 @@
 import InputText from "../InputText/InputText";
+import { patternInputTextRu } from '../../utils/constant'
 function FormUserCheck({ handleSubmit, onSubmit, errors }) {
     return (
         <>
@@ -9,7 +10,7 @@ function FormUserCheck({ handleSubmit, onSubmit, errors }) {
                     label='Фамилия'
                     requiredMessage={'Это поле обязательно'}
                     errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
-                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                    patternRule={patternInputTextRu}
                     type='text'
                 />
                 <InputText
@@ -17,7 +18,7 @@ function FormUserCheck({ handleSubmit, onSubmit, errors }) {
                     label='Имя'
                     requiredMessage={'Это поле обязательно'}
                     errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
-                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                    patternRule={patternInputTextRu}
                     type='text'
                 />
                 <InputText
@@ -25,7 +26,7 @@ function FormUserCheck({ handleSubmit, onSubmit, errors }) {
                     label='Отчество'
                     requiredMessage={'Это поле обязательно'}
                     errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
-                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                    patternRule={patternInputTextRu}
                     type='text'
                 />
 

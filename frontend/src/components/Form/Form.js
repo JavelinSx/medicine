@@ -1,25 +1,24 @@
 import React from 'react';
 import DatePicker from 'react-date-picker';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller, useWatch, FormProvider } from 'react-hook-form';
 import { checkBoxData } from '../../utils/constant';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUpdateCard, fetchGetAllCards, fetchGetCardFile } from '../../ducks/cards';
+import { fetchUpdateCard, fetchGetAllCards } from '../../ducks/cards';
 import ButtonLoader from '../ButtonLoader/ButtonLoader';
 import { convertBlobToFile } from '../../utils/convertBlobToFile';
 import MySelectComponent from '../MySelectComponent/MySelectComponent'
 
 const Form = () => {
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
-  const [errorsFiles, setErrorsFiles] = useState({})
   const [waitUpdateCard, setWaitUpdateCard] = useState(false)
 
 
-  const { register, control, handleSubmit, formState: { errors, isSubmitting }, setValue, watch, setError, getValues } = useForm({
+  const { register, control, handleSubmit, formState: { errors }, setValue, watch, setError, getValues } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange'
   });
-  const { card, cardFiles } = useSelector((state) => state.cards);
+  const { card } = useSelector((state) => state.cards);
   const { userAuth } = useSelector((state) => state.auth)
   const dispatch = useDispatch()
   // Состояние для отслеживания выбранного checkbox в каждой группе
@@ -107,7 +106,7 @@ const Form = () => {
         dispatch(fetchUpdateCard(formData))
           .then((payload) => payload.type.includes('fulfilled') ? setTimeout(() => setWaitUpdateCard(false), 2000) : '')
       })
-      .then(() => dispatch(fetchGetAllCards()))
+      .then(() => userAuth.role !== 'patient' ? dispatch(fetchGetAllCards()) : null)
       .catch((error) => {
         console.log(error)
       });

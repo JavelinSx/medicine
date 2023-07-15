@@ -1,6 +1,6 @@
 
 
-import React, { useState, useMemo, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import Personal from '../Personal/Personal'
 import Patient from '../Patient/Patient';
 import PatientProfile from '../PatientProfile/PatientProfile'
-import PersonalProfile from '../PersonalProfile/PersonalProfile'
 import UnfamiliarPersonalProfile from '../UnfamiliarPersonalProfile/UnfamiliarPersonalProfile';
 
 function App() {
@@ -21,7 +20,6 @@ function App() {
   const dispatch = useDispatch();
   const { isAuthenticated, userAuth } = useSelector((state) => state.auth);
   const [userRoleLogin, setUserRoleLogin] = useState('patient')
-  const scrollContainerRef = useRef(null);
 
 
   useEffect(() => {
@@ -45,9 +43,9 @@ function App() {
   }
 
   return (
-    <div ref={scrollContainerRef} className='App ps' id='app'>
+    <div className='app' id='app'>
       {
-        isAuthenticated ? <Header /> : null
+        isAuthenticated ? <Header resetRole={handleSelectLoginRole} /> : null
       }
 
       <Routes>

@@ -6,6 +6,7 @@ import { fetchUpdateUser } from '../../ducks/usersUpdate'
 import MessagePatient from '../MessagePatient/MessagePatient';
 import InputText from '../InputText/InputText';
 import SubmitButton from '../SubmitButton/SubmitButton';
+import { patternInputTextRu } from '../../utils/constant'
 function PersonalProfile() {
 
     const [openMessage, setOpenMessage] = useState(false)
@@ -16,7 +17,7 @@ function PersonalProfile() {
     const { updatedUser } = useSelector((state) => state.usersUpdate)
     const { errorPost } = useSelector((state) => state.usersPost)
 
-    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues, reset } = useForm({
+    const { register, handleSubmit, formState: { errors }, control, watch, setValue, getValues } = useForm({
         mode: 'onChange',
         reValidateMode: 'onChange'
     })
@@ -87,7 +88,7 @@ function PersonalProfile() {
                             label='Фамилия'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
-                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            patternRule={patternInputTextRu}
                             type='text'
                         />
                         <InputText
@@ -95,7 +96,7 @@ function PersonalProfile() {
                             label='Имя'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
-                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            patternRule={patternInputTextRu}
                             type='text'
                         />
                         <InputText
@@ -103,7 +104,7 @@ function PersonalProfile() {
                             label='Отчество'
                             requiredMessage={'Это поле обязательно'}
                             errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
-                            patternRule={/^[а-яёА-ЯЁ]+$/u}
+                            patternRule={patternInputTextRu}
                             type='text'
                         />
 

@@ -20,6 +20,9 @@ const MESSAGE_INFO_FETCH = '/info/message'
 const initialState = {
     patients: getPatients || [],
     patientsLogins: [],
+    doctorsLogins: [],
+    nursesLogins: [],
+    registrarsLogins: [],
     doctors: getDoctors || [],
     nurses: getNurses || [],
     registrars: getRegistrars || [],

@@ -15,7 +15,7 @@ import { openPopup } from '../../ducks/popupInteractionUser';
 import MySelectComponent from '../MySelectComponent/MySelectComponent';
 import InputText from '../InputText/InputText';
 import SubmitButton from '../SubmitButton/SubmitButton';
-
+import { patternInputTextRu } from '../../utils/constant'
 function PatientProfile() {
 
     const dispatch = useDispatch();
@@ -79,7 +79,7 @@ function PatientProfile() {
                                     label='Фамилия'
                                     requiredMessage={'Это поле обязательно'}
                                     errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
-                                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                    patternRule={patternInputTextRu}
                                     type='text'
                                 />
                                 <InputText
@@ -87,7 +87,7 @@ function PatientProfile() {
                                     label='Имя'
                                     requiredMessage={'Это поле обязательно'}
                                     errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
-                                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                    patternRule={patternInputTextRu}
                                     type='text'
                                 />
                                 <InputText
@@ -95,7 +95,7 @@ function PatientProfile() {
                                     label='Отчество'
                                     requiredMessage={'Это поле обязательно'}
                                     errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
-                                    patternRule={/^[а-яёА-ЯЁ]+$/u}
+                                    patternRule={patternInputTextRu}
                                     type='text'
                                 />
                                 <div className='patient-profile__input-wrapper'>

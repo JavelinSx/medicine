@@ -10,7 +10,7 @@ import { fetchInfoPatients } from '../../ducks/usersGet';
 import MySelectComponent from '../MySelectComponent/MySelectComponent'
 import { useState } from 'react';
 import InputText from '../InputText/InputText';
-
+import { patternInputTextRu, patternInputTextEn, patternInputTextPassword } from '../../utils/constant'
 
 function FormCreateUser({ roleList }) {
 
@@ -95,7 +95,7 @@ function FormCreateUser({ roleList }) {
                         label='Фамилия'
                         requiredMessage={'Это поле обязательно'}
                         errorMessage={'Пожалуйста, введите фамилию, используя только русские буквы'}
-                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        patternRule={patternInputTextRu}
                         type='text'
                     />
                     <InputText
@@ -103,7 +103,7 @@ function FormCreateUser({ roleList }) {
                         label='Имя'
                         requiredMessage={'Это поле обязательно'}
                         errorMessage={'Пожалуйста, введите имя, используя только русские буквы'}
-                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        patternRule={patternInputTextRu}
                         type='text'
                     />
                     <InputText
@@ -111,7 +111,7 @@ function FormCreateUser({ roleList }) {
                         label='Отчество'
                         requiredMessage={'Это поле обязательно'}
                         errorMessage={'Пожалуйста, введите отчество, используя только русские буквы'}
-                        patternRule={/^[а-яёА-ЯЁ]+$/u}
+                        patternRule={patternInputTextRu}
                         type='text'
                     />
                     <InputText
@@ -119,7 +119,7 @@ function FormCreateUser({ roleList }) {
                         label='Логин'
                         requiredMessage={'Это поле обязательно'}
                         errorMessage={'Пожалуйста, введите логин, используя только латинские буквы'}
-                        patternRule={/^[a-zA-Z]+$/}
+                        patternRule={patternInputTextEn}
                         loginList={patientsLogins}
                         type='text'
                     />
@@ -128,7 +128,7 @@ function FormCreateUser({ roleList }) {
                         label='Пароль'
                         requiredMessage={'Это поле обязательно'}
                         errorMessage={'Минимум 8 символов, одна или более букв верхнего регистра.'}
-                        patternRule={/(?=.*[A-Z])[\S]{8,}/}
+                        patternRule={patternInputTextPassword}
                         type='password'
                     />
 

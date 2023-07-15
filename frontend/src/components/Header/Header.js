@@ -1,19 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchLogout } from '../../ducks/auth';
-function Header() {
+function Header({ resetRole }) {
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-
 
     const logout = () => {
         dispatch(fetchLogout())
         localStorage.clear()
         sessionStorage.clear()
+        resetRole('patient')
     }
-
 
     return (
 
