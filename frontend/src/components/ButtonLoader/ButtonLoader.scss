@@ -14,7 +14,7 @@
   object-fit: cover;
   transition: width 0.5s ease;
   @include respond-to($breakpoint-small) {
-    width: 216px;
+    width: 180px;
   }
   @include respond-to($breakpoint-medium) {
     width: 300px;

@@ -5,11 +5,16 @@ function Header({ resetRole }) {
 
     const dispatch = useDispatch();
 
-    const logout = () => {
-        dispatch(fetchLogout())
-        localStorage.clear()
-        sessionStorage.clear()
-        resetRole('patient')
+    const logout = async () => {
+        try {
+            await dispatch(fetchLogout())
+            await localStorage.clear()
+            await sessionStorage.clear()
+            await resetRole('patient')
+        } catch (error) {
+
+        }
+
     }
 
     return (
