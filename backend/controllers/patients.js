@@ -33,7 +33,6 @@ module.exports.loginPatient = (req, res, next) => {
             })
                 .send({
                     _id: user._id,
-                    login: user.login,
                     role: user.role,
                     name: user.name,
                     surName: user.surName,
@@ -57,7 +56,6 @@ module.exports.registerPatient = (req, res, next) => {
         .then((hash) => Patient.create({ login, password: hash, surName, name, middleName, gender, birthDay }))
         .then((user) => {
             res.send({
-                login: user.login,
                 _id: user._id,
                 surName: user.surName,
                 name: user.name,

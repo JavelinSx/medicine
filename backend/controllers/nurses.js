@@ -30,7 +30,6 @@ module.exports.loginNurse = (req, res, next) => {
                 secure: true,
             })
                 .send({
-                    login: user.login,
                     role: user.role,
                     name: user.name,
                     surName: user.serName,
@@ -98,12 +97,12 @@ module.exports.deleteNurse = (req, res, next) => {
 }
 
 module.exports.registerNurse = (req, res, next) => {
-    const { login, password, role } = req.body
+    const { login, password, name, surName, middleName } = req.body
     return bcryptjs.hash(password, 10)
-        .then((hash) => Nurse.create({ login, password: hash }))
+        .then((hash) => Nurse.create({ login, password: hash, name, surName, middleName }))
         .then((user) => {
             res.send({
-                login: user.login, _id: user._id
+                _id: user._id, name, surName, middleName
             })
         })
         .catch((err) => {

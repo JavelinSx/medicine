@@ -33,7 +33,6 @@ module.exports.loginDoctor = (req, res, next) => {
             })
                 .send({
                     _id: user._id,
-                    login: user.login,
                     role: user.role,
                     name: user.name,
                     surName: user.surName,

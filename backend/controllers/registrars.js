@@ -31,7 +31,6 @@ module.exports.loginRegistrar = (req, res, next) => {
                 secure: true,
             })
                 .send({
-                    login: user.login,
                     role: user.role,
                     name: user.name,
                     surName: user.serName,
@@ -48,12 +47,12 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.registerRegistrar = (req, res, next) => {
-    const { login, password } = req.body
+    const { login, password, name, surName, middleName } = req.body
     return bcryptjs.hash(password, 10)
-        .then((hash) => Registrar.create({ login, password: hash }))
+        .then((hash) => Registrar.create({ login, password: hash, name, surName, middleName }))
         .then((user) => {
             res.send({
-                login: user.login, _id: user._id
+                _id: user._id, name, surName, middleName
             })
         })
         .catch((err) => {

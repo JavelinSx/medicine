@@ -31,7 +31,6 @@ module.exports.loginAdmin = (req, res, next) => {
                 secure: true,
             })
                 .send({
-                    login: user.login,
                     role: user.role,
                     name: user.name,
                     surName: user.serName,
