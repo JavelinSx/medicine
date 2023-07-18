@@ -11,6 +11,7 @@ const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { JWT_DEV } = require('../utils/constant')
 const Nurse = require('../models/nurse')
+const { capitalizeFirstLetter } = require('../utils/utils')
 
 module.exports.loginNurse = (req, res, next) => {
     const { login, password } = req.body;
@@ -66,7 +67,11 @@ module.exports.updateNurse = (req, res, next) => {
     const { surName, name, middleName } = req.body;
     Nurse.findByIdAndUpdate(
         req.params.id,
-        { surName, name, middleName },
+        {
+            name: capitalizeFirstLetter(name),
+            surName: capitalizeFirstLetter(surName),
+            middleName: capitalizeFirstLetter(middleName)
+        },
         {
             new: true,
             runValidators: true,
@@ -99,7 +104,13 @@ module.exports.deleteNurse = (req, res, next) => {
 module.exports.registerNurse = (req, res, next) => {
     const { login, password, name, surName, middleName } = req.body
     return bcryptjs.hash(password, 10)
-        .then((hash) => Nurse.create({ login, password: hash, name, surName, middleName }))
+        .then((hash) => Nurse.create({
+            login,
+            password: hash,
+            name: capitalizeFirstLetter(name),
+            surName: capitalizeFirstLetter(surName),
+            middleName: capitalizeFirstLetter(middleName)
+        }))
         .then((user) => {
             res.send({
                 _id: user._id, name, surName, middleName

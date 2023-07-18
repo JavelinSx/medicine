@@ -11,7 +11,7 @@ const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { JWT_DEV } = require('../utils/constant')
 const Registrar = require('../models/registrar')
-
+const { capitalizeFirstLetter } = require('../utils/utils')
 
 module.exports.loginRegistrar = (req, res, next) => {
     const { login, password } = req.body;
@@ -49,7 +49,13 @@ module.exports.logout = (req, res) => {
 module.exports.registerRegistrar = (req, res, next) => {
     const { login, password, name, surName, middleName } = req.body
     return bcryptjs.hash(password, 10)
-        .then((hash) => Registrar.create({ login, password: hash, name, surName, middleName }))
+        .then((hash) => Registrar.create({
+            login,
+            password: hash,
+            name: capitalizeFirstLetter(name),
+            surName: capitalizeFirstLetter(surName),
+            middleName: capitalizeFirstLetter(middleName)
+        }))
         .then((user) => {
             res.send({
                 _id: user._id, name, surName, middleName
@@ -102,7 +108,11 @@ module.exports.updateRegistrar = (req, res, next) => {
     const { surName, name, middleName } = req.body;
     Registrar.findByIdAndUpdate(
         req.params.id,
-        { surName, name, middleName },
+        {
+            name: capitalizeFirstLetter(name),
+            surName: capitalizeFirstLetter(surName),
+            middleName: capitalizeFirstLetter(middleName)
+        },
         {
             new: true,
             runValidators: true,

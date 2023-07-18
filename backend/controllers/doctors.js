@@ -12,7 +12,7 @@ const { NODE_ENV, JWT_PROD } = process.env
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { JWT_DEV } = require('../utils/constant')
-
+const { capitalizeFirstLetter } = require('../utils/utils')
 
 module.exports.loginDoctor = (req, res, next) => {
     const { login, password } = req.body;
@@ -51,7 +51,13 @@ module.exports.logout = (req, res) => {
 module.exports.registerDoctor = (req, res, next) => {
     const { login, password, name, surName, middleName } = req.body
     bcryptjs.hash(password, 10)
-        .then((hash) => Doctor.create({ login, password: hash, name, surName, middleName }))
+        .then((hash) => Doctor.create({
+            login,
+            password: hash,
+            name: capitalizeFirstLetter(name),
+            surName: capitalizeFirstLetter(surName),
+            middleName: capitalizeFirstLetter(middleName)
+        }))
         .then(() => {
             res.send({
                 message: "Пользователь создан"
@@ -125,7 +131,11 @@ module.exports.updateDoctor = (req, res, next) => {
     role === 'admin' || role === 'doctor' ?
         Doctor.findByIdAndUpdate(
             req.params.id,
-            { surName, name, middleName },
+            {
+                name: capitalizeFirstLetter(name),
+                surName: capitalizeFirstLetter(surName),
+                middleName: capitalizeFirstLetter(middleName)
+            },
             {
                 new: true,
                 runValidators: true,
