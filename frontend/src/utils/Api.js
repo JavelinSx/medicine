@@ -270,11 +270,11 @@ class Api {
 const url = NODE_ENV === 'production' ? REACT_APP_URL_PROD : REACT_APP_URL_DEV
 
 const MainApi = new Api(
-    url,
+    REACT_APP_URL_PROD,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: url,
+        Origin: REACT_APP_URL_PROD,
     }
 )
 
