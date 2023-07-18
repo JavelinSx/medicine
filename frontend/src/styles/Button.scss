@@ -58,13 +58,21 @@
   background-color: $card-complete;
 }
 .button__delete {
-  padding: 4px 10px;
-  position: absolute;
-  right: 20px;
-  background-color: $error-color;
+  margin-top: 10px;
+  width: 100%;
+  background-color: lighten($error-color, 5%);
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: lighten($error-color, 10%);
+    background-color: lighten($error-color, 20%);
+  }
+}
+.button__save {
+  // color: $black-text;
+  font-weight: 600;
+  background-color: $card-new;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: lighten($card-new, 10%);
   }
 }
 .button-search {
@@ -91,5 +99,17 @@
   right: 10px;
   &:hover {
     background-color: $error-color;
+  }
+}
+
+.button-roll-up {
+  padding: 4px 10px;
+  width: 90%;
+  position: absolute;
+  right: 20px;
+  background-color: $roll-up-button-color;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: lighten($card-new, 10%);
   }
 }

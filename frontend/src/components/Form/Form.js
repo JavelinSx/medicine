@@ -4,15 +4,17 @@ import { useEffect, useState } from 'react';
 import { useForm, Controller, useWatch, FormProvider } from 'react-hook-form';
 import { checkBoxData } from '../../utils/constant';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchUpdateCard, fetchGetAllCards } from '../../ducks/cards';
+import { fetchUpdateCard, fetchGetAllCards, fetchDeleteCard } from '../../ducks/cards';
 import ButtonLoader from '../ButtonLoader/ButtonLoader';
 import { convertBlobToFile } from '../../utils/convertBlobToFile';
 import MySelectComponent from '../MySelectComponent/MySelectComponent'
+import { openPopup } from '../../ducks/popupInteractionUser';
+import { createDraftSafeSelector } from '@reduxjs/toolkit';
 
 const Form = () => {
   const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
   const [waitUpdateCard, setWaitUpdateCard] = useState(false)
-
+  const { user } = useSelector((state) => state.popupInteractionUser)
 
   const { register, control, handleSubmit, formState: { errors }, setValue, watch, setError, getValues } = useForm({
     mode: 'onChange',
@@ -27,6 +29,7 @@ const Form = () => {
 
   useEffect(() => {
     if (card) {
+
       Object.entries(card).forEach(([fieldName, value]) => {
         if (fieldName === 'markerCA') {
           value = 0
@@ -40,29 +43,46 @@ const Form = () => {
   // Валидация файлов по расширению
   const validateFile = (value) => {
     const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5 мегабайт
+
     if (value instanceof FileList) {
       for (let i = 0; i < value.length; i++) {
         const fileExtension = value[i].name.split('.').pop();
+        const fileSize = value[i].size;
 
         if (!allowedExtensions.includes(`.${fileExtension}`)) {
           return 'Неподдерживаемый тип файла. Используйте: .jpg, .jpeg, .png';
         }
+
+        if (fileSize > maxSizeInBytes) {
+          return 'Превышен максимальный размер файла. Максимальный размер: 5 МБ';
+        }
       }
     } else if (value instanceof Blob) {
-
       const fileExtension = value.name.split('.').pop();
+      const fileSize = value.size;
+
       if (!allowedExtensions.includes(`.${fileExtension}`)) {
-        setError('error', ' hello')
         return 'Неподдерживаемый тип файла. Используйте: .jpg, .jpeg, .png';
+      }
+
+      if (fileSize > maxSizeInBytes) {
+        return 'Превышен максимальный размер файла. Максимальный размер: 5 МБ';
       }
     } else if (value instanceof File) {
       const fileExtension = value.name.split('.').pop();
+      const fileSize = value.size;
 
       if (!allowedExtensions.includes(`.${fileExtension}`)) {
         return 'Неподдерживаемый тип файла. Используйте: .jpg, .jpeg, .png';
       }
+
+      if (fileSize > maxSizeInBytes) {
+        return 'Превышен максимальный размер файла. Максимальный размер: 5 МБ';
+      }
     }
   };
+
 
   // Обработчик изменений checkbox в группе
   const handleCheckboxChange = (groupIndex, checkboxIndex) => {
@@ -105,8 +125,9 @@ const Form = () => {
         formData.delete('previewFileKT')
         dispatch(fetchUpdateCard(formData))
           .then((payload) => payload.type.includes('fulfilled') ? setTimeout(() => setWaitUpdateCard(false), 2000) : '')
+          .then(() => userAuth.role !== 'patient' ? dispatch(fetchGetAllCards()) : null)
       })
-      .then(() => userAuth.role !== 'patient' ? dispatch(fetchGetAllCards()) : null)
+
       .catch((error) => {
         console.log(error)
       });
@@ -279,7 +300,7 @@ const Form = () => {
 
           <div>
             <button
-              className='button form__button'
+              className='button form__button button__save'
               type="submit"
               disabled={(userAuth.role === 'patient' && card.status === 'confirmed') ? 'disabled' : undefined}
             > {
@@ -289,6 +310,16 @@ const Form = () => {
                   'Сохранить данные карточки'
               }
             </button>
+            {
+              userAuth.role !== 'patient' ? <button className='button button__delete' type='button' onClick={() => {
+                dispatch(openPopup({
+                  text: `Вы хотите удалить карточку пациента?`,
+                  purpose: 'delete-card',
+                  user: user,
+                  cardId: card._id,
+                }))
+              }}>Удалить карточку</button> : ''
+            }
           </div>
         </form>
       </FormProvider>

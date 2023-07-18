@@ -51,13 +51,21 @@
 }
 .patient-me__cards {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
 }
 .patient-me__cards-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 10px;
   margin-top: 10px;
   border-radius: 0.3rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .patient-me__cards-item-status {
@@ -66,6 +74,7 @@
   text-align: left;
 }
 .patient-me__cards-item-title {
+  position: relative;
   border-radius: 0.3rem;
   padding: 10px;
   padding-top: 50px;

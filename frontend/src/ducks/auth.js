@@ -20,7 +20,8 @@ const initialState = {
 };
 
 export const fetchAuth = createAsyncThunk(LOGIN_FETCH, async (data) => {
-  return await MainApi.login(data)
+  const login = data.login
+  return await MainApi.login({ ...data, login: login.toLowerCase() })
     .then((user) => user)
     .catch((err) => { throw err })
 })

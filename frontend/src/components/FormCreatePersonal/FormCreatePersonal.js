@@ -22,7 +22,6 @@ function FormCreatePersonal({ roleList }) {
     })
 
     useEffect(() => {
-        console.log(roleList)
         if (roleList === 'doctor') {
             setLoginListPersonal(doctorsLogins)
         }
@@ -37,6 +36,7 @@ function FormCreatePersonal({ roleList }) {
 
     const onSubmit = async (info) => {
         try {
+
             await dispatch(fetchCreateUser({
                 ...info,
                 roleList,

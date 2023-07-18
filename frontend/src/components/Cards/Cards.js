@@ -1,16 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCard } from '../../ducks/cards'
+import { selectCard, toggleWaitLoad, resetSelectCard } from '../../ducks/cards'
 import Card from '../Card/Card';
 import { fetchGetCardFile, fetchGetAllCardsFromPatient } from '../../ducks/cards'
-import { setCard } from '../../utils/sessionStorageInfo';
+import { setCard, getCard, setCardsPatient, getCardsPatient } from '../../utils/sessionStorageInfo';
 import { openPopup } from '../../ducks/popupInteractionUser';
 
 function Cards() {
     const dispatch = useDispatch()
 
     const { updatedUser } = useSelector((state) => state.usersUpdate)
-    const { selectedCard, cardsPatient } = useSelector((state) => state.cards)
+    const { selectedCard, cardsPatient, cardFiles, card } = useSelector((state) => state.cards)
     const { userAuth } = useSelector((state) => state.auth)
     const { user } = useSelector((state) => state.popupInteractionUser)
 
@@ -20,19 +20,32 @@ function Cards() {
         }
     }, [])
 
-    const handleOpenCard = async (id) => {
+
+    const handleOpenCard = async (card) => {
         try {
-            const card = cardsPatient.filter((card) => card._id === id);
-            dispatch(fetchGetAllCardsFromPatient(user._id))
-            dispatch(fetchGetCardFile({ cardId: card[0]._id, patientId: user._id }))
-                .then(() => {
-                    dispatch(selectCard(card))
-                    setCard(card)
-                })
+            //сначала мы ждём файлы, потом делаем selectCard
+
+            await dispatch(toggleWaitLoad(card._id));
+
+            if (selectedCard !== card._id) {
+                await dispatch(fetchGetCardFile({ cardId: card._id, patientId: user._id }));
+                await dispatch(selectCard(card));
+            }
+
+            await setCard(card);
+
+            await dispatch(toggleWaitLoad(card._id));
+
+
+
+
         } catch (error) {
-
+            console.log(error);
         }
+    };
 
+    const rollUp = async () => {
+        await dispatch(resetSelectCard())
     }
 
 
@@ -42,28 +55,23 @@ function Cards() {
                 {
                     cardsPatient.map((card, index) =>
 
-                        <li key={card._id} className={`patient-me__cards-item ${card.colorCard}`} >
-                            <span className='patient-me__cards-item-title' onClick={() => handleOpenCard(card._id)}>
-                                Контрольное обследование №: {index + 1} <br />
-                                Статус карточки: {card.statusRU}
-                            </span>
-                            {selectedCard === card._id ? <Card card={card} /> : null}
-                            {
-                                userAuth.role !== 'patient' ?
-                                    <button
-                                        className='button button__delete'
-                                        onClick={() => dispatch(openPopup({
-                                            text: `Вы действительно хотите удалить карточку?`,
-                                            purpose: 'delete-card',
-                                            user: updatedUser,
-                                            cardId: card._id
-                                        }))}
-                                    >
-                                        X
+                        <li key={card._id} className={`patient-me__cards-item ${card?.colorCard}`} >
 
-                                    </button>
-                                    : null
+                            <div className={`card-blur ${card?.waitLoad ? 'hide-card' : 'show-card'}`}>
+                                Данные загружаются
+                            </div>
+                            <span className={`patient-me__cards-item-title`}
+                                onClick={() => handleOpenCard(card)}>
+                                Контрольное обследование №: {index + 1} <br />
+                                Статус карточки: {card?.statusRU}
+                            </span>
+
+                            {selectedCard === card._id ? <Card card={card} /> : null}
+                            {selectedCard === card._id ?
+                                <button className='button button-roll-up' title='Свернуть' onClick={rollUp}>^</button>
+                                : ''
                             }
+
                         </li>
 
                     )

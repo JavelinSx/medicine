@@ -15,7 +15,9 @@ const initialState = {
 }
 
 export const fetchCreateUser = createAsyncThunk(USER_CREATE_FETCH, async (data) => {
-    return MainApi.createUser(data)
+    const login = data.login
+    const dataParse = { ...data, login: login.toLowerCase() }
+    return MainApi.createUser(dataParse)
         .then((user) => user)
         .catch((err) => { throw err })
 })

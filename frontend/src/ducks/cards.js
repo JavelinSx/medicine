@@ -92,8 +92,11 @@ const card = createSlice({
     name: 'card',
     initialState,
     reducers: {
+        resetSelectCard: (state, action) => {
+            state.selectedCard = null
+        },
         selectCard: (state, action) => {
-            const updatedCard = parseArray(action.payload[0]);
+            const updatedCard = parseArray(action.payload);
             const cardId = updatedCard._id;
             state.card = {
                 ...updatedCard,
@@ -103,6 +106,12 @@ const card = createSlice({
             state.selectedCard = state.selectedCard === cardId ? null : cardId;
             setCard(state.selectedCard);
         },
+        toggleWaitLoad: (state, action) => {
+            const idCard = action.payload
+            state.cardsPatient = state.cardsPatient.map((card) =>
+                idCard === card._id ? { ...card, waitLoad: !card.waitLoad } : card
+            )
+        }
     },
     extraReducers: builder => {
         builder
@@ -114,7 +123,7 @@ const card = createSlice({
                 state.cardsPatient = action.payload?.map((card) => {
                     const colorCard = card.status === 'new' ? 'card-new' : card.status === 'updated' ? 'card-updated' : card.status === 'confirmed' ? 'card-confirmed' : null
                     const statusRU = card.status === 'new' ? 'новая' : card.status === 'updated' ? 'изменённая' : card.status === 'confirmed' ? 'закрытая' : null
-                    const modifiedCard = { ...card, colorCard: colorCard, statusRU: statusRU }
+                    const modifiedCard = { ...card, colorCard: colorCard, statusRU: statusRU, waitLoad: false }
                     return modifiedCard
                 });
                 state.loadingUpdate = false;
@@ -202,5 +211,5 @@ const card = createSlice({
     }
 })
 
-export const { selectCard } = card.actions;
+export const { selectCard, toggleWaitLoad, resetSelectCard } = card.actions;
 export default card.reducer

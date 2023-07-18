@@ -1,0 +1,18 @@
+.card-blur {
+  position: absolute;
+  width: 100%;
+  background-color: $date-select;
+  top: 0px;
+  right: 0px;
+  border-radius: 0.3rem;
+}
+.show-card {
+  opacity: 0;
+  height: 0%;
+  animation-name: fade-in;
+}
+.hide-card {
+  opacity: 0.5;
+  animation-name: fade-out;
+  height: 100%;
+}

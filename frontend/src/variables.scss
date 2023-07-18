@@ -7,6 +7,10 @@ $border-hover-color: #d7e3e98a;
 $date-now: #ffd6ba;
 $date-select: #555b6e;
 
+$black-text: #000000;
+
+$roll-up-button-color: #8dbdd0;
+
 $card-updated: rgb(255, 255, 141);
 $card-complete: rgb(144, 238, 144);
 $card-new: rgb(127, 219, 255);
@@ -28,5 +32,30 @@ $breakpoint-xxlarge: 1200px;
 @mixin respond-to($breakpoint) {
   @media screen and (min-width: $breakpoint) {
     @content;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+  to {
+    opacity: 0.5;
+    height: 100%;
+  }
+}
+
+/* Скрываем элемент с анимацией */
+
+/* Анимация исчезновения */
+@keyframes fade-out {
+  from {
+    opacity: 0.5;
+    height: 100%;
+  }
+  to {
+    opacity: 0;
+    height: 0;
   }
 }

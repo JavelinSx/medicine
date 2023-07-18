@@ -9,6 +9,7 @@ import { fetchInfoPatients } from '../../ducks/usersGet';
 import { fetchGetAllCards, fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
 import { fetchDeleteCard } from '../../ducks/cards'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react';
 
 const PopupInteractionUser = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,11 @@ const PopupInteractionUser = () => {
 
     const { isOpen, text, purpose, user, cardId } = useSelector((state) => state.popupInteractionUser)
 
-    const handleConfirm = () => {
+    useEffect(() => {
+        console.log(user)
+    }, [user])
+
+    const handleConfirm = async () => {
 
         if (purpose === 'edit') {
             const pathPatient = `/profile/patient/${user._id}`
@@ -27,18 +32,20 @@ const PopupInteractionUser = () => {
         }
 
         if (purpose === 'delete') {
-            dispatch(fetchDeletePatient(user))
-                .then(() => dispatch(fetchInfoPatients()))
+            await dispatch(fetchDeletePatient(user))
+            await dispatch(fetchInfoPatients())
         }
 
         if (purpose === 'create') {
-            dispatch(fetchCreateCard(user._id))
-                .then(() => dispatch(fetchGetAllCardsFromPatient(user._id)))
+            await dispatch(fetchCreateCard(user._id))
+            await dispatch(fetchGetAllCardsFromPatient(user._id))
         }
 
         if (purpose === 'delete-card') {
-            dispatch(fetchDeleteCard(cardId))
-                .then(() => dispatch(fetchGetAllCardsFromPatient(user._id)))
+            console.log(user)
+
+            await dispatch(fetchDeleteCard(cardId))
+            await dispatch(fetchGetAllCardsFromPatient(user._id))
         }
 
         return dispatch(dismissPopup())
