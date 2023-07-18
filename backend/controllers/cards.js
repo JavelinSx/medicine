@@ -170,15 +170,18 @@ module.exports.deleteCardPatient = (req, res, next) => {
         .orFail(new NotFoundError(ERRORS_MESSAGE.notFound.messageSearchUser))
         .then((card) => {
             if (card.fileMRT || card.fileKT) {
-                const path = card.fileMRT ?? card.fileKT ?? null;
-                fsExtra.remove(path.dirname(card.fileMRT))
+                const pathFile = card.fileMRT || card.fileKT || null;
+                if (pathFile) {
+                    fsExtra.remove(path.dirname(pathFile))
+                }
             }
 
 
 
             res.send({ message: 'Карточка и файлы удалены' })
         })
-        .catch(() => {
+        .catch((err) => {
+            console.log(err)
             next(new BadRequestError(ERRORS_MESSAGE.badRequest.messageUncorrectedData))
         })
 }

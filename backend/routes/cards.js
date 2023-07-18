@@ -40,6 +40,9 @@ const storage = multer.diskStorage({
 
 // Настройка multer с использованием заданного хранилища и фильтра файлов
 const upload = multer({
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
   storage: storage,
 }).fields([
   { name: 'fileMRT', maxCount: 1 },
