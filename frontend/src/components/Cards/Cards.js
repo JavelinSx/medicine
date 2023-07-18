@@ -52,8 +52,8 @@ function Cards() {
 
                         <li key={card._id} className={`patient-me__cards-item ${card?.colorCard}`} >
 
-                            <div className={`card-blur ${card?.waitLoad ? 'hide-card' : 'show-card'}`}>
-                                Данные загружаются
+                            <div className={`card-blur ${card?.waitLoad ? 'show-card' : 'hide-card'}`}>
+                                <span className='card-blur-title'>Данные загружаются</span>
                             </div>
                             <span className={`patient-me__cards-item-title`}
                                 onClick={(event) => handleOpenCard(event, card)}>

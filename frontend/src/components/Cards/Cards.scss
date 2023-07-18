@@ -5,6 +5,9 @@
   top: 0px;
   right: 0px;
   border-radius: 0.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .show-card {
   opacity: 0;
@@ -15,4 +18,7 @@
   opacity: 0.5;
   animation-name: fade-out;
   height: 100%;
+}
+.card-blur-title {
+  text-align: center;
 }
