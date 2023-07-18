@@ -16,7 +16,7 @@ function FormChangePassword() {
     })
 
     const onSubmit = (data) => {
-        console.log(data)
+
     }
 
     const closePopup = () => {

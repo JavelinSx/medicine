@@ -7,7 +7,7 @@ import { setCard } from '../../utils/sessionStorageInfo';
 import { fetchUpdateUser } from '../../ducks/usersUpdate'
 import { selectCard } from '../../ducks/cards'
 import { fetchGetCardFile } from '../../ducks/cards'
-import { fetchGetAllCardsFromPatient } from '../../ducks/cards';
+import { fetchGetAllCardsFromPatient, toggleWaitLoad, resetSelectCard } from '../../ducks/cards';
 
 import DatePicker from 'react-date-picker';
 import '../../../node_modules/react-date-picker/dist/DatePicker.css'
@@ -46,42 +46,54 @@ function Patient() {
 
 
 
-    const handleOpenCard = async (id, event) => {
+    const handleOpenCard = async (card, event) => {
         try {
 
-            if (event.target.tagName.toLowerCase() === 'span') {
-                const card = cardsPatient.filter((card) => card._id === id);
+            if (event.target.tagName === 'SPAN') {
+                await dispatch(toggleWaitLoad(card._id));
 
-                await dispatch(fetchGetCardFile({
-                    cardId: card[0]._id,
-                    patientId: userAuth._id
-                }))
-                await dispatch(selectCard(card))
-                setCard(card);
+                if (selectedCard !== card._id) {
+                    await dispatch(fetchGetCardFile({ cardId: card._id, patientId: userAuth._id }));
+                    await dispatch(selectCard(card));
+                }
+
+                await setCard(card);
+
+                await dispatch(toggleWaitLoad(card._id));
+
 
             }
+
         } catch (error) {
 
         }
 
     }
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (card, event) => {
         try {
+
+
             await dispatch(fetchUpdateUser({
                 updatedData: {
-                    ...data,
-                    birthDay: data.birthDay.toString(),
+                    ...card,
+                    birthDay: card.birthDay.toString(),
                 },
                 updatedUser: userAuth
             }))
             await dispatch(fetchGetAllCardsFromPatient(userAuth._id))
+
+
             setFormSubmitted(true)
         } catch (error) {
             setFormSubmitted(false)
         }
 
     };
+
+    const rollUp = async () => {
+        await dispatch(resetSelectCard())
+    }
 
 
     return (
@@ -162,12 +174,20 @@ function Patient() {
                 <ul className='patient-me__cards'>
                     {
                         cardsPatient.map((card, index) =>
-                            <li key={card._id} className={`patient-me__cards-item ${card.colorCard}`} onClick={(event) => handleOpenCard(card._id, event)}>
+                            <li key={card._id} className={`patient-me__cards-item ${card.colorCard}`} onClick={(event) => handleOpenCard(card, event)}>
+
+                                <div className={`card-blur ${card?.waitLoad ? 'hide-card' : 'show-card'}`}>
+                                    Данные загружаются
+                                </div>
                                 <span className='patient-me__cards-item-title'>
                                     Карточка №: {index + 1} <br />
                                     Статус карточки: {card.statusRU}
                                 </span>
                                 {selectedCard === card._id ? <CardForPatient card={card} /> : ''}
+                                {selectedCard === card._id ?
+                                    <button className='button button-roll-up' title='Свернуть' onClick={rollUp}>^</button>
+                                    : ''
+                                }
                             </li>
                         )
                     }

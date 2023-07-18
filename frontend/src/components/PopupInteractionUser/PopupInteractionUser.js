@@ -6,20 +6,16 @@ import { dismissPopup } from '../../ducks/popupInteractionUser'
 import { fetchDeletePatient } from '../../ducks/usersDelete';
 import { setUserUpdated } from '../../ducks/usersUpdate';
 import { fetchInfoPatients } from '../../ducks/usersGet';
-import { fetchGetAllCards, fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
+import { fetchCreateCard, fetchGetAllCardsFromPatient } from '../../ducks/cards';
 import { fetchDeleteCard } from '../../ducks/cards'
 import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react';
+
 
 const PopupInteractionUser = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { isOpen, text, purpose, user, cardId } = useSelector((state) => state.popupInteractionUser)
-
-    useEffect(() => {
-        console.log(user)
-    }, [user])
 
     const handleConfirm = async () => {
 
@@ -42,8 +38,6 @@ const PopupInteractionUser = () => {
         }
 
         if (purpose === 'delete-card') {
-            console.log(user)
-
             await dispatch(fetchDeleteCard(cardId))
             await dispatch(fetchGetAllCardsFromPatient(user._id))
         }

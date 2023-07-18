@@ -11,6 +11,7 @@ function Header({ resetRole }) {
             await localStorage.clear()
             await sessionStorage.clear()
             await resetRole('patient')
+            window.location.reload(true);
         } catch (error) {
 
         }
@@ -20,7 +21,7 @@ function Header({ resetRole }) {
     return (
 
         <div className='header'>
-            <button className='button' onClick={logout} type='button'>Выйти</button>
+            <button className='button' onClick={logout} type='submit'>Выйти</button>
         </div>
 
     );

@@ -12,6 +12,7 @@ class Api {
 
         const response = await fetch(this._baseUrl + url, options)
         if (options.responseType === 'arraybuffer') {
+            console.log('hello')
             const responseArrayBuffer = await response.arrayBuffer()
             return new Promise((resolve, reject) => {
                 responseArrayBuffer.message ? reject(responseArrayBuffer.message) : resolve(responseArrayBuffer)
@@ -73,7 +74,6 @@ class Api {
 
     login(data) {
         const { login, password, userRoleLogin } = data
-
         return this._request({
             url: `/signin/${userRoleLogin}`,
             options: {
@@ -270,11 +270,11 @@ class Api {
 const url = NODE_ENV === 'production' ? REACT_APP_URL_PROD : REACT_APP_URL_DEV
 
 const MainApi = new Api(
-    REACT_APP_URL_PROD,
+    url,
     {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Origin: REACT_APP_URL_PROD,
+        Origin: url,
     }
 )
 

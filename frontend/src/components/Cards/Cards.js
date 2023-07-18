@@ -1,17 +1,15 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCard, toggleWaitLoad, resetSelectCard } from '../../ducks/cards'
 import Card from '../Card/Card';
 import { fetchGetCardFile, fetchGetAllCardsFromPatient } from '../../ducks/cards'
-import { setCard, getCard, setCardsPatient, getCardsPatient } from '../../utils/sessionStorageInfo';
-import { openPopup } from '../../ducks/popupInteractionUser';
+import { setCard } from '../../utils/sessionStorageInfo';
+
 
 function Cards() {
     const dispatch = useDispatch()
 
-    const { updatedUser } = useSelector((state) => state.usersUpdate)
-    const { selectedCard, cardsPatient, cardFiles, card } = useSelector((state) => state.cards)
-    const { userAuth } = useSelector((state) => state.auth)
+    const { selectedCard, cardsPatient } = useSelector((state) => state.cards)
     const { user } = useSelector((state) => state.popupInteractionUser)
 
     useEffect(() => {
@@ -21,24 +19,21 @@ function Cards() {
     }, [])
 
 
-    const handleOpenCard = async (card) => {
+    const handleOpenCard = async (event, card) => {
         try {
             //сначала мы ждём файлы, потом делаем selectCard
+            if (event.target.tagName === 'SPAN') {
+                await dispatch(toggleWaitLoad(card._id));
 
-            await dispatch(toggleWaitLoad(card._id));
+                if (selectedCard !== card._id) {
+                    await dispatch(fetchGetCardFile({ cardId: card._id, patientId: user._id }));
+                    await dispatch(selectCard(card));
+                }
 
-            if (selectedCard !== card._id) {
-                await dispatch(fetchGetCardFile({ cardId: card._id, patientId: user._id }));
-                await dispatch(selectCard(card));
+                await setCard(card);
+
+                await dispatch(toggleWaitLoad(card._id));
             }
-
-            await setCard(card);
-
-            await dispatch(toggleWaitLoad(card._id));
-
-
-
-
         } catch (error) {
             console.log(error);
         }
@@ -61,7 +56,7 @@ function Cards() {
                                 Данные загружаются
                             </div>
                             <span className={`patient-me__cards-item-title`}
-                                onClick={() => handleOpenCard(card)}>
+                                onClick={(event) => handleOpenCard(event, card)}>
                                 Контрольное обследование №: {index + 1} <br />
                                 Статус карточки: {card?.statusRU}
                             </span>
