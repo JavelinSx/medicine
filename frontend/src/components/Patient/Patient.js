@@ -177,12 +177,15 @@ function Patient() {
                             <li key={card._id} className={`patient-me__cards-item ${card.colorCard}`} onClick={(event) => handleOpenCard(card, event)}>
 
                                 <div className={`card-blur ${card?.waitLoad ? 'hide-card' : 'show-card'}`}>
-                                    Данные загружаются
+                                    <span className='card-blur-title'>Данные загружаются...</span>
                                 </div>
-                                <span className='patient-me__cards-item-title'>
-                                    Карточка №: {index + 1} <br />
-                                    Статус карточки: {card.statusRU}
-                                </span>
+                                {
+                                    card?.waitLoad ? null : <span className='patient-me__cards-item-title'>
+                                        Карточка №: {index + 1} <br />
+                                        Статус карточки: {card.statusRU}
+                                    </span>
+                                }
+
                                 {selectedCard === card._id ? <CardForPatient card={card} /> : ''}
                                 {selectedCard === card._id ?
                                     <button className='button button-roll-up' title='Свернуть' onClick={rollUp}>^</button>

@@ -26,6 +26,10 @@ function Cards() {
                 await dispatch(toggleWaitLoad(card._id));
 
                 if (selectedCard !== card._id) {
+                    //задержка для тестирования
+                    // await new Promise((resolve) => {
+                    //     setTimeout(resolve, 2000); // Здесь 1000 миллисекунд (1 секунда)
+                    // });
                     await dispatch(fetchGetCardFile({ cardId: card._id, patientId: user._id }));
                     await dispatch(selectCard(card));
                 }
@@ -55,11 +59,14 @@ function Cards() {
                             <div className={`card-blur ${card?.waitLoad ? 'hide-card' : 'show-card'}`}>
                                 <span className='card-blur-title'>Данные загружаются...</span>
                             </div>
-                            <span className={`patient-me__cards-item-title`}
-                                onClick={(event) => handleOpenCard(event, card)}>
-                                Контрольное обследование №: {index + 1} <br />
-                                Статус карточки: {card?.statusRU}
-                            </span>
+                            {
+                                card?.waitLoad ? null : <span className={`patient-me__cards-item-title`}
+                                    onClick={(event) => handleOpenCard(event, card)}>
+                                    Контрольное обследование №: {index + 1} <br />
+                                    Статус карточки: {card?.statusRU}
+                                </span>
+                            }
+
 
                             {selectedCard === card._id ? <Card card={card} /> : null}
                             {selectedCard === card._id ?
