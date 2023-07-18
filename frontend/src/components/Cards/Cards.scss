@@ -1,13 +1,14 @@
 .card-blur {
   position: absolute;
   width: 100%;
-  background-color: $date-select;
+  background-color: $border-hover-color;
   top: 0px;
   right: 0px;
   border-radius: 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation-duration: 1s;
 }
 .show-card {
   opacity: 0;
@@ -15,9 +16,10 @@
   animation-name: fade-in;
 }
 .hide-card {
-  opacity: 0.5;
+  opacity: 1;
   animation-name: fade-out;
   height: 100%;
+  z-index: 100000;
 }
 .card-blur-title {
   text-align: center;
